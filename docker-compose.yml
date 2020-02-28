@@ -10,14 +10,30 @@ services:
       - DOCKER_NETWORK_NAME
     networks:
       - plasmabio
-    ports:
-      - "8000:8000"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./proxy/:/srv/jupyterhub/proxy/
       # TODO: remove and replace by CAS Authenticator
       - /etc/passwd:/etc/passwd:ro
       - /etc/shadow:/etc/shadow:ro
       - /etc/group:/etc/group:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${DOCKER_NETWORK_NAME}"
+
+  proxy:
+    container_name: proxy
+    image: traefik:v1.7
+    restart: on-failure
+    networks:
+      - plasmabio
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./proxy/:/etc/traefik/
+    depends_on:
+      - hub
 
 networks:
   plasmabio:
