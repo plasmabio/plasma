@@ -22,3 +22,23 @@ To tear down:
 ```bash
 docker-compose down
 ```
+
+## Deploy
+
+First make sure [Ansible](https://docs.ansible.com/ansible/latest/index.html) is installed:
+
+```bash
+python -m pip install ansible
+```
+
+Then run:
+
+```bash
+ansible-playbook -i <ip>, ansible/docker.yaml -u <user>
+```
+
+As an example:
+
+```bash
+ansible-playbook -i 51.178.95.237, ansible/docker.yml -u ubuntu
+```
