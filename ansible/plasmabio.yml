@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Fetch the plasmabio project
+      git:
+        repo: 'https://github.com/plasmabio/plasmabio'
+        dest: /srv/plasmabio
+        version: master
+
+    - name: Tear down the existing stack
+      docker_compose:
+        project_src: /srv/plasmabio
+        state: absent
+
+    - name: Start the services
+      docker_compose:
+        project_src: /srv/plasmabio
+      register: output

@@ -1,0 +1,3 @@
+---
+- import_playbook: docker.yaml
+- import_playbook: plasmabio.yaml
