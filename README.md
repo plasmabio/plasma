@@ -9,7 +9,7 @@ Configuration files to setup and deploy Plasma Bio on a single machine.
 
 ## Run Locally
 
-TODO
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Deploy
 
