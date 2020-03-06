@@ -1,5 +1,7 @@
 # plasmabio
 
+![Github Actions Status](https://github.com/plasmabio/plasmabio/workflows/Build/badge.svg)
+
 Configuration files to setup and deploy Plasma Bio on a single machine.
 
 ## Requirements
