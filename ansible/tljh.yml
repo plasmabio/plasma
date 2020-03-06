@@ -18,7 +18,16 @@
         dest: "{{ tljh_installer_dest }}"
 
     - name: Run the TLJH installer
-      shell: "python3 {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
+      shell: "/usr/bin/python3 {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
+
+    - name: Upgrade the tljh-plasmabio plugin
+      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasmabio }}"
+
+    - name: Restart JupyterHub
+      systemd:
+        name: jupyterhub
+        state: restarted
+        daemon_reload: yes
