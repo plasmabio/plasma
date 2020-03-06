@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'curl', 'python3', 'python3-dev', 'python3-pip']
+
+    - name: Fetch the plasmabio project
+      git:
+        repo: "{{ plasmabio_repo }}"
+        dest: "{{ plasmabio_remote_dest }}"
+        version: master
+
+    - name: Ensure the TLJH config directory exists
+      file:
+        path: "{{ tljh_config_dir }}"
+        state: directory
+
+    - name: Move the JupyterHub config to the right folder
+      copy:
+        src: "{{ plasmabio_remote_dest }}/hub/jupyterhub_config.py"
+        dest: "{{ tljh_config_dir }}/jupyterhub_config.py"
+        remote_src: yes
+
+    - name: Download the TLJH installer
+      get_url:
+        url: "{{ tljh_installer_url }}"
+        dest: "{{ tljh_installer_dest }}"
+
+    - name: Run the TLJH installer
+      shell: "python3 {{ tljh_installer_dest }} --no-user-env"
+      # TODO: remove when --no-user-env (or equivalent) is available
+      environment:
+        TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
+
+    # TODO: move to TLJH plugin and specify those in `tljh_extra_hub_pip_dependencies`
+    - name: Install extra dependencies
+      pip:
+        name:
+          - dockerspawner
+          - jupyter_client
+        executable: /opt/tljh/hub/bin/pip3
+
+    - name: Restart JupyterHub
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jupyterhub

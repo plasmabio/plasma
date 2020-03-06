@@ -1,0 +1,12 @@
+---
+
+plasmabio_repo: https://github.com/plasmabio/plasmabio
+plasmabio_remote_dest: /srv/plasmabio
+
+tljh_config_dir: /opt/tljh/config/jupyterhub_config.d
+tljh_installer_dest: /srv/tljh-installer.py
+# TODO: update to upstream TLJH links when the --no-user-env (or similar) is available
+# See https://github.com/jupyterhub/the-littlest-jupyterhub/pull/528
+tljh_bootstrap_pip_spec: git+https://github.com/jtpio/the-littlest-jupyterhub.git@skip-install#"egg=the_littlest_jupyterhub"
+tljh_installer_url: https://raw.githubusercontent.com/jtpio/the-littlest-jupyterhub/skip-install/bootstrap/bootstrap.py
+...

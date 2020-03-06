@@ -4,21 +4,35 @@ Configuration files to setup and deploy Plasma Bio on a single machine.
 
 ## Requirements
 
-- Ubuntu 18.04
+- Ubuntu 18.04+
 - Docker CE
-- `docker-compose`
 
-## Run locally
+## Run Locally
+
+TODO
+
+## Deploy
+
+First make sure [Ansible](https://docs.ansible.com/ansible/latest/index.html) is installed:
 
 ```bash
-docker-compose build
-docker-compose up
+python -m pip install ansible
 ```
 
-Open http://localhost:8000 in a web browser and use the host users to authenticate.
-
-To tear down:
+Go to the `ansible` directory:
 
 ```bash
-docker-compose down
+cd ansible/
+```
+
+Then run:
+
+```bash
+ansible-playbook all.yaml -u <user>
+```
+
+As an example with the `ubuntu` user on the remote machine:
+
+```bash
+ansible-playbook all.yml -u ubuntu
 ```
