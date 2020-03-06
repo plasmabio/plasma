@@ -34,8 +34,3 @@ def tljh_extra_hub_pip_packages():
         'dockerspawner',
         'jupyter_client'
     ]
-
-
-@hookimpl
-def tljh_post_install():
-    ensure_builder_units()

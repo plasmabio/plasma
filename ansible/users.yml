@@ -8,5 +8,5 @@
     - name: Add Test User
       user:
         name: foo
-        password: $6$z1YHU3S9Id0BvRL7$Nk/Vukh/Bx0HEW/hWvHjDVLYWO2vv4ZY2RC5nc2yehfGg8k6jnhIXvfk6zA/zAUG1TgN.diV/WFFiJOphYoXl.
+        password: $6$/duoYBffsoWEs5H8$.fDVmvU1ZCTTAlHNecQIe/sm/jbCVmigpZqwkGmFMQcwoi90F0SX/be2QXSr4d.eGZb6zdvtLdaOf3Vm1Onv71
         shell: /bin/bash
