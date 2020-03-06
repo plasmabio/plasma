@@ -34,6 +34,22 @@
         url: "{{ tljh_installer_url }}"
         dest: "{{ tljh_installer_dest }}"
 
-    # TODO: specify dockerspawner dependency for the hub
     - name: Run the TLJH installer
-      shell: "python3 {{ tljh_installer_dest }} --hub-only"
+      shell: "python3 {{ tljh_installer_dest }} --no-user-env"
+      # TODO: remove when --no-user-env (or equivalent) is available
+      environment:
+        TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
+
+    # TODO: move to TLJH plugin and specify those in `tljh_extra_hub_pip_dependencies`
+    - name: Install extra dependencies
+      pip:
+        name:
+          - dockerspawner
+          - jupyter_client
+        executable: /opt/tljh/hub/bin/pip3
+
+    - name: Restart JupyterHub
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jupyterhub
