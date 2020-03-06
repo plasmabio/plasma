@@ -22,9 +22,3 @@
 
     - name: Update apt and install docker-ce
       apt: update_cache=yes name=docker-ce state=latest
-
-    - name: Install docker-compose and the docker module for Python
-      pip:
-        name:
-          - docker
-          - docker-compose
