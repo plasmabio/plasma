@@ -31,3 +31,21 @@
         name: jupyterhub
         state: restarted
         daemon_reload: yes
+
+    - name: Copy the config
+      copy:
+        dest: "{{ tljh_prefix }}/config/config.yaml"
+        content: |
+          https:
+            enabled: true
+            letsencrypt:
+              email: {{ letsencrypt_email }}
+              domains:
+                - {{ letsencrypt_domain }}
+
+    # TODO: do not restart the proxy each time, only on install
+    - name: Restart the proxy
+      systemd:
+        name: traefik
+        state: restarted
+        daemon_reload: yes
