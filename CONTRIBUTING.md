@@ -1,3 +1,10 @@
+# Requirements
+
+`Docker` is used as a `Spawner` to start the user servers, and is then required to run the project locally.
+
+Check out the official Docker documentation to know how to install Docker on your machine:
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
 # Setting up a dev environment
 
 Create a virtual environment to install the dependencies.
