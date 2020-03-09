@@ -1,11 +1,12 @@
-=========
-PlasmaBio
-=========
+.. image:: images/logo/full-logo.png
+   :alt: PlasmaBio Logo
+   :width: 100%
+   :align: center
 
-  .. toctree::
-     :titlesonly:
-     :maxdepth: 2
+.. toctree::
+    :titlesonly:
+    :maxdepth: 2
 
-     overview/index
-     install/index
-     troubleshooting/index
+    overview/index
+    install/index
+    troubleshooting/index

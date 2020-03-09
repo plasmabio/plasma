@@ -4,6 +4,8 @@
 
 Configuration files to setup and deploy Plasma Bio on a single machine.
 
+![logo](./docs/images/logo/full-logo.png)
+
 ## Documentation
 
 The latest documentation is available at:
