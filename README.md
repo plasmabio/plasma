@@ -1,6 +1,7 @@
 # plasmabio
 
 ![Github Actions Status](https://github.com/plasmabio/plasmabio/workflows/Build/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/plasmabio/badge/?version=latest)](https://plasmabio.readthedocs.io/en/latest/?badge=latest)
 
 Configuration files to setup and deploy Plasma Bio on a single machine.
 
@@ -8,9 +9,7 @@ Configuration files to setup and deploy Plasma Bio on a single machine.
 
 ## Documentation
 
-The latest documentation is available at:
-
-TODO: Insert link here
+The latest documentation is available at: https://plasmabio.readthedocs.io
 
 ## Requirements
 
