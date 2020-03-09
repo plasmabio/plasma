@@ -35,3 +35,24 @@ python3 -m jupyterhub -f jupyterhub_config.py
 ```
 
 Open `https://localhost:8000` to start servers.
+
+
+# Contributing to the documentation
+
+Create a new environment:
+
+```bash
+conda create -n plasmabio-docs -c conda-forge python
+conda activate plasmabio-docs
+```
+
+In the `docs` folder:
+
+```bash
+python -m pip install -r requirements.txt
+make html
+```
+
+Open `docs/_build/index.html` in a browser to start browsing the documentation.
+
+Rerun `make html` after making any changes to the source.
