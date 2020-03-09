@@ -4,6 +4,14 @@
 
 Configuration files to setup and deploy Plasma Bio on a single machine.
 
+![logo](./docs/images/logo/full-logo.png)
+
+## Documentation
+
+The latest documentation is available at:
+
+TODO: Insert link here
+
 ## Requirements
 
 - Ubuntu 18.04+
@@ -11,30 +19,4 @@ Configuration files to setup and deploy Plasma Bio on a single machine.
 
 ## Run Locally
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## Deploy
-
-First make sure [Ansible](https://docs.ansible.com/ansible/latest/index.html) is installed:
-
-```bash
-python -m pip install ansible
-```
-
-Go to the `ansible` directory:
-
-```bash
-cd ansible/
-```
-
-Then run:
-
-```bash
-ansible-playbook all.yaml -u <user>
-```
-
-As an example with the `ubuntu` user on the remote machine:
-
-```bash
-ansible-playbook all.yml -u ubuntu
-```
+Check out the instructions in [CONTRIBUTING.md](./CONTRIBUTING.md) to setup a local environment.
