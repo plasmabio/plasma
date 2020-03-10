@@ -18,7 +18,7 @@
         dest: "{{ tljh_installer_dest }}"
 
     - name: Run the TLJH installer
-      shell: "/usr/bin/python3 {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
+      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
@@ -44,8 +44,5 @@
                 - {{ letsencrypt_domain }}
 
     # TODO: do not restart the proxy each time, only on install
-    - name: Restart the proxy
-      systemd:
-        name: traefik
-        state: restarted
-        daemon_reload: yes
+    - name: Reload the proxy
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload proxy"
