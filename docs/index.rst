@@ -3,6 +3,9 @@
    :width: 100%
    :align: center
 
+Documentation
+=============
+
 .. toctree::
     :titlesonly:
     :maxdepth: 2

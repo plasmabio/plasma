@@ -8,4 +8,7 @@ tljh_prefix: /opt/tljh
 # See https://github.com/jupyterhub/the-littlest-jupyterhub/pull/528
 tljh_bootstrap_pip_spec: git+https://github.com/jtpio/the-littlest-jupyterhub.git@skip-install#"egg=the_littlest_jupyterhub"
 tljh_installer_url: https://raw.githubusercontent.com/jtpio/the-littlest-jupyterhub/skip-install/bootstrap/bootstrap.py
+
+letsencrypt_email: contact@plasmabio.org
+letsencrypt_domain: dev.plasmabio.org
 ...
