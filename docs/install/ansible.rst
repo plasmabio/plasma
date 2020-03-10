@@ -59,13 +59,13 @@ Then run the following command after replacing ``<user>`` by your user on the re
 
 .. code-block:: bash
 
-    ansible-playbook all.yaml -u <user>
+    ansible-playbook all.yml -i hosts -u <user>
 
 Many Ubuntu systems running on cloud virtual machines have the default ``ubuntu`` user. In this case, the command becomes:
 
 .. code-block:: bash
 
-    ansible-playbook all.yaml -u ubuntu
+    ansible-playbook all.yml -i hosts -u ubuntu
 
 Ansible will log the progress in the terminal, and will indicate which components have changed in the process of running the playbook:
 
@@ -145,7 +145,7 @@ and update The Littlest JupyterHub):
 
 .. code-block:: bash
 
-    ansible-playbook tljh.yaml -u ubuntu
+    ansible-playbook tljh.yml -i hosts -u ubuntu
 
 For more in-depth details about the Ansible playbook, check out the
 `official documentation <https://docs.ansible.com/ansible/latest/user_guide/playbooks.html>`_.
