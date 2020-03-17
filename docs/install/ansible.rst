@@ -3,6 +3,21 @@
 Deploying with Ansible
 ======================
 
+What is Ansible?
+----------------
+
+Ansible is an open-source tool to automate the provisioning of servers, configuration management,
+and application deployment.
+
+Playbooks can be used to define the list of tasks that should be executed and to declare the desired
+state of the server.
+
+Check out the `How Ansible Works <https://www.ansible.com/overview/how-ansible-works>`_ guide on the Ansible
+official documentation website for more information.
+
+Installing Ansible
+------------------
+
 PlasmaBio comes with several `Ansible Playbooks` to automatically provision the machine with
 the system requirements, as well as installing PlasmaBio and starting up the services.
 
@@ -40,6 +55,9 @@ To verify the installation, run:
 
 This should return the path to the ansible CLI tool in the virtual environment.
 For example: ``/home/myuser/miniconda/envs/plasmabio/bin/ansible``
+
+Running the Playbooks
+---------------------
 
 Check out the repository, and go to the ``plasmabio/ansible/`` directory:
 
@@ -136,7 +154,7 @@ Ansible will log the progress in the terminal, and will indicate which component
 
 
 Running individual playbooks
-............................
+----------------------------
 
 The ``all.yml`` Ansible playbook includes all the playbooks and will process them in order.
 
