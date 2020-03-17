@@ -1,5 +1,5 @@
 Requirements
-------------
+============
 
 Before installing PlasmaBio, you will need:
 
@@ -8,18 +8,29 @@ Before installing PlasmaBio, you will need:
 * SSH access to the machine
 * A `priviledged user` on the remote machine that can issue commands using ``sudo``
 
-If you already have a server available with the ``ubuntu`` user, validate that you have access to it with:
+Adding the public SSH key to the server
+---------------------------------------
+
+To deploy PlasmaBio, you need to be able to access the server via SSH.
+
+This is typically done by copying the key to the remote server using the ``ssh-copy-id`` command, or
+by providing the key during the creation of the server (see section below).
+
+To copy the SSH key to the server:
 
 .. code-block:: bash
 
-    ssh -t ubuntu@51.178.95.143 echo "test"
+    ssh-copy-id ubuntu@51.178.95.143
 
-Which should output the following:
+Alternatively, the SSH key can be copied from ``~/.ssh/id_rsa.pub``, and looks like the following:
 
 .. code-block:: bash
 
-    test
-    Connection to 51.178.95.143 closed.
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCeeTSTvuZ4KzWBwUj2yIKNhX9Jw+LLdNfjOaVONfnYrlVYywRLexRcKJVcUOL8ofK/RXW2xuRQzUu4Kpa0eKMM+iUPEKFF+RtLQGxn3aCVctvXprzrugm69unWot+rc2aBosX99j64U74KkEaLquuBZDd/hmqxxbCr9DRYqb/aFIjfhBS8V0QdKVln1jPoy/nPCY6HMnovicExjB/E5s5lTj/2qUoNXWF5r4zHQlXuc6CY0NN11F2/5n0KfSD3eunBd26zrhzpOJbcyftUV9YOICjJXWOLLOPFn2mqXsPa0k/xRCjCiLv/aiU8xF5mJvYDEJ2jigqGihzfgPz4UEwH0bqQRsq9LrFYVcFLQprCknxxt9F2WgO6nv/V5kgRSi3WOzRt12NcWjg1um/C2TTK9bSqFTEMXlPlsLxDa7Js/kUMZh6N3rIzTsQpXuhKjQLxZ5TReUUdsGyAtU0eQv5rrJBr6ML02C9EMZ5NvduPs1w44+39WONCmoQoKBkiFIYfN0EV7Ps6kM6okzT7Cu8n4DOlsrdLT1b4gSK891461EjIHsfQsD+m53tKZx3Q2FTPJkPofUISzUXzRnXoPflWPbvwLl42qEjWJ4eZv0LHDtJhyr1RvRCXi7P24DdbLbjTjWy3kpNWTdO3b0Zto90ekHNElriHlM1BeqFo+6ABnw== your_email@example.com
+
+It can then be manually added to ``~/.ssh/authorized_keys`` on the server.
+
+For more information, checkout `this tutorial on DigitalOcean to set up SSH Keys on Ubuntu 18.04 <https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804>`_.
 
 Creating a new server (optional)
 --------------------------------
@@ -31,3 +42,35 @@ provides detailed guides for different cloud providers.
 
 You can pick one of them, and stop at the point where the TLJH script (starting with ``#!/bin/bash``) should be provided
 (this part is covered in the next section).
+
+During the installation steps, you will be able to specify the SSH key to use to connect to the server.
+
+The key must first be added to the list of available keys by using the cloud provider interface:
+
+.. image:: ../images/install/add-ssh-key.png
+   :alt: Add a new SSH key
+   :width: 100%
+   :align: center
+
+When asked to choose an SSH key, select the one you just added:
+
+.. image:: ../images/install/select-ssh-key.png
+   :alt: Select the SSH key
+   :width: 100%
+   :align: center
+
+Test the connection
+-------------------
+
+For a server with an ``ubuntu`` user, validate that you have access to it with:
+
+.. code-block:: bash
+
+    ssh -t ubuntu@51.178.95.143 echo "test"
+
+Which should output the following:
+
+.. code-block:: bash
+
+    test
+    Connection to 51.178.95.143 closed.
