@@ -5,3 +5,4 @@ Configuration
    :maxdepth: 3
 
    persistence
+   environments
