@@ -27,3 +27,8 @@ By default ``SystemUserSpawner`` mounts the user's home directory into the user 
 will persist in the home directory for that user on the host machine.
 
 PlasmaBio uses the same default.
+
+.. image:: ../images/configuration/persistence.png
+   :alt: Mounting user's home directories
+   :width: 100%
+   :align: center
