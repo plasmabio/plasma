@@ -1,4 +1,4 @@
-from dockerspawner import DockerSpawner
+from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
@@ -17,15 +17,15 @@ def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.hub_ip = public_ips()[0]
     c.JupyterHub.allow_named_servers = True
     c.JupyterHub.authenticator_class = PAMAuthenticator
-    c.JupyterHub.spawner_class = DockerSpawner
+    c.JupyterHub.spawner_class = SystemUserSpawner
 
     # spawner
     # increase the timeout to be able to pull larger Docker images
-    c.DockerSpawner.start_timeout=120
-    c.DockerSpawner.image_whitelist = IMAGES
-    c.DockerSpawner.name_template = "{prefix}-{username}-{imagename}-{servername}"
-    c.DockerSpawner.default_url = '/lab'
-    c.DockerSpawner.remove = True
+    c.SystemUserSpawner.start_timeout = 120
+    c.SystemUserSpawner.image_whitelist = IMAGES
+    c.SystemUserSpawner.name_template = "{prefix}-{username}-{imagename}-{servername}"
+    c.SystemUserSpawner.default_url = '/lab'
+    c.SystemUserSpawner.remove = True
 
 
 @hookimpl
