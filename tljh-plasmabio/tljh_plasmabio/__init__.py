@@ -32,5 +32,6 @@ def tljh_custom_jupyterhub_config(c):
 def tljh_extra_hub_pip_packages():
     return [
         'dockerspawner',
-        'jupyter_client'
+        'jupyter_client',
+        'jupyter-repo2doocker'
     ]

@@ -10,6 +10,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'dockerspawner',
-        'jupyter_client'
+        'jupyter_client',
+        'jupyter-repo2docker'
     ]
 )
