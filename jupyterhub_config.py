@@ -1,23 +1,14 @@
-# This file is only used for local development
+"""
+This file is only used for local development
+and overrides some of the default values.
+"""
 
 import os
 
-from tljh_plasmabio import tljh_custom_jupyterhub_config
+from tljh_plasmabio import create_pre_spawn_hook, tljh_custom_jupyterhub_config
 
 tljh_custom_jupyterhub_config(c)
 
-# configure the volumes
-user_dir = os.path.join(os.getcwd(), "volumes/user/{username}")
-
-
-def create_user_volume(spawner):
-    """
-    A pre-spawn hook to create the user home directory with
-    the correct permissions when testing locally
-    """
-    username = spawner.user.name  # get the username
-    os.makedirs(user_dir.format(username=username), exist_ok=True)
-
-
-c.SystemUserSpawner.pre_spawn_hook = create_user_volume
-c.SystemUserSpawner.host_homedir_format_string = user_dir
+volumes_path = os.path.join(os.getcwd(), "volumes/user")
+c.DockerSpawner.volumes = {os.path.join(volumes_path, "{username}"): "/home/jovyan/work"}
+c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(volumes_path)
