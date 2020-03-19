@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Build the user images
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh_plasmabio.build_images"
