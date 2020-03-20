@@ -7,3 +7,4 @@ Configuration
    persistence
    environments
    resources
+   cull
