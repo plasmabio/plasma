@@ -44,6 +44,10 @@
               email: {{ letsencrypt_email }}
               domains:
                 - {{ letsencrypt_domain }}
+          services:
+            cull:
+              timeout: 3600
+
 
     # TODO: do not restart the proxy each time, only on install
     - name: Reload the proxy
