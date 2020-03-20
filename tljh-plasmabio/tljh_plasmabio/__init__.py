@@ -48,6 +48,7 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.volumes = {
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
+    c.DockerSpawner.mem_limit = '2G'
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
 

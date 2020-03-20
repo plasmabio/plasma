@@ -6,3 +6,4 @@ Configuration
 
    persistence
    environments
+   resources
