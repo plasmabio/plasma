@@ -1,21 +1,19 @@
 HTTPS
 =====
 
-We recommend enabling HTTPS for any public-facing deployment.
-
-In fact, HTTPS is **enabled by default** when using the Ansible playbooks, see :ref:`install/ansible`.
+HTTPS is **enabled by default** when using the Ansible playbooks, see :ref:`install/ansible`.
 
 Support for HTTPS is handled automatically thanks to `Let's Encrypt <https://letsencrypt.org>`_, which also
 handles the renewal of the certificates when they are about to expire.
 
-In the Ansible playbook, the Let's Encrypt configuration is defined in ``vars/default.yml`` with the following values:
+In the Ansible playbook, the Let's Encrypt configuration is defined in ``ansible/vars/default.yml`` with the following values:
 
 .. code-block:: text
 
     letsencrypt_email: contact@plasmabio.org
     letsencrypt_domain: dev.plasmabio.org
 
-To change the domain and email, modify ``vars/default.yml`` and rerun the playbook.
+If you decide to change the domain and email later, modify ``ansible/vars/default.yml`` and rerun the playbook.
 
 How to make the domain point to the IP of the server
 ----------------------------------------------------
