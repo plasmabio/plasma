@@ -66,12 +66,26 @@ Check out the repository, and go to the ``plasmabio/ansible/`` directory:
     git clone https://github.com/plasmabio/plasmabio
     cd plasmabio/ansible
 
-Make sure the ``hosts`` file contains the correct IP and hostname for the server. For example:
+Create a ``hosts`` file with the following content:
 
 .. code-block:: text
 
     [servers]
     51.178.95.237
+
+    [servers:vars]
+    ansible_python_interpreter=/usr/bin/python3
+
+Replace the IP corresponds to your server. If you already defined the hostname (see :ref:`install/https`),
+you can also specify the domain name:
+
+.. code-block:: text
+
+    [servers]
+    dev.plasmabio.org
+
+    [servers:vars]
+    ansible_python_interpreter=/usr/bin/python3
 
 Then run the following command after replacing ``<user>`` by your user on the remote machine:
 
