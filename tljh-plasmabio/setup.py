@@ -4,12 +4,16 @@ setup(
     name="tljh-plasmabio",
     version="0.0.1",
     entry_points={
-        "tljh": ["tljh_plasmabio = tljh_plasmabio"]
+        "tljh": ["tljh_plasmabio = tljh_plasmabio"],
+        "console_scripts": [
+            "build-images = tljh_plasmabio.build_images:main",
+        ]
     },
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'dockerspawner',
-        'jupyter_client'
+        'jupyter_client',
+        'jupyter-repo2docker'
     ]
 )
