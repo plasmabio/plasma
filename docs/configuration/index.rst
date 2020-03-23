@@ -8,3 +8,4 @@ Configuration
    environments
    resources
    cull
+   namedservers
