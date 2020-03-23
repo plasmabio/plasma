@@ -11,11 +11,6 @@ Configuration files to setup and deploy Plasma Bio on a single machine.
 
 The latest documentation is available at: https://plasmabio.readthedocs.io
 
-## Requirements
-
-- Ubuntu 18.04+
-- Docker CE
-
 ## Run Locally
 
 Check out the instructions in [CONTRIBUTING.md](./CONTRIBUTING.md) to setup a local environment.
