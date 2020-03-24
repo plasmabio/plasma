@@ -36,7 +36,7 @@ the system requirements, as well as installing PlasmaBio and starting up the ser
 
     .. code-block:: bash
 
-        conda create -n plasmasbio -c conda-forge python nodejs
+        conda create -n plasmabio -c conda-forge python nodejs
         conda activate plasmabio
 
 
