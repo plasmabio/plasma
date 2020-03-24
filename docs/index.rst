@@ -14,3 +14,4 @@ Documentation
     install/index
     configuration/index
     troubleshooting/index
+    contributing/index
