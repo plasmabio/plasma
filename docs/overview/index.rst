@@ -14,3 +14,8 @@ The project provides:
 - Documentation for the plugin and the Ansible playbooks
 
 Here is an overview of all the different components and their interactions after PlasmaBio has been deployed on a new server:
+
+.. image:: ../images/overview.png
+   :alt: Overview Diagram
+   :width: 100%
+   :align: center
