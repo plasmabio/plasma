@@ -1,6 +1,5 @@
 .. _overview/overview:
 
-========
 Overview
 ========
 
@@ -19,3 +18,15 @@ Here is an overview of all the different components and their interactions after
    :alt: Overview Diagram
    :width: 100%
    :align: center
+
+
+The JupyterHub Documentation
+----------------------------
+
+Since PlasmaBio is built on top of JupyterHub and The Littlest JupyterHub distribution, it benefits from its community
+and high quality documentation.
+
+For more information on these projects:
+
+- `JupyterHub Documentation <https://jupyterhub.readthedocs.io>`_
+- `The Littlest JupyterHub Documentation <https://the-littlest-jupyterhub.readthedocs.io>`_
