@@ -1,0 +1,24 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Ref</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+  </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script type="text/javascript">
+require(["images"]);
+</script>
+{% endblock %}

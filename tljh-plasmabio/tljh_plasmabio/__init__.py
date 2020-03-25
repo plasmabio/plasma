@@ -1,6 +1,7 @@
 import os
 import pwd
 import shutil
+import sys
 
 from dockerspawner import DockerSpawner
 from jupyterhub.auth import PAMAuthenticator
@@ -52,6 +53,16 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.mem_limit = '2G'
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
+
+    # register the service to manage the user images
+    c.JupyterHub.services = [{
+        'name': 'images',
+        'admin': True,
+        'url': 'http://127.0.0.1:9988',
+        'command': [
+            sys.executable, '-m', 'tljh_plasmabio.images'
+        ]
+    }]
 
 
 @hookimpl
