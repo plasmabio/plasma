@@ -1,11 +1,15 @@
 import json
 import os
 
+import docker
+
 from jinja2 import ChoiceLoader, Environment, FileSystemLoader, PackageLoader
 from jupyterhub._data import DATA_FILES_PATH
 from jupyterhub.services.auth import HubAuthenticated
 from jupyterhub.utils import auth_decorator, url_path_join
 from tornado import ioloop, web
+
+from .builder import Builder, BuildHandler
 
 loader = ChoiceLoader(
     [
@@ -14,6 +18,29 @@ loader = ChoiceLoader(
     ]
 )
 templates = Environment(loader=loader)
+client = docker.from_env()
+
+
+def list_images():
+    """
+    Retrieve local images built by repo2docker
+    """
+    r2d_images = [
+        image
+        for image in client.images.list(
+            filters={"dangling": False, "label": ["repo2docker.ref"]}
+        )
+    ]
+    images = [
+        {
+            "repo": image.labels["repo2docker.repo"],
+            "ref": image.labels["repo2docker.ref"],
+            "status": "built",
+        }
+        for image in r2d_images
+        if image.labels["repo2docker.repo"] != "local"
+    ]
+    return images
 
 
 @auth_decorator
@@ -34,6 +61,7 @@ class ImagesHandler(HubAuthenticated, web.RequestHandler):
         self.write(
             template.render(
                 user=user,
+                images=list_images(),
                 static_url=self.static_url,
                 login_url=self.hub_auth.login_url,
                 logout_url=logout_url,
@@ -44,7 +72,9 @@ class ImagesHandler(HubAuthenticated, web.RequestHandler):
 
 
 class MultiStaticFileHandler(web.StaticFileHandler):
-    """A static file handler that 'merges' a list of directories
+    """
+    A static file handler that 'merges' a list of directories
+
     If initialized like this::
         application = web.Application([
             (r"/content/(.*)", web.MultiStaticFileHandler, {"paths": ["/var/1", "/var/2"]}),
@@ -83,9 +113,11 @@ def make_app():
         "static_path": "/",
         "static_url_prefix": f"{service_prefix}/static/",
     }
+    builder = Builder()
     return web.Application(
         [
             (rf"{service_prefix}?", ImagesHandler),
+            (rf"{service_prefix}api/build", BuildHandler, {"builder": builder}),
             (
                 rf"{service_prefix}static/(.*)",
                 MultiStaticFileHandler,

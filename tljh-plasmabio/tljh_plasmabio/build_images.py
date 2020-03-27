@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 # list of images to choose from when spawning a new server
 # TODO: make this dynamic and easier to edit
 IMAGES = {
-    "python-template": "https://github.com/plasmabio/template-python",
+    "python-template-test": "https://github.com/plasmabio/template-python",
     "python-requirements": "https://github.com/binder-examples/requirements",
 }
 
