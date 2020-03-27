@@ -9,7 +9,7 @@ from jupyterhub.services.auth import HubAuthenticated
 from jupyterhub.utils import auth_decorator, url_path_join
 from tornado import ioloop, web
 
-from .builder import Builder, BuildHandler
+from .builder import BuildHandler
 
 loader = ChoiceLoader(
     [
@@ -128,11 +128,10 @@ def make_app():
         "static_path": "/",
         "static_url_prefix": f"{service_prefix}/static/",
     }
-    builder = Builder()
     return web.Application(
         [
             (rf"{service_prefix}?", ImagesHandler),
-            (rf"{service_prefix}api/build", BuildHandler, {"builder": builder}),
+            (rf"{service_prefix}api/build", BuildHandler),
             (
                 rf"{service_prefix}static/(.*)",
                 MultiStaticFileHandler,

@@ -1,6 +1,7 @@
 {% extends "page.html" %}
 
 {% block main %}
+
 <div class="container">
   <table class="table table-striped">
     <thead>
@@ -8,7 +9,7 @@
         <th>Repository</th>
         <th>Ref</th>
         <th>Status</th>
-        <th class="text-center"><a id="add-new" role="button" class="btn btn-primary btn-xs">Add New</a></th>
+        <th class="text-center"><a id="add-image" role="button" class="btn btn-primary btn-xs">Add New</a></th>
       </tr>
       {% for image in images %}
       <tr >
@@ -39,6 +40,19 @@
   </tbody>
   </table>
 </div>
+
+
+{% macro image_modal(name, multi=False) %}
+{% call modal(name, btn_class='btn-primary save-button') %}
+<div class="form-group">
+  <input type="text" class="form-control repo-input" placeholder="Repository URL"/>
+  <input type="text" class="form-control ref-input " placeholder="Ref"/>
+</div>
+{% endcall %}
+{% endmacro %}
+
+{{ image_modal('Add Image') }}
+
 {% endblock %}
 
 {% block script %}
