@@ -8,13 +8,14 @@ logging.basicConfig(level=logging.INFO)
 # list of images to choose from when spawning a new server
 # TODO: make this dynamic and easier to edit
 IMAGES = {
-    "python-template-test": "https://github.com/plasmabio/template-python",
+    "python-template": "https://github.com/plasmabio/template-python",
     "python-requirements": "https://github.com/binder-examples/requirements",
 }
 
 
 def build_image(name, repo):
     ref = "master"
+    image_name = f"{name}:latest"
     subprocess.run(
         [
             sys.executable,
@@ -28,8 +29,10 @@ def build_image(name, repo):
             "1100",
             "--no-run",
             "--image-name",
-            f"{name}:latest",
-            repo,
+            image_name,
+            "--appendix",
+            f"LABEL repo2docker.name={image_name}",
+            repo
         ]
     )
 

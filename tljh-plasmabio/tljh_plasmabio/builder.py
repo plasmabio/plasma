@@ -14,8 +14,9 @@ def build_image():
     subprocess.run(["sleep", "10"])
 
 
-def build_docker_image(name, repo, ref=None):
-    ref = ref or "master"
+def build_image(name, repo):
+    ref = "master"
+    image_name = f"{name}:latest"
     subprocess.run(
         [
             sys.executable,
@@ -29,7 +30,9 @@ def build_docker_image(name, repo, ref=None):
             "1100",
             "--no-run",
             "--image-name",
-            f"{name}:latest",
+            image_name,
+            "--appendix",
+            f"LABEL repo2docker.name={image_name}",
             repo,
         ]
     )

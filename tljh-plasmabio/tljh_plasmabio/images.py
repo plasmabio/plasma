@@ -23,7 +23,7 @@ client = docker.from_env()
 
 def list_images():
     """
-    Retrieve local images built by repo2docker
+    Retrieve local images built and being built by repo2docker
     """
     r2d_images = [
         image
@@ -40,7 +40,22 @@ def list_images():
         for image in r2d_images
         if image.labels["repo2docker.repo"] != "local"
     ]
-    return images
+
+    r2d_containers = [
+        container
+        for container in client.containers.list()
+        if "repo2docker.name" not in container.labels
+    ]
+    containers = [
+        {
+            "repo": container.labels["repo2docker.repo"],
+            "ref": container.labels["repo2docker.ref"],
+            "status": "building",
+        }
+        for container in r2d_containers
+        if container.labels["repo2docker.repo"] != "local"
+    ]
+    return images + containers
 
 
 @auth_decorator
