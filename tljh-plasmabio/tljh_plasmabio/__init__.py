@@ -28,8 +28,7 @@ def create_pre_spawn_hook(base_path, uid=1100):
 
 
 class PlasmaSpawner(DockerSpawner):
-    @default("options_form")
-    def _default_options_form(self):
+    def options_form(self, spawner):
         """
         Override the default form to handle the case when there is only
         one image.
