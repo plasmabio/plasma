@@ -136,7 +136,7 @@ def make_app():
     ]
     app_settings = {
         "static_path": "/",
-        "static_url_prefix": f"{service_prefix}/static/",
+        "static_url_prefix": f"{service_prefix}static/",
     }
     return web.Application(
         [
