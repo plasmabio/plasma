@@ -76,6 +76,9 @@ def admin_only(self):
 
 
 class ImagesHandler(HubAuthenticated, web.RequestHandler):
+    def static_url(self, path, **kwargs):
+        return url_path_join(self.settings["static_url"], path)
+
     @admin_only
     def get(self):
         template = templates.get_template("images.html")
@@ -135,8 +138,7 @@ def make_app():
         os.path.join(os.path.dirname(__file__), "static"),
     ]
     app_settings = {
-        "static_path": "/",
-        "static_url_prefix": f"{service_prefix}static/",
+        "static_url": url_path_join(service_prefix, "static/")
     }
     return web.Application(
         [
