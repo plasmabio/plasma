@@ -7,6 +7,7 @@ from dockerspawner import DockerSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
+from traitlets import default
 
 from .images import list_images
 
@@ -26,12 +27,36 @@ def create_pre_spawn_hook(base_path, uid=1100):
     return create_dir_hook
 
 
-def list_available_images(spawner):
-    """
-    Retrieve the list of available images
-    """
-    images = list_images()
-    return {image["image_name"]: image["image_name"] for image in images}
+class PlasmaSpawner(DockerSpawner):
+    @default("options_form")
+    def _default_options_form(self):
+        """
+        Override the default form to handle the case when there is only
+        one image.
+        """
+        image_whitelist = self._get_image_whitelist()
+        option_t = '<option value="{image}" {selected}>{image}</option>'
+        options = [
+            option_t.format(
+                image=image, selected="selected" if image == self.image else ""
+            )
+            for image in image_whitelist
+        ]
+        return """
+        <label for="image">Select an image:</label>
+        <select class="form-control" name="image" required autofocus>
+        {options}
+        </select>
+        """.format(
+            options=options
+        )
+
+    def image_whitelist(self, spawner):
+        """
+        Retrieve the list of available images
+        """
+        images = list_images()
+        return {image["image_name"]: image["image_name"] for image in images}
 
 
 @hookimpl
@@ -40,24 +65,23 @@ def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.hub_ip = public_ips()[0]
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
-    c.JupyterHub.spawner_class = DockerSpawner
+    c.JupyterHub.spawner_class = PlasmaSpawner
     c.JupyterHub.allow_named_servers = True
     c.JupyterHub.named_server_limit_per_user = 2
 
     # spawner
     # increase the timeout to be able to pull larger Docker images
-    c.DockerSpawner.start_timeout = 120
-    c.DockerSpawner.pull_policy = "Never"
-    c.DockerSpawner.name_template = "{prefix}-{username}-{imagename}-{servername}"
-    c.DockerSpawner.default_url = "/lab"
-    c.DockerSpawner.cmd = ["jupyterhub-singleuser"]
-    c.DockerSpawner.volumes = {
+    c.PlasmaSpawner.start_timeout = 120
+    c.PlasmaSpawner.pull_policy = "Never"
+    c.PlasmaSpawner.name_template = "{prefix}-{username}-{servername}"
+    c.PlasmaSpawner.default_url = "/lab"
+    c.PlasmaSpawner.cmd = ["jupyterhub-singleuser"]
+    c.PlasmaSpawner.volumes = {
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
-    c.DockerSpawner.mem_limit = "2G"
-    c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
-    c.DockerSpawner.remove = True
-    c.DockerSpawner.image_whitelist = list_available_images
+    c.PlasmaSpawner.mem_limit = "2G"
+    c.PlasmaSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
+    c.PlasmaSpawner.remove = True
 
     # register the service to manage the user images
     c.JupyterHub.services = [

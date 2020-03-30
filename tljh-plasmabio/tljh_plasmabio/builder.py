@@ -39,7 +39,7 @@ def build_image(repo, ref):
         labels={
             "repo2docker.repo": repo,
             "repo2docker.ref": ref,
-            "repo2docker.image_name": image_name,
+            "repo2docker.build": image_name,
         },
         volumes={
             "/var/run/docker.sock": {"bind": "/var/run/docker.sock", "mode": "rw"}

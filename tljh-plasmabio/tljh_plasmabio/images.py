@@ -47,8 +47,8 @@ def list_images():
 
 def list_containers():
     """
-    Retrieve data for the local images being built by repo2docker
-    Images are built in a Docker container
+    Retrieve data for the local images being built by repo2docker.
+    Images are built in a Docker container.
     """
     r2d_containers = [
         container
@@ -58,11 +58,11 @@ def list_containers():
         {
             "repo": container.labels["repo2docker.repo"],
             "ref": container.labels["repo2docker.ref"],
-            "image_name": container.labels["repo2docker.image_name"],
+            "image_name": container.labels["repo2docker.build"],
             "status": "building",
         }
         for container in r2d_containers
-        if "repo2docker.image_name" in container.labels
+        if "repo2docker.build" in container.labels
     ]
     return containers
 
