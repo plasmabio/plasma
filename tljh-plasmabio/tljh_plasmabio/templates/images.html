@@ -14,10 +14,10 @@
       {% for image in images %}
       <tr >
         <td class="repo-col col-sm-5">
-          <a href="{{ image.repo }}">{{ image.repo }}</a>
+          <a href="{{ image.repo }}" target="_blank">{{ image.repo }}</a>
         </td>
         <td class="ref-col col-sm-3">
-          <a href="{{ image.repo }}/tree/{{ image.ref }}">{{ image.ref }}</a>
+          <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.ref }}</a>
         </td>
         <td class="status-col col-sm-2">
           {% if image.status == 'building' %}

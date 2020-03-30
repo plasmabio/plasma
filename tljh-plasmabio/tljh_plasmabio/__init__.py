@@ -8,9 +8,7 @@ from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
 
-
-from .build_images import IMAGES
-
+from .images import list_images
 
 # TODO: make this configurable
 VOLUMES_PATH = "/volumes/users"
@@ -28,6 +26,14 @@ def create_pre_spawn_hook(base_path, uid=1100):
     return create_dir_hook
 
 
+def list_available_images(spawner):
+    """
+    Retrieve the list of available images
+    """
+    images = list_images()
+    return {image["image_name"]: image["image_name"] for image in images}
+
+
 @hookimpl
 def tljh_custom_jupyterhub_config(c):
     # hub
@@ -41,8 +47,6 @@ def tljh_custom_jupyterhub_config(c):
     # spawner
     # increase the timeout to be able to pull larger Docker images
     c.DockerSpawner.start_timeout = 120
-    # TODO: make the image_whitelist a callable so it can pick up new images dynamically
-    c.DockerSpawner.image_whitelist = {k: k for k in IMAGES.keys()}
     c.DockerSpawner.pull_policy = "Never"
     c.DockerSpawner.name_template = "{prefix}-{username}-{imagename}-{servername}"
     c.DockerSpawner.default_url = "/lab"
@@ -50,21 +54,22 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.volumes = {
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
-    c.DockerSpawner.mem_limit = '2G'
+    c.DockerSpawner.mem_limit = "2G"
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
+    c.DockerSpawner.image_whitelist = list_available_images
 
     # register the service to manage the user images
-    c.JupyterHub.services = [{
-        'name': 'images',
-        'admin': True,
-        'url': 'http://127.0.0.1:9988',
-        'command': [
-            sys.executable, '-m', 'tljh_plasmabio.images'
-        ]
-    }]
+    c.JupyterHub.services = [
+        {
+            "name": "images",
+            "admin": True,
+            "url": "http://127.0.0.1:9988",
+            "command": [sys.executable, "-m", "tljh_plasmabio.images"],
+        }
+    ]
 
 
 @hookimpl
 def tljh_extra_hub_pip_packages():
-    return ["dockerspawner", "jupyter_client", "jupyter-repo2docker"]
+    return ["dockerspawner", "jupyter_client"]

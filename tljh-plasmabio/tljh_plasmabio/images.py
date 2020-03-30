@@ -23,7 +23,7 @@ client = docker.from_env()
 
 def list_images():
     """
-    Retrieve local images built and being built by repo2docker
+    Retrieve local images built by repo2docker
     """
     r2d_images = [
         image
@@ -35,27 +35,36 @@ def list_images():
         {
             "repo": image.labels["repo2docker.repo"],
             "ref": image.labels["repo2docker.ref"],
+            "image_name": image.labels["repo2docker.image_name"],
+            "display_name": image.labels["repo2docker.display_name"],
             "status": "built",
         }
         for image in r2d_images
-        if image.labels["repo2docker.repo"] != "local"
+        if "repo2docker.display_name" in image.labels
     ]
+    return images
 
+
+def list_containers():
+    """
+    Retrieve data for the local images being built by repo2docker
+    Images are built in a Docker container
+    """
     r2d_containers = [
         container
-        for container in client.containers.list()
-        if "repo2docker.name" not in container.labels
+        for container in client.containers.list(filters={"label": ["repo2docker.ref"]})
     ]
     containers = [
         {
             "repo": container.labels["repo2docker.repo"],
             "ref": container.labels["repo2docker.ref"],
+            "image_name": container.labels["repo2docker.image_name"],
             "status": "building",
         }
         for container in r2d_containers
-        if container.labels["repo2docker.repo"] != "local"
+        if "repo2docker.image_name" in container.labels
     ]
-    return images + containers
+    return containers
 
 
 @auth_decorator
@@ -73,10 +82,11 @@ class ImagesHandler(HubAuthenticated, web.RequestHandler):
         user = self.get_current_user()
         prefix = self.hub_auth.hub_prefix
         logout_url = url_path_join(prefix, "logout")
+        images = list_images() + list_containers()
         self.write(
             template.render(
                 user=user,
-                images=list_images(),
+                images=images,
                 static_url=self.static_url,
                 login_url=self.hub_auth.login_url,
                 logout_url=logout_url,
