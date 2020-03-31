@@ -68,8 +68,14 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         self.log.debug("Delete an image")
         data = escape.json_decode(self.request.body)
         name = data["name"]
-        # TODO: should this run in an executor? (removing the image is blocking)
-        remove_image(name)
+        try:
+            # TODO: should this run in an executor? (removing the image is blocking)
+            remove_image(name)
+        except docker.errors.ImageNotFound:
+            self.set_status(404)
+            self.write({"message": f"Image {name} does not exist"})
+            return
+
         self.set_status(200)
 
     @web.authenticated

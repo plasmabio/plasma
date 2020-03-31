@@ -62,6 +62,7 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     .click(function() {
       var dialog = $("#remove-image-dialog");
       var image = dialog.find(".delete-image").text();
+      $("#removing-image-dialog").modal();
       api.api_request("build", {
         type: "DELETE",
         data: JSON.stringify({
