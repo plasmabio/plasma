@@ -15,6 +15,9 @@ client = docker.from_env()
 
 
 def build_image(repo, ref):
+    """
+    Build an image given a repo and a ref
+    """
     ref = ref or "master"
     name = urlparse(repo).path.strip("/")
     image_name = f"{name}:{ref}"
@@ -49,9 +52,25 @@ def build_image(repo, ref):
     )
 
 
+def remove_image(name):
+    """
+    Remove an image by name
+    """
+    client.images.remove(name)
+
+
 class BuildHandler(HubAuthenticated, web.RequestHandler):
     def initialize(self):
         self.log = app_log
+
+    @web.authenticated
+    def delete(self):
+        self.log.debug("Delete an image")
+        data = escape.json_decode(self.request.body)
+        name = data["name"]
+        # TODO: should this run in an executor? (removing the image is blocking)
+        remove_image(name)
+        self.set_status(200)
 
     @web.authenticated
     def post(self):
@@ -63,5 +82,4 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         # TODO: validate input
         build_image(repo, ref)
 
-        self.log.debug("Build succeeded")
         self.set_status(200)

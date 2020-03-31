@@ -12,7 +12,7 @@
         <th class="text-center"><a id="add-image" role="button" class="btn btn-primary btn-xs">Add New</a></th>
       </tr>
       {% for image in images %}
-      <tr >
+      <tr class="image-row" data-image="{{ image.image_name }}">
         <td class="repo-col col-sm-5">
           <a href="{{ image.repo }}" target="_blank">{{ image.repo }}</a>
         </td>
@@ -28,7 +28,7 @@
         </td>
         <td class="build-col col-sm-1 text-center">
           {%if image.status == 'built' %}
-          <a role="button" class="build-image btn btn-xs btn-danger">
+          <a role="button" class="remove-image btn btn-xs btn-danger">
             Remove
           </a>
           {%- endif %}
@@ -41,6 +41,10 @@
   </table>
 </div>
 
+{% call modal('Remove image', btn_label='Remove', btn_class='btn-danger remove-button') %}
+  Are you sure you want to remove the following environment?
+  <pre class="delete-image">ENV</pre>
+{% endcall %}
 
 {% macro image_modal(name, multi=False) %}
 {% call modal(name, btn_class='btn-primary save-button') %}
