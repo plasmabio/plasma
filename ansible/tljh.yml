@@ -23,7 +23,7 @@
       ignore_errors: yes
 
     - name: Run the TLJH installer
-      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
+      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }} --admin foo"
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
@@ -52,3 +52,10 @@
     # TODO: do not restart the proxy each time, only on install
     - name: Reload the proxy
       shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload proxy"
+
+    # Pull the repo2docker image to build user images
+    - name: Pull jupyter/repo2docker
+      docker_image:
+        name: jupyter/repo2docker
+        tag: master
+        source: pull

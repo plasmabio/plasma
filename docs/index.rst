@@ -12,6 +12,7 @@ Documentation
 
     overview/index
     install/index
+    environments/index
     configuration/index
     troubleshooting/index
     contributing/index

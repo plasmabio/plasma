@@ -1,15 +1,15 @@
 import os
 import pwd
 import shutil
+import sys
 
 from dockerspawner import DockerSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
+from traitlets import default
 
-
-from .build_images import IMAGES
-
+from .images import list_images
 
 # TODO: make this configurable
 VOLUMES_PATH = "/volumes/users"
@@ -27,6 +27,37 @@ def create_pre_spawn_hook(base_path, uid=1100):
     return create_dir_hook
 
 
+def options_form(spawner):
+    """
+    Override the default form to handle the case when there is only
+    one image.
+    """
+    images = spawner.image_whitelist(spawner)
+    option_t = '<option value="{image}" {selected}>{image}</option>'
+    options = [
+        option_t.format(
+            image=image, selected="selected" if image == spawner.image else ""
+        )
+        for image in images
+    ]
+    return """
+    <label for="image">Select an image:</label>
+    <select class="form-control" name="image" required autofocus>
+    {options}
+    </select>
+    """.format(
+        options=options
+    )
+
+
+def image_whitelist(spawner):
+    """
+    Retrieve the list of available images
+    """
+    images = list_images()
+    return {image["image_name"]: image["image_name"] for image in images}
+
+
 @hookimpl
 def tljh_custom_jupyterhub_config(c):
     # hub
@@ -40,20 +71,30 @@ def tljh_custom_jupyterhub_config(c):
     # spawner
     # increase the timeout to be able to pull larger Docker images
     c.DockerSpawner.start_timeout = 120
-    # TODO: make the image_whitelist a callable so it can pick up new images dynamically
-    c.DockerSpawner.image_whitelist = {k: k for k in IMAGES.keys()}
     c.DockerSpawner.pull_policy = "Never"
-    c.DockerSpawner.name_template = "{prefix}-{username}-{imagename}-{servername}"
+    c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
     c.DockerSpawner.default_url = "/lab"
     c.DockerSpawner.cmd = ["jupyterhub-singleuser"]
     c.DockerSpawner.volumes = {
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
-    c.DockerSpawner.mem_limit = '2G'
+    c.DockerSpawner.mem_limit = "2G"
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
+    c.DockerSpawner.image_whitelist = image_whitelist
+    c.DockerSpawner.options_form = options_form
+
+    # register the service to manage the user images
+    c.JupyterHub.services = [
+        {
+            "name": "images",
+            "admin": True,
+            "url": "http://127.0.0.1:9988",
+            "command": [sys.executable, "-m", "tljh_plasmabio.images"],
+        }
+    ]
 
 
 @hookimpl
 def tljh_extra_hub_pip_packages():
-    return ["dockerspawner", "jupyter_client", "jupyter-repo2docker"]
+    return ["dockerspawner", "jupyter_client"]

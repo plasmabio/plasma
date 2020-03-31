@@ -5,7 +5,6 @@ Configuration
    :maxdepth: 3
 
    persistence
-   environments
    resources
    cull
    namedservers

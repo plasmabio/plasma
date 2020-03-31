@@ -1,0 +1,4 @@
+Removing an environment
+=======================
+
+TODO
