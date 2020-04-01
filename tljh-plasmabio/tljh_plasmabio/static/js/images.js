@@ -24,6 +24,8 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
 
   $("#add-image").click(function() {
     var dialog = $("#create-environment-dialog");
+    dialog.find(".repo-input").val("");
+    dialog.find(".ref-input").val("");
     dialog.modal();
   });
 
