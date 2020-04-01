@@ -6,7 +6,7 @@ Now that the repository is ready, we can add it to the JupyterHub via the user i
 To add the new user environment, click on the ``Add New`` button and provide the following information:
 
 - ``Repository URL``: the URL to the repository to build the environment from
-- ``Ref``: the git commit hash to use
+- ``Reference (git commit)``: the git commit hash to use
 
 
 As an example:

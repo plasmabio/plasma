@@ -1,12 +1,12 @@
 User Environments
 =================
 
-User environments are built as immutable Docker images. The Docker images bundle the dependencies, extensions,
-and predefined notebooks that should be available to all users.
+User environments are built as immutable `Docker images <https://docs.docker.com/engine/docker-overview>`_.
+The Docker images bundle the dependencies, extensions, and predefined notebooks that should be available to all users.
 
 PlasmaBio uses `jupyter-repo2docker <https://repo2docker.readthedocs.io>`_ to build the images on the server.
 
-Environments can be managed by admin users by clicking on ``Services -> images``:
+Environments can be managed by admin users by clicking on ``Services -> environments``:
 
 .. image:: ../images/environments/services-navbar.png
    :alt: Manage the list of environments

@@ -6,10 +6,10 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Repository</th>
-        <th>Ref</th>
+        <th>Repository URL</th>
+        <th>Reference</th>
         <th>Status</th>
-        <th class="text-center"><a id="add-image" role="button" class="btn btn-primary btn-xs">Add New</a></th>
+        <th class="text-center"><a id="add-environment" role="button" class="btn btn-primary btn-xs">Add New</a></th>
       </tr>
       {% for image in images %}
       <tr class="image-row" data-image="{{ image.image_name }}">
@@ -28,7 +28,7 @@
         </td>
         <td class="build-col col-sm-1 text-center">
           {%if image.status == 'built' %}
-          <a role="button" class="remove-image btn btn-xs btn-danger">
+          <a role="button" class="remove-environment btn btn-xs btn-danger">
             Remove
           </a>
           {%- endif %}
@@ -41,27 +41,37 @@
   </table>
 </div>
 
-{% call modal('Removing image', btn_label='OK', btn_class='btn-primary removing-button') %}
+{% call modal('Removing Environment', btn_label='OK', btn_class='btn-primary removing-button') %}
   <div class="text-center">
     <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
   </div>
 {% endcall %}
 
-{% call modal('Remove image', btn_label='Remove', btn_class='btn-danger remove-button') %}
+{% call modal('Remove Environment', btn_label='Remove', btn_class='btn-danger remove-button') %}
   Are you sure you want to remove the following environment?
-  <pre class="delete-image">ENV</pre>
+  <pre class="delete-environment">ENV</pre>
 {% endcall %}
 
-{% macro image_modal(name, multi=False) %}
+{% macro environment_modal(name, multi=False) %}
 {% call modal(name, btn_class='btn-primary save-button') %}
-<div class="form-group">
-  <input type="text" class="form-control repo-input" placeholder="Repository URL"/>
-  <input type="text" class="form-control ref-input " placeholder="Ref"/>
-</div>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="repository-url" class="col-sm-4 control-label">Repository URL</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control repo-input" id="repository-url"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="reference" class="col-sm-4 control-label">Reference (git commit)</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control ref-input" id="reference" placeholder="master"/>
+      </div>
+    </div>
+  </div>
 {% endcall %}
 {% endmacro %}
 
-{{ image_modal('Add Image') }}
+{{ environment_modal('Create Environment') }}
 
 {% endblock %}
 

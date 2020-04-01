@@ -7,7 +7,7 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
 ) {
   "use strict";
 
-  var base_url = '/services/images';
+  var base_url = '/services/environments';
   var api = new JHAPI(base_url);
 
   function getRow(element) {
@@ -22,15 +22,17 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     return element;
   }
 
-  $("#add-image").click(function() {
-    var dialog = $("#add-image-dialog");
+  $("#add-environment").click(function() {
+    var dialog = $("#create-environment-dialog");
+    dialog.find(".repo-input").val("");
+    dialog.find(".ref-input").val("");
     dialog.modal();
   });
 
-  $("#add-image-dialog")
+  $("#create-environment-dialog")
     .find(".save-button")
     .click(function() {
-      var dialog = $("#add-image-dialog");
+      var dialog = $("#create-environment-dialog");
       var repo = dialog.find(".repo-input").val();
       var ref = dialog.find(".ref-input").val();
       console.log(repo, ref);
@@ -48,21 +50,21 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
       });
     });
 
-  $(".remove-image").click(function() {
+  $(".remove-environment").click(function() {
     var el = $(this);
     var row = getRow(el);
     var image = row.data("image");
-    var dialog = $("#remove-image-dialog");
-    dialog.find(".delete-image").text(image);
+    var dialog = $("#remove-environment-dialog");
+    dialog.find(".delete-environment").text(image);
     dialog.modal();
   });
 
-  $("#remove-image-dialog")
+  $("#remove-environment-dialog")
     .find(".remove-button")
     .click(function() {
-      var dialog = $("#remove-image-dialog");
-      var image = dialog.find(".delete-image").text();
-      var spinner = $("#removing-image-dialog");
+      var dialog = $("#remove-environment-dialog");
+      var image = dialog.find(".delete-environment").text();
+      var spinner = $("#removing-environment-dialog");
       spinner.find('.modal-footer').remove();
       spinner.modal();
       api.api_request("build", {

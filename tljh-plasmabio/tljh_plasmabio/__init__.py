@@ -87,7 +87,7 @@ def tljh_custom_jupyterhub_config(c):
     # register the service to manage the user images
     c.JupyterHub.services = [
         {
-            "name": "images",
+            "name": "environments",
             "admin": True,
             "url": "http://127.0.0.1:9988",
             "command": [sys.executable, "-m", "tljh_plasmabio.images"],
