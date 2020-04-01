@@ -23,14 +23,14 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
   }
 
   $("#add-image").click(function() {
-    var dialog = $("#add-image-dialog");
+    var dialog = $("#create-environment-dialog");
     dialog.modal();
   });
 
-  $("#add-image-dialog")
+  $("#create-environment-dialog")
     .find(".save-button")
     .click(function() {
-      var dialog = $("#add-image-dialog");
+      var dialog = $("#create-environment-dialog");
       var repo = dialog.find(".repo-input").val();
       var ref = dialog.find(".ref-input").val();
       console.log(repo, ref);
