@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install extra system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'jq' ]
+
+    - name: Install ctop
+      get_url:
+        url: https://github.com/bcicen/ctop/releases/download/v0.7.3/ctop-0.7.3-linux-amd64
+        dest: /usr/local/bin/ctop
+        mode: '500'
