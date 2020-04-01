@@ -1,3 +1,5 @@
+.. _install/requirements:
+
 Requirements
 ============
 
@@ -7,6 +9,9 @@ Before installing PlasmaBio, you will need:
 * The public IP of the server
 * SSH access to the machine
 * A `priviledged user` on the remote machine that can issue commands using ``sudo``
+
+
+.. _install/ssh-key:
 
 Adding the public SSH key to the server
 ---------------------------------------
