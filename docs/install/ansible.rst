@@ -181,3 +181,15 @@ and update The Littlest JupyterHub):
 
 For more in-depth details about the Ansible playbook, check out the
 `official documentation <https://docs.ansible.com/ansible/latest/user_guide/playbooks.html>`_.
+
+
+List of available playbooks
+---------------------------
+
+The Ansible playbooks are located in the ``ansible/`` directory:
+
+- ``docker.yml``: install Docker CE on the host
+- ``utils.yml``: install extra system packages useful for debugging and system administration
+- ``users.yml``: create the tests users on the host
+- ``tljh.yml``: install TLJH and the PlasmaBio TLJH plugin
+- ``all.yml``: the main playbook that references all the other playbooks
