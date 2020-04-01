@@ -22,7 +22,7 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     return element;
   }
 
-  $("#add-image").click(function() {
+  $("#add-environment").click(function() {
     var dialog = $("#create-environment-dialog");
     dialog.find(".repo-input").val("");
     dialog.find(".ref-input").val("");
@@ -50,21 +50,21 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
       });
     });
 
-  $(".remove-image").click(function() {
+  $(".remove-environment").click(function() {
     var el = $(this);
     var row = getRow(el);
     var image = row.data("image");
-    var dialog = $("#remove-image-dialog");
-    dialog.find(".delete-image").text(image);
+    var dialog = $("#remove-environment-dialog");
+    dialog.find(".delete-environment").text(image);
     dialog.modal();
   });
 
-  $("#remove-image-dialog")
+  $("#remove-environment-dialog")
     .find(".remove-button")
     .click(function() {
-      var dialog = $("#remove-image-dialog");
-      var image = dialog.find(".delete-image").text();
-      var spinner = $("#removing-image-dialog");
+      var dialog = $("#remove-environment-dialog");
+      var image = dialog.find(".delete-environment").text();
+      var spinner = $("#removing-environment-dialog");
       spinner.find('.modal-footer').remove();
       spinner.modal();
       api.api_request("build", {
