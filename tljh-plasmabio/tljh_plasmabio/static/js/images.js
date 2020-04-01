@@ -7,7 +7,7 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
 ) {
   "use strict";
 
-  var base_url = '/services/images';
+  var base_url = '/services/environments';
   var api = new JHAPI(base_url);
 
   function getRow(element) {
