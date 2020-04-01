@@ -27,7 +27,7 @@ Why is my environment not building?
 -----------------------------------
 
 If for some reasons an environment does not appear after :ref:`environments/add`, it is possible that
-there are some issues building it and install the dependencies.
+there are some issues building it and installing the dependencies.
 
 We recommend building the environment either locally with ``repo2docker`` (next section) or on Binder.
 
@@ -42,6 +42,8 @@ To run the same environments on a local machine, you can use ``jupyter-repo2dock
 .. code-block:: bash
 
   jupyter-repo2docker --ref a4edf334c6b4b16be3a184d0d6e8196137ee1b06 https://github.com/plasmabio/template-python
+
+Update the parameters based on the image you would like to build.
 
 This will create a Docker image and start it automatically once the build is complete.
 
