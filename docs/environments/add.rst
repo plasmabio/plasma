@@ -1,3 +1,5 @@
+.. _environments/add:
+
 Adding a new environment
 ========================
 
