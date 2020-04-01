@@ -45,6 +45,9 @@ In the case of the `Python Template <https://github.com/plasmabio/template-pytho
    :align: center
 
 
+
+.. _environments/prepare/binder:
+
 Testing on Binder
 .................
 
