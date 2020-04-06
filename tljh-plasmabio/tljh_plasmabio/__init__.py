@@ -91,6 +91,7 @@ def tljh_custom_jupyterhub_config(c):
         'cpu_period': CPU_PERIOD,
         'cpu_quota': int(float(CPU_PERIOD) * cpu_limit),
     }
+    c.DockerSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
