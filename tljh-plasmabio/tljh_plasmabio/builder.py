@@ -24,6 +24,10 @@ def build_image(repo, ref, memory=None, cpu=None):
     name = urlparse(repo).path.strip("/")
     image_name = f"{name}:{ref}"
 
+    # memory is specified in GB
+    if memory:
+        memory += 'G'
+
     # add extra labels to set additional image properties
     labels = [
         f"LABEL repo2docker.display_name={name}-{ref}",
