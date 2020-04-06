@@ -37,7 +37,7 @@ def list_images():
             "ref": image.labels["repo2docker.ref"],
             "image_name": image.labels["repo2docker.image_name"],
             "display_name": image.labels["repo2docker.display_name"],
-            "memory_limit": image.labels["plasmabio.memory_limit"],
+            "mem_limit": image.labels["plasmabio.mem_limit"],
             "cpu_limit": image.labels["plasmabio.cpu_limit"],
             "status": "built",
         }

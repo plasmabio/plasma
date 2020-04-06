@@ -29,10 +29,10 @@
           <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.ref }}</a>
         </td>
         <td class="ref-col col-sm-1">
-          {% if image.memory_limit == '' %}
+          {% if image.mem_limit == '' %}
             default
           {% else %}
-            {{ image.memory_limit }}
+            {{ image.mem_limit }}
           {%- endif %}
         </td>
         <td class="ref-col col-sm-1">

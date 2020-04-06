@@ -28,7 +28,7 @@ def build_image(repo, ref, memory=None, cpu=None):
     labels = [
         f"LABEL repo2docker.display_name={name}-{ref}",
         f"LABEL repo2docker.image_name={image_name}",
-        f"LABEL plasmabio.memory_limit={memory}",
+        f"LABEL plasmabio.mem_limit={memory}",
         f"LABEL plasmabio.cpu_limit={cpu}",
     ]
     cmd = [
