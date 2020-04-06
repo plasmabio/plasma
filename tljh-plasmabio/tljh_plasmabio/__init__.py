@@ -14,6 +14,10 @@ from .images import list_images
 # TODO: make this configurable
 VOLUMES_PATH = "/volumes/users"
 
+# Default CPU period
+# See: https://docs.docker.com/config/containers/resource_constraints/#limit-a-containers-access-to-memory#configure-the-default-cfs-scheduler
+CPU_PERIOD = 100_000
+
 
 # See: https://github.com/jupyterhub/jupyterhub/tree/master/examples/bootstrap-script#example-1---create-a-user-directory
 def create_pre_spawn_hook(base_path, uid=1100):
@@ -79,6 +83,16 @@ def tljh_custom_jupyterhub_config(c):
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
     c.DockerSpawner.mem_limit = "2G"
+
+    # set the default cpu limit
+    cpu_limit = 2
+    c.DockerSpawner.cpu_limit = cpu_limit
+    c.DockerSpawner.extra_host_config = {
+        'cpu_period': CPU_PERIOD,
+        'cpu_quota': int(float(CPU_PERIOD) * cpu_limit),
+    }
+    c.DockerSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.DockerSpawner.remove = True
     c.DockerSpawner.image_whitelist = image_whitelist

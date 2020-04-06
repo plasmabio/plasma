@@ -14,3 +14,18 @@ Users can monitor their memory usage using the indicator in the top bar area:
    :alt: Memory indicator in the top bar area
    :width: 50%
    :align: center
+
+CPU
+---
+
+By default PlasmaBio sets a limit of ``2 cpus`` for each user server.
+
+This limit is enforced by the operating system, which throttles access to the CPU by the processes running in the
+Docker container.
+
+Users can monitor their CPU usage using the indicator in the top bar area:
+
+.. image:: ../images/configuration/cpu-usage.png
+   :alt: CPU indicator in the top bar area
+   :width: 50%
+   :align: center
