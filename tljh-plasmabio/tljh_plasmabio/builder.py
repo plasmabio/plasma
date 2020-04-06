@@ -14,13 +14,23 @@ from tornado.log import app_log
 client = docker.from_env()
 
 
-def build_image(repo, ref):
+def build_image(repo, ref, memory=None, cpu=None):
     """
     Build an image given a repo and a ref
     """
     ref = ref or "master"
+    if len(ref) >= 40:
+        ref = ref[:7]
     name = urlparse(repo).path.strip("/")
     image_name = f"{name}:{ref}"
+
+    # add extra labels to set additional image properties
+    labels = [
+        f"LABEL repo2docker.display_name={name}-{ref}",
+        f"LABEL repo2docker.image_name={image_name}",
+        f"LABEL plasmabio.memory_limit={memory}",
+        f"LABEL plasmabio.cpu_limit={cpu}",
+    ]
     cmd = [
         "jupyter-repo2docker",
         "--ref",
@@ -33,7 +43,7 @@ def build_image(repo, ref):
         "--image-name",
         image_name,
         "--appendix",
-        f"LABEL repo2docker.display_name={name}-{ref}\nLABEL repo2docker.image_name={image_name}",
+        '\n'.join(labels),
         repo,
     ]
     client.containers.run(
@@ -85,7 +95,10 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         data = escape.json_decode(self.request.body)
         repo = data["repo"]
         ref = data["ref"]
+        memory = data["memory"]
+        cpu = data["cpu"]
+
         # TODO: validate input
-        build_image(repo, ref)
+        build_image(repo, ref, memory, cpu)
 
         self.set_status(200)

@@ -13,6 +13,8 @@
       <tr>
         <th>Repository URL</th>
         <th>Reference</th>
+        <th>Mem. Limit</th>
+        <th>CPU Limit</th>
         <th>Status</th>
         <th class="text-center"><a id="add-environment" role="button" class="btn btn-primary btn-xs">Add New</a></th>
       </tr>
@@ -23,8 +25,22 @@
         <td class="repo-col col-sm-4">
           <a href="{{ image.repo }}" target="_blank">{{ image.repo }}</a>
         </td>
-        <td class="ref-col col-sm-4">
+        <td class="ref-col col-sm-2">
           <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.ref }}</a>
+        </td>
+        <td class="ref-col col-sm-1">
+          {% if image.memory_limit == '' %}
+            default
+          {% else %}
+            {{ image.memory_limit }}
+          {%- endif %}
+        </td>
+        <td class="ref-col col-sm-1">
+          {% if image.cpu_limit == '' %}
+            default
+          {% else %}
+            {{ image.cpu_limit }}
+          {%- endif %}
         </td>
         <td class="status-col col-sm-1">
           {% if image.status == 'building' %}
@@ -75,6 +91,18 @@
       <label for="reference" class="col-sm-4 control-label">Reference (git commit)</label>
       <div class="col-sm-8">
         <input type="text" class="form-control ref-input" id="reference" placeholder="master"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="memory" class="col-sm-4 control-label">Memory Limit</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control memory-input" id="memory" placeholder="2G"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cpu" class="col-sm-4 control-label">CPU Limit</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control cpu-input" id="cpu" placeholder="2"/>
       </div>
     </div>
   </div>
