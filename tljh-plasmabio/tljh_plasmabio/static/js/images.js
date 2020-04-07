@@ -26,6 +26,8 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     var dialog = $("#create-environment-dialog");
     dialog.find(".repo-input").val("");
     dialog.find(".ref-input").val("");
+    dialog.find(".memory-input").val("");
+    dialog.find(".cpu-input").val("");
     dialog.modal();
   });
 
@@ -34,17 +36,22 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     .click(function() {
       var dialog = $("#create-environment-dialog");
       var repo = dialog.find(".repo-input").val();
-      var ref = dialog.find(".ref-input").val();
-      console.log(repo, ref);
+      var ref = dialog.find(".ref-input").val().trim();
+      var memory = dialog.find(".memory-input").val().trim();
+      var cpu = dialog.find(".cpu-input").val().trim();
+      var spinner = $("#adding-environment-dialog");
+      spinner.find('.modal-footer').remove();
+      spinner.modal();
       api.api_request("build", {
         type: "POST",
         data: JSON.stringify({
           repo: repo,
-          ref: ref
+          ref: ref,
+          memory: memory,
+          cpu: cpu
         }),
         dataType: null,
         success: function(reply) {
-          console.log(reply)
           window.location.reload();
         },
       });

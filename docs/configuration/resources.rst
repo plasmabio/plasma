@@ -37,8 +37,8 @@ Users can monitor their CPU usage using the indicator in the top bar area if the
 
 .. _resources/display:
 
-Display the indicators
-----------------------
+Displaying the indicators
+-------------------------
 
 To enable the Memory and CPU indicators as shown above, the following dependencies must be added to the user environment:
 

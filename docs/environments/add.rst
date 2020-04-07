@@ -9,6 +9,10 @@ To add the new user environment, click on the ``Add New`` button and provide the
 
 - ``Repository URL``: the URL to the repository to build the environment from
 - ``Reference (git commit)``: the git commit hash to use
+- ``Memory Limit (GB)``: the memory limit to apply to the user server.
+  Float values are allowed (for example a value of ``3.5`` corresponds to a limit of 3.5GB)
+- ``CPU Limit``: the number of cpus the user server is allowed to used.
+  See the `JupyterHub documentation <https://jupyterhub.readthedocs.io/en/stable/api/spawner.html#jupyterhub.spawner.Spawner.cpu_limit>`_ for more info.
 
 
 As an example:

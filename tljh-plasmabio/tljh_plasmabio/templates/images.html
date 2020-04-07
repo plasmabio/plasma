@@ -13,6 +13,8 @@
       <tr>
         <th>Repository URL</th>
         <th>Reference</th>
+        <th>Mem. Limit</th>
+        <th>CPU Limit</th>
         <th>Status</th>
         <th class="text-center"><a id="add-environment" role="button" class="btn btn-primary btn-xs">Add New</a></th>
       </tr>
@@ -23,8 +25,22 @@
         <td class="repo-col col-sm-4">
           <a href="{{ image.repo }}" target="_blank">{{ image.repo }}</a>
         </td>
-        <td class="ref-col col-sm-4">
+        <td class="ref-col col-sm-2">
           <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.ref }}</a>
+        </td>
+        <td class="ref-col col-sm-1">
+          {% if image.mem_limit == '' %}
+            default
+          {% else %}
+            {{ image.mem_limit }}
+          {%- endif %}
+        </td>
+        <td class="ref-col col-sm-1">
+          {% if image.cpu_limit == '' %}
+            default
+          {% else %}
+            {{ image.cpu_limit }}
+          {%- endif %}
         </td>
         <td class="status-col col-sm-1">
           {% if image.status == 'building' %}
@@ -51,6 +67,12 @@
   </table>
 </div>
 
+{% call modal('Adding Environment', btn_label='OK', btn_class='btn-primary adding-button') %}
+  <div class="text-center">
+    <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
+  </div>
+{% endcall %}
+
 {% call modal('Removing Environment', btn_label='OK', btn_class='btn-primary removing-button') %}
   <div class="text-center">
     <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
@@ -75,6 +97,18 @@
       <label for="reference" class="col-sm-4 control-label">Reference (git commit)</label>
       <div class="col-sm-8">
         <input type="text" class="form-control ref-input" id="reference" placeholder="master"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="memory" class="col-sm-4 control-label">Memory Limit (GB)</label>
+      <div class="col-sm-8">
+        <input type="number" step="1" class="form-control memory-input" id="memory" placeholder="2"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cpu" class="col-sm-4 control-label">CPU Limit</label>
+      <div class="col-sm-8">
+        <input type="number" step="0.5" class="form-control cpu-input" id="cpu" placeholder="2"/>
       </div>
     </div>
   </div>

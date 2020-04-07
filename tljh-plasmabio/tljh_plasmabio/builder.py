@@ -1,7 +1,9 @@
 import asyncio
+import json
 import subprocess
 import sys
 
+from http.client import responses
 from threading import Event
 from urllib.parse import urlparse
 
@@ -14,13 +16,27 @@ from tornado.log import app_log
 client = docker.from_env()
 
 
-def build_image(repo, ref):
+def build_image(repo, ref, memory=None, cpu=None):
     """
-    Build an image given a repo and a ref
+    Build an image given a repo, ref and limits
     """
     ref = ref or "master"
+    if len(ref) >= 40:
+        ref = ref[:7]
     name = urlparse(repo).path.strip("/")
     image_name = f"{name}:{ref}"
+
+    # memory is specified in GB
+    if memory:
+        memory += 'G'
+
+    # add extra labels to set additional image properties
+    labels = [
+        f"LABEL plasmabio.display_name={name}-{ref}",
+        f"LABEL plasmabio.image_name={image_name}",
+        f"LABEL plasmabio.mem_limit={memory}",
+        f"LABEL plasmabio.cpu_limit={cpu}",
+    ]
     cmd = [
         "jupyter-repo2docker",
         "--ref",
@@ -33,7 +49,7 @@ def build_image(repo, ref):
         "--image-name",
         image_name,
         "--appendix",
-        f"LABEL repo2docker.display_name={name}-{ref}\nLABEL repo2docker.image_name={image_name}",
+        '\n'.join(labels),
         repo,
     ]
     client.containers.run(
@@ -63,6 +79,27 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
     def initialize(self):
         self.log = app_log
 
+    def write_error(self, status_code, **kwargs):
+        exc_info = kwargs.get('exc_info')
+        message = ''
+        exception = None
+        status_message = responses.get(status_code, 'Unknown Error')
+        if exc_info:
+            exception = exc_info[1]
+            try:
+                message = exception.log_message % exception.args
+            except Exception:
+                pass
+
+            reason = getattr(exception, 'reason', '')
+            if reason:
+                status_message = reason
+
+        self.set_header('Content-Type', 'application/json')
+        self.write(
+            json.dumps({'status': status_code, 'message': message or status_message})
+        )
+
     @web.authenticated
     def delete(self):
         self.log.debug("Delete an image")
@@ -72,9 +109,7 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
             # TODO: should this run in an executor? (removing the image is blocking)
             remove_image(name)
         except docker.errors.ImageNotFound:
-            self.set_status(404)
-            self.write({"message": f"Image {name} does not exist"})
-            return
+            raise web.HTTPError(400, f"Image {name} does not exist")
 
         self.set_status(200)
 
@@ -85,7 +120,24 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         data = escape.json_decode(self.request.body)
         repo = data["repo"]
         ref = data["ref"]
-        # TODO: validate input
-        build_image(repo, ref)
+        memory = data["memory"]
+        cpu = data["cpu"]
+
+        if not repo:
+            raise web.HTTPError(400, "Repository is empty")
+
+        if memory:
+            try:
+                float(memory)
+            except:
+                raise web.HTTPError(400, "Memory Limit must be a number")
+
+        if cpu:
+            try:
+                float(cpu)
+            except:
+                raise web.HTTPError(400, "CPU Limit must be a number")
+
+        build_image(repo, ref, memory, cpu)
 
         self.set_status(200)

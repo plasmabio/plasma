@@ -9,7 +9,7 @@ from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
 from traitlets import default
 
-from .images import list_images
+from .images import list_images, client
 
 # TODO: make this configurable
 VOLUMES_PATH = "/volumes/users"
@@ -21,14 +21,23 @@ CPU_PERIOD = 100_000
 
 # See: https://github.com/jupyterhub/jupyterhub/tree/master/examples/bootstrap-script#example-1---create-a-user-directory
 def create_pre_spawn_hook(base_path, uid=1100):
-    def create_dir_hook(spawner):
+    def pre_spawn_hook(spawner):
+
+        # create user directory if it does not exist
         username = spawner.user.name
         volume_path = os.path.join(base_path, username)
         os.makedirs(volume_path, 0o755, exist_ok=True)
         # use jovyan id (used when building the image with repo2docker)
         shutil.chown(volume_path, user=uid)
 
-    return create_dir_hook
+        # set the image limits
+        image = client.images.get(spawner.user_options.get('image'))
+        mem_limit = image.labels.get("plasmabio.mem_limit", None)
+        cpu_limit = image.labels.get("plasmabio.cpu_limit", None)
+        spawner.mem_limit = mem_limit or spawner.mem_limit
+        spawner.cpu_limit = float(cpu_limit) if cpu_limit else spawner.cpu_limit
+
+    return pre_spawn_hook
 
 
 def options_form(spawner):
