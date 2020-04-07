@@ -49,6 +49,7 @@
               timeout: 3600
 
     # Special task to disable HTTPS only when the --no-https flag is specified
+    # The never tag is a special tag, see: https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html#special-tags
     - name: Disable HTTPS
       shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config set https.enabled false"
       tags: [ never, no-https ]
