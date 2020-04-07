@@ -35,10 +35,7 @@ def create_pre_spawn_hook(base_path, uid=1100):
         mem_limit = image.labels.get("plasmabio.mem_limit", None)
         cpu_limit = image.labels.get("plasmabio.cpu_limit", None)
         spawner.mem_limit = mem_limit or spawner.mem_limit
-        try:
-            spawner.cpu_limit = float(cpu_limit) if cpu_limit else spawner.cpu_limit
-        except:
-            pass
+        spawner.cpu_limit = float(cpu_limit) if cpu_limit else spawner.cpu_limit
 
     return pre_spawn_hook
 
