@@ -27,3 +27,20 @@ This is typically done by logging in to the registrar website and adding a new e
 
 You can refer to the `documentation for The Littlest JupyterHub on how to enable HTTPS <http://tljh.jupyter.org/en/latest/howto/admin/https.html#enable-https>`_
 for more details.
+
+
+Deploying without HTTPS
+-----------------------
+
+.. warning::
+
+    **We do not recommend deploying JupyterHub without HTTPS for production use.**
+    However in some situations it can be handy to do so, for example when testing the setup.
+
+The next section describes how to use the Ansible playbooks to provision the machine: :ref:`install/ansible`.
+
+If you want to disable HTTPS, add ``--tags "all,no-https"`` at the end of the Ansible commands. For example:
+
+.. code-block:: bash
+
+    ansible-playbook -i hosts tljh.yml -u ubuntu --tags "all,no-https"
