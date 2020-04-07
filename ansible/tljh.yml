@@ -48,10 +48,15 @@
             cull:
               timeout: 3600
 
+    # Special task to disable HTTPS only when the --no-https flag is specified
+    - name: Disable HTTPS
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config set https.enabled false"
+      tags: [ never, no-https ]
+
 
     # TODO: do not restart the proxy each time, only on install
     - name: Reload the proxy
-      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload proxy"
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload"
 
     # Pull the repo2docker image to build user images
     - name: Pull jupyter/repo2docker
