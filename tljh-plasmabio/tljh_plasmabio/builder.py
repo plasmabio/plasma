@@ -32,8 +32,8 @@ def build_image(repo, ref, memory=None, cpu=None):
 
     # add extra labels to set additional image properties
     labels = [
-        f"LABEL repo2docker.display_name={name}-{ref}",
-        f"LABEL repo2docker.image_name={image_name}",
+        f"LABEL plasmabio.display_name={name}-{ref}",
+        f"LABEL plasmabio.image_name={image_name}",
         f"LABEL plasmabio.mem_limit={memory}",
         f"LABEL plasmabio.cpu_limit={cpu}",
     ]
@@ -130,13 +130,13 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
             try:
                 float(memory)
             except:
-                raise web.HTTPError(400, "Memory Limit must be a float value")
+                raise web.HTTPError(400, "Memory Limit must be a number")
 
         if cpu:
             try:
                 float(cpu)
             except:
-                raise web.HTTPError(400, "CPU Limit must be a float value")
+                raise web.HTTPError(400, "CPU Limit must be a number")
 
         build_image(repo, ref, memory, cpu)
 

@@ -35,14 +35,14 @@ def list_images():
         {
             "repo": image.labels["repo2docker.repo"],
             "ref": image.labels["repo2docker.ref"],
-            "image_name": image.labels["repo2docker.image_name"],
-            "display_name": image.labels["repo2docker.display_name"],
+            "image_name": image.labels["plasmabio.image_name"],
+            "display_name": image.labels["plasmabio.display_name"],
             "mem_limit": image.labels["plasmabio.mem_limit"],
             "cpu_limit": image.labels["plasmabio.cpu_limit"],
             "status": "built",
         }
         for image in r2d_images
-        if "repo2docker.display_name" in image.labels
+        if "plasmabio.display_name" in image.labels
     ]
     return images
 
