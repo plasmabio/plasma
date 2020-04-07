@@ -39,6 +39,9 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
       var ref = dialog.find(".ref-input").val().trim();
       var memory = dialog.find(".memory-input").val().trim();
       var cpu = dialog.find(".cpu-input").val().trim();
+      var spinner = $("#adding-environment-dialog");
+      spinner.find('.modal-footer').remove();
+      spinner.modal();
       api.api_request("build", {
         type: "POST",
         data: JSON.stringify({

@@ -67,6 +67,12 @@
   </table>
 </div>
 
+{% call modal('Adding Environment', btn_label='OK', btn_class='btn-primary adding-button') %}
+  <div class="text-center">
+    <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
+  </div>
+{% endcall %}
+
 {% call modal('Removing Environment', btn_label='OK', btn_class='btn-primary removing-button') %}
   <div class="text-center">
     <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
