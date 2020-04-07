@@ -108,7 +108,7 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.options_form = options_form
 
     # register the service to manage the user images
-    c.JupyterHub.services = [
+    c.JupyterHub.services += [
         {
             "name": "environments",
             "admin": True,
