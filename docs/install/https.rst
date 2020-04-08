@@ -43,4 +43,4 @@ If you want to disable HTTPS, add ``--tags "all,no-https"`` at the end of the An
 
 .. code-block:: bash
 
-    ansible-playbook -i hosts tljh.yml -u ubuntu --tags "all,no-https"
+    ansible-playbook all.yml -i hosts -u ubuntu --tags "all,no-https"
