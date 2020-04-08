@@ -28,12 +28,6 @@
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
 
-    - name: Restart JupyterHub
-      systemd:
-        name: jupyterhub
-        state: restarted
-        daemon_reload: yes
-
     - name: Copy the config
       copy:
         dest: "{{ tljh_prefix }}/config/config.yaml"
@@ -48,6 +42,9 @@
             cull:
               timeout: 3600
 
+    - name: Reload the hub
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload hub"
+
     # Special task to disable HTTPS only when the --no-https flag is specified
     # The never tag is a special tag, see: https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html#special-tags
     - name: Disable HTTPS
@@ -57,7 +54,7 @@
 
     # TODO: do not restart the proxy each time, only on install
     - name: Reload the proxy
-      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload"
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload proxy"
 
     # Pull the repo2docker image to build user images
     - name: Pull jupyter/repo2docker
