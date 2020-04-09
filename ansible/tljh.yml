@@ -28,33 +28,11 @@
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
 
-    - name: Copy the config
-      copy:
-        dest: "{{ tljh_prefix }}/config/config.yaml"
-        content: |
-          https:
-            enabled: true
-            letsencrypt:
-              email: {{ letsencrypt_email }}
-              domains:
-                - {{ letsencrypt_domain }}
-          services:
-            cull:
-              timeout: 3600
+    - name: Set the idle culler timeout to 1 hour
+      shell: "tljh-config set services.cull.timeout 3600"
 
     - name: Reload the hub
-      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload hub"
-
-    # Special task to disable HTTPS only when the --no-https flag is specified
-    # The never tag is a special tag, see: https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html#special-tags
-    - name: Disable HTTPS
-      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config set https.enabled false"
-      tags: [ never, no-https ]
-
-
-    # TODO: do not restart the proxy each time, only on install
-    - name: Reload the proxy
-      shell: "{{ tljh_prefix }}/hub/bin/python3 -m tljh.config reload proxy"
+      shell: "tljh-config reload hub"
 
     # Pull the repo2docker image to build user images
     - name: Pull jupyter/repo2docker
