@@ -117,6 +117,8 @@ def tljh_custom_jupyterhub_config(c):
     c.SystemUserSpawner.image_whitelist = image_whitelist
     c.SystemUserSpawner.options_form = options_form
 
+    c.JupyterHub.template_paths = os.path.join(os.path.dirname(__file__), "templates"),
+
     # register the service to manage the user images
     c.JupyterHub.services += [
         {

@@ -1,0 +1,13 @@
+{% extends "templates/admin.html" %}
+
+{% block thead %}
+{{ super() }}
+<th></th>
+<th></th>
+<th>Image</th>
+{% endblock thead %}
+
+{% block user_row %}
+{{ super() }}
+<td class="col-sm-2">{{ spawner.image }}</td>
+{% endblock user_row %}
