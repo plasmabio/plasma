@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+
+    - name: Stop jupyterhub and traefik services
+      systemd:
+        name: "{{ item }}"
+        state: stopped
+        daemon_reload: yes
+      with_items:
+        - jupyterhub
+        - traefik
+
+    - name: Disable jupyterhub and traefik services
+      systemd:
+        name: "{{ item }}"
+        enabled: false
+        daemon_reload: yes
+      with_items:
+        - jupyterhub
+        - traefik
+
+    - name: Remove systemd unit files
+      file:
+        state: absent
+        path: "/etc/systemd/system/{{ item }}.service"
+      with_items:
+        - jupyterhub
+        - traefik
+
+    - name: Remove tljh-config
+      file:
+        state: absent
+        path: "/usr/bin/tljh-config"
+
+    - name: Remove TLJH
+      file:
+        state: absent
+        path: "{{ tljh_prefix }}/"
