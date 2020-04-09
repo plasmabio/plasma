@@ -28,7 +28,7 @@ After clicking on the ``Add Image`` button, the page will automatically reload a
 as well as the ones currently being built:
 
 
-.. image:: ../images/environments/building-environments.png
+.. image:: ../images/environments/environments.png
    :alt: Listing the environments being built
    :width: 100%
    :align: center
