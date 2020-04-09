@@ -8,6 +8,8 @@ import os
 
 from tljh_plasmabio import create_pre_spawn_hook, tljh_custom_jupyterhub_config
 
+c.JupyterHub.services = []
+
 tljh_custom_jupyterhub_config(c)
 
 user = getpass.getuser()
