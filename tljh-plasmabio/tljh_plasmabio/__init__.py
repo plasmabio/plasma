@@ -14,6 +14,7 @@ from .images import list_images, client
 
 # TODO: make this configurable
 VOLUMES_PATH = "/volumes/users"
+SHARED_DATA_PATH = "/srv/data"
 
 # Default CPU period
 # See: https://docs.docker.com/config/containers/resource_constraints/#limit-a-containers-access-to-memory#configure-the-default-cfs-scheduler
@@ -94,7 +95,8 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.default_url = "/lab"
     c.DockerSpawner.cmd = ["jupyterhub-singleuser"]
     c.DockerSpawner.volumes = {
-        os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
+        os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work",
+        SHARED_DATA_PATH: {"bind": "/home/jovyan/data", "mode": "ro"},
     }
 
     # set the default cpu and memory limits
