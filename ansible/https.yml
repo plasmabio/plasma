@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+
+    # Enable Automatic HTTPS with Let's Encrypt
+    - name: Enable HTTPS
+      shell: |
+        tljh-config set https.enabled true
+        tljh-config set https.letsencrypt.email {{ letsencrypt_email }}
+        tljh-config add-item https.letsencrypt.domains {{ letsencrypt_domain }}
+
+    - name: Reload the proxy
+      shell: "tljh-config reload proxy"
