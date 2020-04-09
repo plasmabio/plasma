@@ -61,6 +61,8 @@ def list_containers():
             "repo": container.labels["repo2docker.repo"],
             "ref": container.labels["repo2docker.ref"],
             "image_name": container.labels["repo2docker.build"],
+            "mem_limit": container.labels["plasmabio.mem_limit"],
+            "cpu_limit": container.labels["plasmabio.cpu_limit"],
             "status": "building",
         }
         for container in r2d_containers

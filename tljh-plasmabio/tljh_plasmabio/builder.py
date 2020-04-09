@@ -59,6 +59,8 @@ def build_image(repo, ref, memory=None, cpu=None):
             "repo2docker.repo": repo,
             "repo2docker.ref": ref,
             "repo2docker.build": image_name,
+            "plasmabio.mem_limit": memory,
+            "plasmabio.cpu_limit": cpu
         },
         volumes={
             "/var/run/docker.sock": {"bind": "/var/run/docker.sock", "mode": "rw"}
