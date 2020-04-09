@@ -9,6 +9,7 @@ from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
 from traitlets import default
 
+from .builder import DEFAULT_CPU_LIMIT, DEFAULT_MEMORY_LIMIT
 from .images import list_images, client
 
 # TODO: make this configurable
@@ -31,11 +32,15 @@ def create_pre_spawn_hook(base_path, uid=1100):
         shutil.chown(volume_path, user=uid)
 
         # set the image limits
-        image = client.images.get(spawner.user_options.get('image'))
+        image = client.images.get(spawner.user_options.get("image"))
         mem_limit = image.labels.get("plasmabio.mem_limit", None)
         cpu_limit = image.labels.get("plasmabio.cpu_limit", None)
         spawner.mem_limit = mem_limit or spawner.mem_limit
         spawner.cpu_limit = float(cpu_limit) if cpu_limit else spawner.cpu_limit
+        spawner.extra_host_config = {
+            "cpu_period": CPU_PERIOD,
+            "cpu_quota": int(float(CPU_PERIOD) * spawner.cpu_limit),
+        }
 
     return pre_spawn_hook
 
@@ -91,15 +96,10 @@ def tljh_custom_jupyterhub_config(c):
     c.DockerSpawner.volumes = {
         os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work"
     }
-    c.DockerSpawner.mem_limit = "2G"
 
-    # set the default cpu limit
-    cpu_limit = 2
-    c.DockerSpawner.cpu_limit = cpu_limit
-    c.DockerSpawner.extra_host_config = {
-        'cpu_period': CPU_PERIOD,
-        'cpu_quota': int(float(CPU_PERIOD) * cpu_limit),
-    }
+    # set the default cpu and memory limits
+    c.DockerSpawner.mem_limit = DEFAULT_MEMORY_LIMIT
+    c.DockerSpawner.cpu_limit = float(DEFAULT_CPU_LIMIT)
     c.DockerSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
     c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)

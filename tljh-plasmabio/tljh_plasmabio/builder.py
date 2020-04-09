@@ -15,6 +15,9 @@ from tornado.log import app_log
 
 client = docker.from_env()
 
+DEFAULT_CPU_LIMIT = "2"
+DEFAULT_MEMORY_LIMIT = "2G"
+
 
 def build_image(repo, ref, memory=None, cpu=None):
     """
@@ -27,8 +30,8 @@ def build_image(repo, ref, memory=None, cpu=None):
     image_name = f"{name}:{ref}"
 
     # memory is specified in GB
-    if memory:
-        memory += 'G'
+    memory = f"{memory}G" if memory else DEFAULT_MEMORY_LIMIT
+    cpu = cpu or DEFAULT_CPU_LIMIT
 
     # add extra labels to set additional image properties
     labels = [
