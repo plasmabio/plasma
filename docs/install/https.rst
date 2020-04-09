@@ -3,7 +3,16 @@
 HTTPS
 =====
 
-HTTPS is **enabled by default** when using the Ansible playbooks, see :ref:`install/ansible`.
+.. warning::
+
+    HTTPS is **not** enabled by default.
+
+    **We do not recommend deploying JupyterHub without HTTPS for production use.**
+
+    However in some situations it can be handy to do so, for example when testing the setup.
+
+Enable HTTPS
+------------
 
 Support for HTTPS is handled automatically thanks to `Let's Encrypt <https://letsencrypt.org>`_, which also
 handles the renewal of the certificates when they are about to expire.
@@ -15,7 +24,17 @@ In the Ansible playbook, the Let's Encrypt configuration is defined in ``ansible
     letsencrypt_email: contact@plasmabio.org
     letsencrypt_domain: dev.plasmabio.org
 
-If you decide to change the domain and email later, modify ``ansible/vars/default.yml`` and rerun the playbook.
+Modify these values to the ones you want to use.
+
+Then, run the ``https.yml`` playbook:
+
+.. code-block:: bash
+
+    ansible-playbook https.yml -i hosts -u ubuntu
+
+This will reload the proxy to take the changes into account.
+
+It might take a few minutes for the certificates to be setup and the changes to take effect.
 
 How to make the domain point to the IP of the server
 ----------------------------------------------------
@@ -28,19 +47,12 @@ This is typically done by logging in to the registrar website and adding a new e
 You can refer to the `documentation for The Littlest JupyterHub on how to enable HTTPS <http://tljh.jupyter.org/en/latest/howto/admin/https.html#enable-https>`_
 for more details.
 
+Manual HTTPS
+------------
 
-Deploying without HTTPS
------------------------
+To use an existing SSL key and certificate, you can refer to the
+`Manual HTTPS with existing key and certificate <http://tljh.jupyter.org/en/latest/howto/admin/https.html#manual-https-with-existing-key-and-certificate>`_
+documentation for TLJH.
 
-.. warning::
-
-    **We do not recommend deploying JupyterHub without HTTPS for production use.**
-    However in some situations it can be handy to do so, for example when testing the setup.
-
-The next section describes how to use the Ansible playbooks to provision the machine: :ref:`install/ansible`.
-
-If you want to disable HTTPS, add ``--tags "all,no-https"`` at the end of the Ansible commands. For example:
-
-.. code-block:: bash
-
-    ansible-playbook all.yml -i hosts -u ubuntu --tags "all,no-https"
+This can also be integrated in the ``https.yml`` playbook by replacing the ``tljh-config`` commands to the ones mentioned
+in the documentation.
