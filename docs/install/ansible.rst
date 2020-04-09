@@ -91,13 +91,13 @@ Then run the following command after replacing ``<user>`` by your user on the re
 
 .. code-block:: bash
 
-    ansible-playbook all.yml -i hosts -u <user>
+    ansible-playbook site.yml -i hosts -u <user>
 
 Many Ubuntu systems running on cloud virtual machines have the default ``ubuntu`` user. In this case, the command becomes:
 
 .. code-block:: bash
 
-    ansible-playbook all.yml -i hosts -u ubuntu
+    ansible-playbook site.yml -i hosts -u ubuntu
 
 Ansible will log the progress in the terminal, and will indicate which components have changed in the process of running the playbook:
 
@@ -170,7 +170,7 @@ Ansible will log the progress in the terminal, and will indicate which component
 Running individual playbooks
 ----------------------------
 
-The ``all.yml`` Ansible playbook includes all the playbooks and will process them in order.
+The ``site.yml`` Ansible playbook includes all the playbooks and will process them in order.
 
 It is however possible to run the playbooks individually. For example to run the ``tljh.yml`` playbook only (to install
 and update The Littlest JupyterHub):
@@ -192,4 +192,5 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``utils.yml``: install extra system packages useful for debugging and system administration
 - ``users.yml``: create the tests users on the host
 - ``tljh.yml``: install TLJH and the PlasmaBio TLJH plugin
-- ``all.yml``: the main playbook that references all the other playbooks
+- ``https.yml``: enable HTTPS for TLJH
+- ``site.yml``: the main playbook that references all the other playbooks
