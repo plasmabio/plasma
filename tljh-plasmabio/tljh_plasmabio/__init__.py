@@ -102,7 +102,7 @@ def tljh_custom_jupyterhub_config(c):
     # TODO: change back to jupyterhub-singleuser
     c.SystemUserSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
     c.SystemUserSpawner.volumes = {
-        os.path.join(os.path.dirname(__file__), "entrypoint.sh"): "/usr/local/bin/repo2docker-entrypoint",
+        os.path.join(os.path.dirname(__file__), "entrypoint", "entrypoint.sh"): "/usr/local/bin/repo2docker-entrypoint",
         SHARED_DATA_PATH: {"bind": "/srv/data", "mode": "ro"},
     }
     c.SystemUserSpawner.host_homedir_format_string = os.path.join(

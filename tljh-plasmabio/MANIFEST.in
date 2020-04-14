@@ -1,2 +1,3 @@
 recursive-include tljh_plasmabio/templates/ *
 recursive-include tljh_plasmabio/static/ *
+recursive-include tljh_plasmabio/entrypoint/ *

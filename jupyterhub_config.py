@@ -22,7 +22,11 @@ shared_data_path = os.path.join(os.getcwd(), "volumes/data")
 
 c.SystemUserSpawner.volumes = {
     os.path.join(
-        os.path.dirname(__file__), "tljh-plasmabio", "tljh_plasmabio", "entrypoint.sh"
+        os.path.dirname(__file__),
+        "tljh-plasmabio",
+        "tljh_plasmabio",
+        "entrypoint",
+        "entrypoint.sh",
     ): "/usr/local/bin/repo2docker-entrypoint",
     shared_data_path: {"bind": "/srv/data", "mode": "ro"},
 }
