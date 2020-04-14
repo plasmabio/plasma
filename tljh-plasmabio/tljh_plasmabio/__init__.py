@@ -3,7 +3,7 @@ import pwd
 import shutil
 import sys
 
-from dockerspawner import DockerSpawner
+from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
@@ -12,8 +12,7 @@ from traitlets import default
 from .builder import DEFAULT_CPU_LIMIT, DEFAULT_MEMORY_LIMIT
 from .images import list_images, client
 
-# TODO: make this configurable
-VOLUMES_PATH = "/volumes/users"
+VOLUMES_PATH = "/home"
 SHARED_DATA_PATH = "/srv/data"
 
 # Default CPU period
@@ -27,13 +26,20 @@ def create_pre_spawn_hook(base_path, uid=1100):
 
         # create user directory if it does not exist
         username = spawner.user.name
-        volume_path = os.path.join(base_path, username)
-        os.makedirs(volume_path, 0o755, exist_ok=True)
+        imagename = spawner.user_options.get("image")
+        volume_path = os.path.join(base_path, username, imagename)
+        os.makedirs(volume_path, exist_ok=True)
         # use jovyan id (used when building the image with repo2docker)
         shutil.chown(volume_path, user=uid)
 
+        # the escaped image name is used to create a new folder in the user home directory
+        imagename_escaped = imagename.replace(":", "-").replace('/', "-")
+        spawner.host_homedir_format_string = spawner.host_homedir_format_string.format(
+            username=username, imagename=imagename_escaped
+        )
+
         # set the image limits
-        image = client.images.get(spawner.user_options.get("image"))
+        image = client.images.get(imagename)
         mem_limit = image.labels.get("plasmabio.mem_limit", None)
         cpu_limit = image.labels.get("plasmabio.cpu_limit", None)
         spawner.mem_limit = mem_limit or spawner.mem_limit
@@ -83,31 +89,35 @@ def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.hub_ip = public_ips()[0]
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
-    c.JupyterHub.spawner_class = DockerSpawner
+    c.JupyterHub.spawner_class = SystemUserSpawner
     c.JupyterHub.allow_named_servers = True
     c.JupyterHub.named_server_limit_per_user = 2
 
     # spawner
     # increase the timeout to be able to pull larger Docker images
-    c.DockerSpawner.start_timeout = 120
-    c.DockerSpawner.pull_policy = "Never"
-    c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
-    c.DockerSpawner.default_url = "/lab"
-    c.DockerSpawner.cmd = ["jupyterhub-singleuser"]
-    c.DockerSpawner.volumes = {
-        os.path.join(VOLUMES_PATH, "{username}"): "/home/jovyan/work",
-        SHARED_DATA_PATH: {"bind": "/home/jovyan/data", "mode": "ro"},
+    c.SystemUserSpawner.start_timeout = 120
+    c.SystemUserSpawner.pull_policy = "Never"
+    c.SystemUserSpawner.name_template = "{prefix}-{username}-{servername}"
+    c.SystemUserSpawner.default_url = "/lab"
+    # TODO: change back to jupyterhub-singleuser
+    c.SystemUserSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
+    c.SystemUserSpawner.volumes = {
+        os.path.join(os.path.dirname(__file__), "entrypoint.sh"): "/usr/local/bin/repo2docker-entrypoint",
+        SHARED_DATA_PATH: {"bind": "/srv/data", "mode": "ro"},
     }
+    c.SystemUserSpawner.host_homedir_format_string = os.path.join(
+        VOLUMES_PATH, "{username}", "{imagename}"
+    )
 
     # set the default cpu and memory limits
-    c.DockerSpawner.mem_limit = DEFAULT_MEMORY_LIMIT
-    c.DockerSpawner.cpu_limit = float(DEFAULT_CPU_LIMIT)
-    c.DockerSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+    c.SystemUserSpawner.mem_limit = DEFAULT_MEMORY_LIMIT
+    c.SystemUserSpawner.cpu_limit = float(DEFAULT_CPU_LIMIT)
+    c.SystemUserSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
-    c.DockerSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
-    c.DockerSpawner.remove = True
-    c.DockerSpawner.image_whitelist = image_whitelist
-    c.DockerSpawner.options_form = options_form
+    # c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
+    c.SystemUserSpawner.remove = True
+    c.SystemUserSpawner.image_whitelist = image_whitelist
+    c.SystemUserSpawner.options_form = options_form
 
     # register the service to manage the user images
     c.JupyterHub.services += [
