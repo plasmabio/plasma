@@ -21,8 +21,11 @@ if [[ "$NB_USER" != "jovyan" ]]; then
     chown -R ${NB_USER}:${NB_USER} ${USER_HOME}
 
     # link the read-only data volume
-    rm "${USER_HOME}/data"
-    ln -s /srv/data "${USER_HOME}/data"
+    DATA="${USER_HOME}/data"
+    if [[ -e  ${DATA} ]]; then
+        rm ${DATA}
+    fi
+    ln -s /srv/data ${DATA}
 fi
 
 # Add $CONDA_DIR/bin to sudo secure_path

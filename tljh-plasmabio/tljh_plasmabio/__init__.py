@@ -24,16 +24,16 @@ CPU_PERIOD = 100_000
 def create_pre_spawn_hook(base_path, uid=1100):
     def pre_spawn_hook(spawner):
 
-        # create user directory if it does not exist
+        # create user directory on the host if it does not exist
         username = spawner.user.name
         imagename = spawner.user_options.get("image")
-        volume_path = os.path.join(base_path, username, imagename)
+        imagename_escaped = imagename.replace(":", "-").replace('/', "-")
+
+        volume_path = os.path.join(base_path, username, imagename_escaped)
         os.makedirs(volume_path, exist_ok=True)
-        # use jovyan id (used when building the image with repo2docker)
         shutil.chown(volume_path, user=uid)
 
         # the escaped image name is used to create a new folder in the user home directory
-        imagename_escaped = imagename.replace(":", "-").replace('/', "-")
         spawner.host_homedir_format_string = spawner.host_homedir_format_string.format(
             username=username, imagename=imagename_escaped
         )
@@ -114,7 +114,7 @@ def tljh_custom_jupyterhub_config(c):
     c.SystemUserSpawner.cpu_limit = float(DEFAULT_CPU_LIMIT)
     c.SystemUserSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
-    # c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
+    c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(VOLUMES_PATH)
     c.SystemUserSpawner.remove = True
     c.SystemUserSpawner.image_whitelist = image_whitelist
     c.SystemUserSpawner.options_form = options_form
