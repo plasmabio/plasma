@@ -3,7 +3,8 @@
 set -e
 
 # handle user override
-NB_GID=${NB_UID} PATH=${PATH//jovyan/$NB_USER}
+NB_GID=${NB_UID}
+PATH=${PATH//jovyan/$NB_USER}
 USER_HOME="/home/$NB_USER"
 
 # add a new group for the user
