@@ -1,6 +1,8 @@
 Data Persistence
 ================
 
+.. _persistence/user-data:
+
 User Data
 ---------
 

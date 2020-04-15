@@ -167,6 +167,8 @@ Ansible will log the progress in the terminal, and will indicate which component
     51.178.95.237              : ok=15   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 
+.. _install/individual-playbook:
+
 Running individual playbooks
 ----------------------------
 
