@@ -12,6 +12,12 @@ The project provides:
 - Ansible playbooks to automate the deployment on a new server
 - Documentation for the plugin and the Ansible playbooks
 
+PlasmaBio can be seen as an **opinionated TLJH distribution**:
+
+- It gives admin users the possibility to configure multiple user environments backed by Docker images
+- It provides an interface to build the user environments, accessible from the JupyterHub panel
+- It uses PAM as the authenticator, and relies on system users for data persistence (home directories) and authentication
+
 Here is an overview of all the different components and their interactions after PlasmaBio has been deployed on a new server:
 
 .. image:: ../images/overview.png

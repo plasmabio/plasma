@@ -5,12 +5,6 @@
     - vars/default.yml
 
   tasks:
-    - name: Add the jovyan user
-      user:
-        name: jovyan
-        uid: 1100
-        group: users
-
     - name: Add foo Test User
       user:
         name: foo

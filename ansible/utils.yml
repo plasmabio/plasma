@@ -5,7 +5,7 @@
   tasks:
     - name: Install extra system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'jq' ]
+      loop: [ 'jq', 'tree' ]
 
     - name: Install ctop
       get_url:
