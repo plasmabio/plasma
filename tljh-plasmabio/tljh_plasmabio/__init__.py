@@ -1,6 +1,5 @@
 import os
 import pwd
-import shutil
 import sys
 
 from dockerspawner import SystemUserSpawner
@@ -21,7 +20,7 @@ CPU_PERIOD = 100_000
 
 
 # See: https://github.com/jupyterhub/jupyterhub/tree/master/examples/bootstrap-script#example-1---create-a-user-directory
-def create_pre_spawn_hook(base_path, uid=1100):
+def create_pre_spawn_hook(base_path):
     def pre_spawn_hook(spawner):
 
         # create user directory on the host if it does not exist
@@ -31,7 +30,6 @@ def create_pre_spawn_hook(base_path, uid=1100):
 
         volume_path = os.path.join(base_path, username, imagename_escaped)
         os.makedirs(volume_path, exist_ok=True)
-        shutil.chown(volume_path, user=uid)
 
         # the escaped image name is used to create a new folder in the user home directory
         spawner.host_homedir_format_string = spawner.host_homedir_format_string.format(

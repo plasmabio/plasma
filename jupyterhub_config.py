@@ -33,4 +33,4 @@ c.SystemUserSpawner.volumes = {
 c.SystemUserSpawner.host_homedir_format_string = os.path.join(
     volumes_path, "{username}", "{imagename}"
 )
-c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(volumes_path, user)
+c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(volumes_path)
