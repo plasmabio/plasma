@@ -13,6 +13,7 @@ groupadd -g $NB_GID -o ${NB_GROUP:-${NB_USER}}
 useradd --home ${USER_HOME} -u $NB_UID -g $NB_GID -G 100 -l $NB_USER
 
 # copy the content from the default docker image to the user home directory
+shopt -s dotglob
 cp -r --no-clobber /home/jovyan/* ${USER_HOME}
 
 # set correct permissions for the user home directory
@@ -25,8 +26,5 @@ if [[ -e  ${DATA} ]]; then
 fi
 ln -s /srv/data ${DATA}
 
-# Add $CONDA_DIR/bin to sudo secure_path
-sed -r "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CONDA_DIR/bin\"#" /etc/sudoers | grep secure_path > /etc/sudoers.d/path
-
 # execute the notebook process as the given user
-exec sudo -E -H -u $NB_USER PATH=$PATH PYTHONPATH=${PYTHONPATH} CONDA_DIR=${CONDA_DIR} "${@}"
+exec su - $NB_USER -m -c '"$0" "$@"' -- "$@"
