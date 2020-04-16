@@ -115,6 +115,8 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
             remove_image(name)
         except docker.errors.ImageNotFound:
             raise web.HTTPError(400, f"Image {name} does not exist")
+        except docker.errors.APIError as e:
+            raise web.HTTPError(500, str(e))
 
         self.set_status(200)
 
