@@ -32,9 +32,10 @@ def create_pre_spawn_hook(base_path):
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped image name is used to create a new folder in the user home directory
-        spawner.host_homedir_format_string = spawner.host_homedir_format_string.format(
-            username=username, imagename=imagename_escaped
-        )
+        homedir = f"/home/{username}/{imagename_escaped}"
+        spawner.host_homedir_format_string = homedir
+        # keep the same home dir name in the container to reflect the host file structure
+        spawner.image_homedir_format_string = homedir
 
         # set the image limits
         image = client.images.get(imagename)
