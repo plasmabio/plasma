@@ -32,10 +32,11 @@ For example when the user ``foo`` starts their server, the list of processes loo
 The following steps happen when a user starts their server:
 
 1. Mount the directory for the environment from the host into the container using the name of the image.
-   For example ``/home/user/plasmabio-template-python-12345`` will be mounted into ``/home/user`` inside the container.
+   For example ``/home/user/plasmabio-template-python-12345`` will be mounted into ``/home/user/plasmabio-template-python-12345`` inside the container.
    This has the advantage that everything is persisted to disk whenever a file is created from the notebook interface.
+   Also the file structure in the container reflects what is on the host.
 2. A new directory is created in the user home directory for each new environment (i.e for each Docker image).
-3. On server startup, the entrypoint script copies the files from the base image that are initially in ``/home/jovyan`` to ``/home/user``.
+3. On server startup, the entrypoint script copies the files from the base image that are initially in ``/home/jovyan`` to ``/home/user/plasmabio-template-python-12345`` in the container.
    They are then persisted in ``/home/user/plasmabio-template-python-12345`` on the host.
 
 .. image:: ../images/configuration/persistence.png
