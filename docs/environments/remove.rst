@@ -27,10 +27,10 @@ It is possible that removing an environment returns an error such as the followi
    :width: 100%
    :align: center
 
-This is most likely because the environment is currently in use by a user. We recommend asking the users to stop their server
+This is most likely because the environment is currently being used. We recommend asking the users to stop their server
 before attempting to remove the environment one more time.
 
-Alternatively the environment currently in use by a user is also displayed in the Admin panel:
+The environment (image) that a user is currently using is also displayed in the Admin panel:
 
 .. image:: ../images/environments/admin-panel-images.png
    :alt: Admin panel with the image name
