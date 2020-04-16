@@ -93,3 +93,8 @@ On the repository page, enter the reference in the search input box:
    :alt: Searching for a commit hash on GitHub
    :width: 100%
    :align: center
+
+Removing an environment returns an error
+----------------------------------------
+
+See :ref:`remove/error` for more info.
