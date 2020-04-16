@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+
+    # Add JupyterHub admins
+    - name: Add admin users
+      shell: tljh-config add-item users.admin {{ item }}
+      loop: "{{ admins }}"
+
+    - name: Reload the hub
+      shell: "tljh-config reload hub"
