@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install Cockpit with the Docker plugin
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'cockpit', 'cockpit-docker' ]
+
+    - name: Create the cockpit config
+      copy:
+        dest: "/etc/cockpit/cockpit.conf"
+        content: |
+          [WebService]
+          Origins = https://{{ letsencrypt_domain }} wss://{{ letsencrypt_domain }}
+          ProtocolHeader = X-Forwarded-Proto
+
+          # Cockpit is added as a JupyterHub service so the rules are added to Traefik
+          UrlRoot=/services/cockpit/
+
+          # SSL termination is done on the Traefik proxy
+          AllowUnencrypted=true
