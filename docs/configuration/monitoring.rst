@@ -28,6 +28,30 @@ Users will be asked to login with their system credentials. They can then access
 Monitoring user servers with Cockpit
 ------------------------------------
 
+.. note::
+
+  Access to Docker Containers requires access to ``docker``.
+
+  Make sure your user can access docker on the machine with:
+
+  .. code-block:: bash
+
+    sudo docker info
+
+  Your user should also be able to login with a password. If the user doesn't have a password yet, you can
+  create a new one with:
+
+  .. code-block:: bash
+
+    sudo passwd <username>
+
+  For example if your user is ``ubuntu``:
+
+  .. code-block:: bash
+
+    sudo passwd ubuntu
+
+
 Since user servers are started as Docker containers, they will be displayed in the Cockpit interface in the
 ``Docker Containers`` section:
 
