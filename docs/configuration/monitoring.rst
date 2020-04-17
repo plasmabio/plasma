@@ -51,6 +51,8 @@ Monitoring user servers with Cockpit
 
     sudo passwd ubuntu
 
+  To add more users as admin or change permissions from the Cockpit UI, see :ref:`monitoring/permissions`.
+
 
 Since user servers are started as Docker containers, they will be displayed in the Cockpit interface in the
 ``Docker Containers`` section:
@@ -67,3 +69,23 @@ The Cockpit interface shows:
 - The environment currently in use
 
 It is also possible to stop the user server by clicking on the "Stop" button.
+
+
+.. _monitoring/permissions:
+
+Changing user permissions from the Cockpit UI
+---------------------------------------------
+
+.. note::
+
+  You first need to be logged in with a user that has the ``sudo`` permission.
+
+Cockpit makes it easy to add a specific user to a certain group.
+
+For example a user can be given the "Container Administrator" role via the UI to be able to manage Docker containers
+and images on the machine:
+
+.. image:: ../images/configuration/cockpit-roles.png
+   :alt: Manage user roles from the Cockpit UI
+   :width: 100%
+   :align: center
