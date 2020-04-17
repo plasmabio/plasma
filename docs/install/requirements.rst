@@ -37,6 +37,8 @@ It can then be manually added to ``~/.ssh/authorized_keys`` on the server.
 
 For more information, checkout `this tutorial on DigitalOcean to set up SSH Keys on Ubuntu 18.04 <https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804>`_.
 
+.. _requirements/server:
+
 Creating a new server (optional)
 --------------------------------
 
@@ -54,18 +56,18 @@ The key must first be added to the list of available keys by using the cloud pro
 
 .. image:: ../images/install/add-ssh-key.png
    :alt: Add a new SSH key
-   :width: 100%
+   :width: 75%
    :align: center
 
 When asked to choose an SSH key, select the one you just added:
 
 .. image:: ../images/install/select-ssh-key.png
    :alt: Select the SSH key
-   :width: 100%
+   :width: 75%
    :align: center
 
-Test the connection
--------------------
+Testing the connection
+----------------------
 
 For a server with an ``ubuntu`` user, validate that you have access to it with:
 
@@ -79,3 +81,18 @@ Which should output the following:
 
     test
     Connection to 51.178.95.143 closed.
+
+Updating the local SSH config (optional)
+----------------------------------------
+
+Depending on the server used for the deployment, see :ref:`requirements/server`, you might want to add the
+following to your local SSH config located in ``~/.ssh/config``:
+
+.. code-block:: bash
+
+    Host *
+        ServerAliveInterval 60
+        ServerAliveCountMax 10
+
+These settings help keep the connection to server alive while the deployment is happening,
+or if you have an open SSH connection to the server.
