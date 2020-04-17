@@ -23,7 +23,7 @@
       ignore_errors: yes
 
     - name: Run the TLJH installer
-      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }} --admin foo"
+      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"

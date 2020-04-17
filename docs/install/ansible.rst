@@ -184,7 +184,6 @@ and update The Littlest JupyterHub):
 For more in-depth details about the Ansible playbook, check out the
 `official documentation <https://docs.ansible.com/ansible/latest/user_guide/playbooks.html>`_.
 
-
 List of available playbooks
 ---------------------------
 
@@ -194,5 +193,7 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``utils.yml``: install extra system packages useful for debugging and system administration
 - ``users.yml``: create the tests users on the host
 - ``tljh.yml``: install TLJH and the PlasmaBio TLJH plugin
+- ``admins.yml``: add admin users to JupyterHub
 - ``https.yml``: enable HTTPS for TLJH
-- ``site.yml``: the main playbook that references all the other playbooks
+- ``uninstall.yml``: uninstall TLJH only
+- ``site.yml``: the main playbook that references some of the other playbooks
