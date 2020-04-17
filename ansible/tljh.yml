@@ -17,10 +17,14 @@
         url: "{{ tljh_installer_url }}"
         dest: "{{ tljh_installer_dest }}"
 
-    - name: Upgrade the tljh-plasmabio plugin
+    - name: Check if the tljh-plasmabio is already installed
+      shell: "{{ tljh_prefix }}/hub/bin/python3 -c 'import tljh_plasmabio'"
+      register: tljh_plasmabio_installed
+      failed_when: tljh_plasmabio_installed.rc != 0 or tljh_plasmabio_installed.rc != 1
+
+    - name: Upgrade the tljh-plasmabio plugin first if it is already installed
       shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasmabio }}"
-      # ignore errors if this is a fresh install
-      ignore_errors: yes
+      when: tljh_plasmabio_installed.rc == 0
 
     - name: Run the TLJH installer
       shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
