@@ -127,6 +127,10 @@ def tljh_custom_jupyterhub_config(c):
             "admin": True,
             "url": "http://127.0.0.1:9988",
             "command": [sys.executable, "-m", "tljh_plasmabio.images"],
+        },
+        {
+            "name": "cockpit",
+            "url": "http://0.0.0.0:9090",
         }
     ]
 

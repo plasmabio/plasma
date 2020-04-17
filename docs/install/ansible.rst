@@ -192,6 +192,7 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``docker.yml``: install Docker CE on the host
 - ``utils.yml``: install extra system packages useful for debugging and system administration
 - ``users.yml``: create the tests users on the host
+- ``cockpit.yml``: install Cockpit on the host as a monitoring tool
 - ``tljh.yml``: install TLJH and the PlasmaBio TLJH plugin
 - ``admins.yml``: add admin users to JupyterHub
 - ``https.yml``: enable HTTPS for TLJH

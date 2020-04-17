@@ -3,7 +3,7 @@ import os
 
 import docker
 
-from jinja2 import ChoiceLoader, Environment, FileSystemLoader, PackageLoader
+from jinja2 import ChoiceLoader, Environment, FileSystemLoader, PackageLoader, PrefixLoader
 from jupyterhub._data import DATA_FILES_PATH
 from jupyterhub.services.auth import HubAuthenticated
 from jupyterhub.utils import auth_decorator, url_path_join
@@ -14,6 +14,7 @@ from .builder import BuildHandler
 loader = ChoiceLoader(
     [
         PackageLoader("tljh_plasmabio", "templates"),
+        PrefixLoader({'templates': FileSystemLoader([os.path.join(DATA_FILES_PATH, "templates")])}, '/'),
         FileSystemLoader(os.path.join(DATA_FILES_PATH, "templates")),
     ]
 )
