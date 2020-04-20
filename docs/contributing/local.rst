@@ -41,6 +41,15 @@ Install the development requirements
   # Install (https://github.com/jupyterhub/configurable-http-proxy)
   npm -g install configurable-http-proxy
 
+Pull the repo2docker Docker image
+---------------------------------
+
+User environments are built with ``repo2docker`` running in a Docker container. To pull the Docker image:
+
+.. code-block:: bash
+
+  docker pull jupyter/repo2docker
+
 Run
 ---
 
