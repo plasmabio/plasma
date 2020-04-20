@@ -9,6 +9,7 @@
       shell: |
         tljh-config set https.enabled true
         tljh-config set https.letsencrypt.email {{ letsencrypt_email }}
+        tljh-config unset https.letsencrypt.domains
         tljh-config add-item https.letsencrypt.domains {{ name_server }}
 
     - name: Reload the proxy

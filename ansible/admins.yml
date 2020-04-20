@@ -6,7 +6,9 @@
 
   tasks:
 
-    # Add JupyterHub admins
+    - name: Reset the list of admin users to avoid duplicates
+      shell: tljh-config unset users.admin
+
     - name: Add admin users
       shell: tljh-config add-item users.admin {{ item }}
       loop: "{{ admins }}"

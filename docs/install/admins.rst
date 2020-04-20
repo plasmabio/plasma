@@ -13,6 +13,10 @@ New admin users can be added by running the ``admins.yml`` playbook:
 
 This playbook processes the list of users specified via the ``--extra-vars`` command and add them as admin one at a time.
 
+.. warning::
+
+    The list passed via the ``--extra-vars`` parameter overrides the existing list of admins.
+
 Alternatively it is also possible to use the ``tljh-config`` command on the server directly.
 Please refer to `the Littlest JupyterHub documentation <http://tljh.jupyter.org/en/latest/howto/admin/admin-users.html#adding-admin-users-from-the-command-line>`_
 for more info.
