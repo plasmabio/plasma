@@ -6,6 +6,6 @@
     - name: Add users
       user:
         name: "{{ item.name }}"
-        password: "{{ item.password }}"
+        password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
       loop: "{{ users }}"
