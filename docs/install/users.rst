@@ -9,6 +9,9 @@ Creating Users on the host
   This step is optional because in some scenarios users might already exist on the host machine
   and don't need to be created.
 
+Using the users playbook
+------------------------
+
 The ``ansible/`` directory contains a ``users.yml`` playbook that makes it easier to create new users on the host in batches.
 
 First you need to create a new ``users-config.yml`` with the following content:
