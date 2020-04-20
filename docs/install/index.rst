@@ -9,6 +9,7 @@ This guide will walk you through the steps to install PlasmaBio on your own serv
    requirements
    ansible
    https
+   users
    admins
    upgrade
    uninstall

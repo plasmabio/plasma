@@ -18,5 +18,6 @@ MANIFEST
 # the local user volumes used for testing
 volumes/
 
-# the Ansible hosts file
+# the Ansible file
 ansible/hosts
+ansible/users-config.yml
