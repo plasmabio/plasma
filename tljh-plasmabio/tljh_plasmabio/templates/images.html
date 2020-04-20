@@ -13,7 +13,7 @@
       <tr>
         <th>Repository URL</th>
         <th>Reference</th>
-        <th>Mem. Limit</th>
+        <th>Mem. Limit (GB)</th>
         <th>CPU Limit</th>
         <th>Status</th>
         <th class="text-center"><a id="add-environment" role="button" class="btn btn-primary btn-xs">Add New</a></th>
@@ -28,19 +28,11 @@
         <td class="ref-col col-sm-2">
           <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.ref }}</a>
         </td>
-        <td class="ref-col col-sm-1">
-          {% if image.mem_limit == '' %}
-            default
-          {% else %}
-            {{ image.mem_limit }}
-          {%- endif %}
+        <td class="ref-col col-sm-2">
+          {{ image.mem_limit | replace("G", "") }}
         </td>
         <td class="ref-col col-sm-1">
-          {% if image.cpu_limit == '' %}
-            default
-          {% else %}
-            {{ image.cpu_limit }}
-          {%- endif %}
+          {{ image.cpu_limit }}
         </td>
         <td class="status-col col-sm-1">
           {% if image.status == 'building' %}
