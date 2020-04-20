@@ -1,8 +1,6 @@
 ---
 - hosts: all
   become: true
-  vars_files:
-    - vars/default.yml
 
   tasks:
 
@@ -11,7 +9,7 @@
       shell: |
         tljh-config set https.enabled true
         tljh-config set https.letsencrypt.email {{ letsencrypt_email }}
-        tljh-config add-item https.letsencrypt.domains {{ letsencrypt_domain }}
+        tljh-config add-item https.letsencrypt.domains {{ name_server }}
 
     - name: Reload the proxy
       shell: "tljh-config reload proxy"

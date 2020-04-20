@@ -55,6 +55,6 @@ In addition to the user data, the plugin also mounts a shared data volume for al
 The shared data is available under ``/home/user/data`` inside the user server, as pictured in the diagram above.
 
 On the host machine, the shared data should be placed under ``/srv/data`` as recommended in the
-`TLJH documentation <https://github.com/plasmabio/plasmabio/blob/684515bfc5837705d89fc6a7863a69a561e8d15d/ansible/vars/default.yml#L4>`_.
+`TLJH documentation <http://tljh.jupyter.org/en/latest/howto/content/share-data.html#option-2-create-a-read-only-shared-folder-for-data>`_.
 
 The shared data is **read-only**.
