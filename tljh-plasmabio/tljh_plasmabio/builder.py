@@ -3,6 +3,7 @@ import json
 import subprocess
 import sys
 
+from concurrent.futures import ThreadPoolExecutor
 from http.client import responses
 from threading import Event
 from urllib.parse import urlparse
@@ -11,6 +12,7 @@ import docker
 
 from jupyterhub.services.auth import HubAuthenticated
 from tornado import web, escape
+from tornado.concurrent import run_on_executor
 from tornado.log import app_log
 
 client = docker.from_env()
@@ -81,6 +83,9 @@ def remove_image(name):
 
 
 class BuildHandler(HubAuthenticated, web.RequestHandler):
+
+    executor = ThreadPoolExecutor(max_workers=5)
+
     def initialize(self):
         self.log = app_log
 
@@ -106,12 +111,12 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         )
 
     @web.authenticated
+    @run_on_executor
     def delete(self):
         self.log.debug("Delete an image")
         data = escape.json_decode(self.request.body)
         name = data["name"]
         try:
-            # TODO: should this run in an executor? (removing the image is blocking)
             remove_image(name)
         except docker.errors.ImageNotFound:
             raise web.HTTPError(400, f"Image {name} does not exist")
@@ -121,6 +126,7 @@ class BuildHandler(HubAuthenticated, web.RequestHandler):
         self.set_status(200)
 
     @web.authenticated
+    @run_on_executor
     def post(self):
         self.log.debug("Build user images")
 
