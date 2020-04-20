@@ -8,6 +8,7 @@ set -e
 # handle user override
 NB_GID=${NB_UID}
 PATH=${PATH//jovyan/$NB_USER}
+IMAGE_DIR=${HOME}/${USER_IMAGE}
 
 # add a new group for the user
 groupadd -g $NB_GID -o ${NB_GROUP:-${NB_USER}}
@@ -17,10 +18,15 @@ useradd --home ${HOME} -u $NB_UID -g $NB_GID -G 100 -l $NB_USER
 
 # copy the content from the default docker image to the user home directory
 shopt -s dotglob
-cp -r --no-clobber /home/jovyan/* ${HOME}
+cp -r --no-clobber /home/jovyan/* ${IMAGE_DIR}
 
-# set correct permissions for the user home directory
-chown -R ${NB_USER}:${NB_USER} ${HOME}
+# set the correct permissions for the user home subdirectory
+chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
+
+# set the Jupyter paths environment variables to find potential configuration
+# and data files from the user environment base images home directories
+export JUPYTER_CONFIG_DIR=${IMAGE_DIR}/.jupyter
+export JUPYTER_PATH=${IMAGE_DIR}/.local/share/jupyter
 
 # execute the notebook process as the given user
 exec su - $NB_USER -m -c '"$0" "$@"' -- "$@"
