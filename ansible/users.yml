@@ -1,18 +1,11 @@
 ---
 - hosts: all
   become: true
-  vars_files:
-    - vars/default.yml
 
   tasks:
-    - name: Add foo Test User
+    - name: Add users
       user:
-        name: foo
-        password: $6$CnqUc/Ayp94RjVrl$ka.yRuhJ.vzE9oZJNi5AvmzBv/1J2fdGJuR.xCE2dwAAhOJxDIwBLjxLhXUKUjhJKgocL5ulERrJN3A/odQBv/
+        name: "{{ item.name }}"
+        password: "{{ item.password }}"
         shell: /bin/bash
-
-    - name: Add bar Test User
-      user:
-        name: bar
-        password: $6$GtGG1/ZeJ4QrA9.R$SmnuofrF9D8BfYGpHwHSJ8wizLoqHfIJc8JQNROR7mM8/Edu8SlEPCxAxQ3y6uyxqNS8NHOgVc9v3gM5c1GOO1
-        shell: /bin/bash
+      loop: "{{ users }}"

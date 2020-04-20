@@ -1,7 +1,7 @@
 .. _install/admins:
 
-Admin Users
-===========
+Adding Admin Users to JupyterHub
+================================
 
 By default the ``site.yml`` playbook does not add admin users to JupyterHub.
 
