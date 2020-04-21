@@ -105,9 +105,6 @@ def tljh_custom_jupyterhub_config(c):
         ): "/usr/local/bin/repo2docker-entrypoint",
         SHARED_DATA_PATH: {"bind": "/srv/data", "mode": "ro"},
     }
-    c.SystemUserSpawner.host_homedir_format_string = os.path.join(
-        VOLUMES_PATH, "{username}", "{imagename}"
-    )
 
     # set the default cpu and memory limits
     c.SystemUserSpawner.mem_limit = DEFAULT_MEMORY_LIMIT
