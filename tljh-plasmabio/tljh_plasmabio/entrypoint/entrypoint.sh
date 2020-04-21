@@ -23,10 +23,7 @@ cp -r --no-clobber /home/jovyan/* ${IMAGE_DIR}
 # set the correct permissions for the user home subdirectory
 chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 
-# set the Jupyter paths environment variables to find potential configuration
-# and data files from the user environment base images home directories
-export JUPYTER_CONFIG_DIR=${IMAGE_DIR}/.jupyter
-export JUPYTER_PATH=${IMAGE_DIR}/.local/share/jupyter
+cd ${IMAGE_DIR}
 
 # execute the notebook process as the given user
 exec su - $NB_USER -m -c '"$0" "$@"' -- "$@"
