@@ -9,3 +9,12 @@
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
       loop: "{{ users }}"
+
+    - name: Set user quota
+      shell: |
+        setquota -u {{ item.name }} \
+        {{ item.quota.soft if item.quota.soft is defined else quota.soft }} \
+        {{ item.quota.hard if item.quota.hard is defined else quota.hard }} \
+        0 0 /
+      when: quota is defined
+      loop: "{{ users }}"
