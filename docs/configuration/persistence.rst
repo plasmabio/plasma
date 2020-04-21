@@ -31,17 +31,16 @@ For example when the user ``foo`` starts their server, the list of processes loo
 
 The following steps happen when a user starts their server:
 
-1. Mount the directory for the environment from the host into the container using the name of the image.
-   For example ``/home/user/plasmabio-template-python-12345`` will be mounted into ``/home/user/plasmabio-template-python-12345`` inside the container.
-   This has the advantage that everything is persisted to disk whenever a file is created from the notebook interface.
-   Also the file structure in the container reflects what is on the host.
+1. Mount the user home directory on the host into the container. This means that the file structure in the container reflects what is on the host.
 2. A new directory is created in the user home directory for each new environment (i.e for each Docker image).
+   For example if a user starts the ``plasmabio/template-python:12345`` environment, there will be a new folder created under ``/home/user/plasmabio-template-python-12345``.
+   This folder is then persisted to disk in the user home directory on the host. Any file and notebook created from the notebook interface are also persisted to disk.
 3. On server startup, the entrypoint script copies the files from the base image that are initially in ``/home/jovyan`` to ``/home/user/plasmabio-template-python-12345`` in the container.
    They are then persisted in ``/home/user/plasmabio-template-python-12345`` on the host.
 
 .. image:: ../images/configuration/persistence.png
    :alt: Mounting user's home directories
-   :width: 100%
+   :width: 80%
    :align: center
 
 - The files highlighted in blue correspond to the files initially bundled in the environment. These files are copied to the environment subdirectory in the user home directory on startup.
@@ -52,7 +51,7 @@ Shared Data
 
 In addition to the user data, the plugin also mounts a shared data volume for all users.
 
-The shared data is available under ``/home/user/data`` inside the user server, as pictured in the diagram above.
+The shared data is available under ``/srv/data`` inside the user server, as pictured in the diagram above.
 
 On the host machine, the shared data should be placed under ``/srv/data`` as recommended in the
 `TLJH documentation <http://tljh.jupyter.org/en/latest/howto/content/share-data.html#option-2-create-a-read-only-shared-folder-for-data>`_.
