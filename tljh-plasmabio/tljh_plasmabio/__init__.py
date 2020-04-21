@@ -32,7 +32,7 @@ def create_pre_spawn_hook(base_path):
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped image name is used to create a new folder in the user home directory
-        spawner.host_homedir_format_string = f"/{base_path}/{username}"
+        spawner.host_homedir_format_string = f"{base_path}/{username}"
         # pass the image name to the Docker container
         spawner.environment = {"USER_IMAGE": imagename_escaped}
 
