@@ -20,6 +20,12 @@ useradd --home ${HOME} -u $NB_UID -g $NB_GID -G 100 -l $NB_USER
 shopt -s dotglob
 cp -r --no-clobber /home/jovyan/* ${IMAGE_DIR}
 
+# remove the .cache if it exists, as it can be a couple hundreds MB big
+if [ -d ${IMAGE_DIR}/.cache ]
+then
+  rm -r ${IMAGE_DIR}/.cache
+fi
+
 # set the correct permissions for the user home subdirectory
 chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 
