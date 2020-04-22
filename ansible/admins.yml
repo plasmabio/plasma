@@ -8,6 +8,8 @@
 
     - name: Reset the list of admin users to avoid duplicates
       shell: tljh-config unset users.admin
+      register: admins
+      failed_when: admins.rc > 1
 
     - name: Add admin users
       shell: tljh-config add-item users.admin {{ item }}

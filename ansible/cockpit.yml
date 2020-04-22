@@ -14,7 +14,7 @@
         dest: "/etc/cockpit/cockpit.conf"
         content: |
           [WebService]
-          Origins = https://{{ letsencrypt_domain }} wss://{{ letsencrypt_domain }}
+          Origins = https://{{ name_server }} wss://{{ name_server }}
           ProtocolHeader = X-Forwarded-Proto
 
           # Cockpit is added as a JupyterHub service so the rules are added to Traefik
