@@ -30,7 +30,4 @@ c.SystemUserSpawner.volumes = {
     ): "/usr/local/bin/repo2docker-entrypoint",
     shared_data_path: {"bind": "/srv/data", "mode": "ro"},
 }
-c.SystemUserSpawner.host_homedir_format_string = os.path.join(
-    volumes_path, "{username}", "{imagename}"
-)
 c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(volumes_path)

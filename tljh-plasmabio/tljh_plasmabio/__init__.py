@@ -26,16 +26,15 @@ def create_pre_spawn_hook(base_path):
         # create user directory on the host if it does not exist
         username = spawner.user.name
         imagename = spawner.user_options.get("image")
-        imagename_escaped = imagename.replace(":", "-").replace('/', "-")
+        imagename_escaped = imagename.replace(":", "-").replace("/", "-")
 
         volume_path = os.path.join(base_path, username, imagename_escaped)
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped image name is used to create a new folder in the user home directory
-        homedir = f"/home/{username}/{imagename_escaped}"
-        spawner.host_homedir_format_string = homedir
-        # keep the same home dir name in the container to reflect the host file structure
-        spawner.image_homedir_format_string = homedir
+        spawner.host_homedir_format_string = f"{base_path}/{username}"
+        # pass the image name to the Docker container
+        spawner.environment = {"USER_IMAGE": imagename_escaped}
 
         # set the image limits
         image = client.images.get(imagename)
@@ -101,12 +100,11 @@ def tljh_custom_jupyterhub_config(c):
     # TODO: change back to jupyterhub-singleuser
     c.SystemUserSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
     c.SystemUserSpawner.volumes = {
-        os.path.join(os.path.dirname(__file__), "entrypoint", "entrypoint.sh"): "/usr/local/bin/repo2docker-entrypoint",
+        os.path.join(
+            os.path.dirname(__file__), "entrypoint", "entrypoint.sh"
+        ): "/usr/local/bin/repo2docker-entrypoint",
         SHARED_DATA_PATH: {"bind": "/srv/data", "mode": "ro"},
     }
-    c.SystemUserSpawner.host_homedir_format_string = os.path.join(
-        VOLUMES_PATH, "{username}", "{imagename}"
-    )
 
     # set the default cpu and memory limits
     c.SystemUserSpawner.mem_limit = DEFAULT_MEMORY_LIMIT
@@ -118,7 +116,9 @@ def tljh_custom_jupyterhub_config(c):
     c.SystemUserSpawner.image_whitelist = image_whitelist
     c.SystemUserSpawner.options_form = options_form
 
-    c.JupyterHub.template_paths = os.path.join(os.path.dirname(__file__), "templates"),
+    c.JupyterHub.template_paths = (
+        os.path.join(os.path.dirname(__file__), "templates"),
+    )
 
     # register the service to manage the user images
     c.JupyterHub.services += [
@@ -128,10 +128,7 @@ def tljh_custom_jupyterhub_config(c):
             "url": "http://127.0.0.1:9988",
             "command": [sys.executable, "-m", "tljh_plasmabio.images"],
         },
-        {
-            "name": "cockpit",
-            "url": "http://0.0.0.0:9090",
-        }
+        {"name": "cockpit", "url": "http://0.0.0.0:9090",},
     ]
 
 
