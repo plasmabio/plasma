@@ -1,8 +1,8 @@
 ---
 - hosts: all
   become: true
-  vars_files:
-    - vars/default.yml
+  vars:
+    device: LABEL=cloudimg-rootfs
 
   tasks:
     - name: Install tools to set quotas
@@ -15,7 +15,7 @@
     - name: Mount up device by label
       mount:
         path: /
-        src: LABEL=cloudimg-rootfs
+        src: "{{ device }}"
         opts: usrquota,grpquota
         fstype: ext4
         state: present
