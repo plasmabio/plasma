@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  vars:
+    device: LABEL=cloudimg-rootfs
+
+  tasks:
+    - name: Install tools to set quotas
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'quota', 'linux-image-extra-virtual' ]
+
+    - name: Reboot the machine
+      reboot:
+
+    - name: Mount up device by label
+      mount:
+        path: /
+        src: "{{ device }}"
+        opts: usrquota,grpquota
+        fstype: ext4
+        state: present
+
+    - name: Remount /
+      mount:
+        path: /
+        state: remounted
+
+    - stat:
+          path: /aquota.user
+      register: quota
+
+    - name: Enable quotas
+      shell: |
+        quotacheck -ugm /
+        quotaon -v /
+      when: quota.stat.exists == False
