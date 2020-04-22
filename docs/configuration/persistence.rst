@@ -46,6 +46,42 @@ The following steps happen when a user starts their server:
 - The files highlighted in blue correspond to the files initially bundled in the environment. These files are copied to the environment subdirectory in the user home directory on startup.
 - The other files are examples of files created by the user.
 
+User server startup
+-------------------
+
+The user server is started from the environment directory:
+
+.. image:: ../images/configuration/user-server-rootdir.png
+   :alt: User servers are started in the environment directory
+   :width: 50%
+   :align: center
+
+The rest of the user files are mounted into the container, see :ref:`persistence/user-data`.
+
+A user can for example open a terminal and access their files by typing ``cd``.
+
+They can then inspect their files:
+
+.. code-block:: text
+
+   foo@3e29b2297563:/home/foo$ ls -lisah
+   total 56K
+    262882 4.0K drwxr-xr-x  9 foo  foo  4.0K Apr 21 16:53 .
+   6205024 4.0K drwxr-xr-x  1 root root 4.0K Apr 21 16:50 ..
+    266730 4.0K -rw-------  1 foo  foo   228 Apr 21 14:41 .bash_history
+    262927 4.0K -rw-r--r--  1 foo  foo   220 May  5  2019 .bash_logout
+    262928 4.0K -rw-r--r--  1 foo  foo  3.7K May  5  2019 .bashrc
+   1043206 4.0K drwx------  3 foo  foo  4.0K Apr 21 09:26 .cache
+    528378 4.0K drwx------  3 foo  foo  4.0K Apr 17 17:36 .gnupg
+   1565895 4.0K drwxrwxr-x  2 foo  foo  4.0K Apr 21 09:55 .ipynb_checkpoints
+   1565898 4.0K drwxr-xr-x  5 foo  foo  4.0K Apr 21 09:27 .ipython
+   1565880 4.0K drwxrwxr-x  3 foo  foo  4.0K Apr 21 09:26 .local
+    258181    0 -rw-rw-r--  1 foo  foo     0 Apr 21 16:53 out
+   1050223 4.0K drwxrwxr-x 12 foo  foo  4.0K Apr 20 10:44 plasmabio-template-bash-master
+   1043222 4.0K drwxrwxr-x 13 foo  foo  4.0K Apr 20 17:07 plasmabio-template-python-master
+    262926 4.0K -rw-r--r--  1 foo  foo   807 May  5  2019 .profile
+    258193 4.0K -rw-rw-r--  1 foo  foo   843 Apr 21 09:56 Untitled.ipynb
+
 Shared Data
 -----------
 
