@@ -107,7 +107,7 @@ To enable quotas on the machine, execute the ``quotas.yml`` playbook with the so
 Setting the user quotas
 .......................
 
-The ``users.yml`` playbook can also be used to set the user quotas. In ``users-config.yml`` you can defined quotas as follows:
+The ``users.yml`` playbook can also be used to set the user quotas. In ``users-config.yml`` you can define quotas as follows:
 
 .. code-block:: yaml
 
@@ -121,10 +121,26 @@ The ``users.yml`` playbook can also be used to set the user quotas. In ``users-c
       password: foo
       # override quota for a specific user
       quota:
-        soft: 20G
-        hard: 25G
+        soft: 512M
+        hard: 1G
 
     - name: bar
       password: bar
 
 Then re-run the ``users.yml`` playbook as mentioned in :ref:`install/users-playbook`.
+
+For example, if a user exceeds their quota when creating a file from the terminal inside the container, they will be shown the following message:
+
+.. code-block:: text
+
+  foo@549539d386e5:~/plasmabio-template-python-master$ fallocate -l 1G test.img
+  fallocate: fallocate failed: Disk quota exceeded
+
+On the host machine, a user can check their quota by running the following command:
+
+.. code-block:: text
+
+  foo@plasmabio-jtuloup-test-quotas:~$ quota -vs
+  Disk quotas for user foo (uid 1001):
+       Filesystem   space   quota   limit   grace   files   quota   limit   grace
+        /dev/sda1   1024M*   512M   1024M   6days   33910       0       0
