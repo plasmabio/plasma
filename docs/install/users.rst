@@ -140,7 +140,14 @@ On the host machine, a user can check their quota by running the following comma
 
 .. code-block:: text
 
-  foo@plasmabio-jtuloup-test-quotas:~$ quota -vs
+  foo@test-server:~$ quota -vs
   Disk quotas for user foo (uid 1001):
        Filesystem   space   quota   limit   grace   files   quota   limit   grace
         /dev/sda1   1024M*   512M   1024M   6days   33910       0       0
+
+If the quota is exceeded and the user tries to create a new notebook from the interface, they will be shown an error dialog:
+
+.. image:: ../images/install/quota-exceeded.png
+   :alt: User quota exceeded
+   :width: 80%
+   :align: center
