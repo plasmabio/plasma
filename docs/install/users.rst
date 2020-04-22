@@ -69,7 +69,7 @@ Check it out for more info on user and group quotas.
 
 .. warning::
 
-  It is recommended to do the initial quota setup **before** letting users to connect to the hub.
+  It is recommended to do the initial quota setup **before** letting users connect to the hub.
 
 Finding the source device
 .........................
