@@ -23,6 +23,7 @@ cp -r --no-clobber /home/jovyan/* ${IMAGE_DIR}
 # set the correct permissions for the user home subdirectory
 chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 
+# start the notebook server from the environment directory
 cd ${IMAGE_DIR}
 
 # execute the notebook process as the given user
