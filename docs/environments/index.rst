@@ -6,7 +6,7 @@ The Docker images bundle the dependencies, extensions, and predefined notebooks 
 
 PlasmaBio uses `jupyter-repo2docker <https://repo2docker.readthedocs.io>`_ to build the images on the server.
 
-Environments can be managed by admin users by clicking on ``Services -> environments``:
+Environments can be managed by admin users by clicking on ``Environments`` in the navigation bar:
 
 .. image:: ../images/environments/services-navbar.png
    :alt: Manage the list of environments
