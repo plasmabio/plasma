@@ -1,5 +1,4 @@
 ---
 - import_playbook: docker.yml
 - import_playbook: utils.yml
-- import_playbook: cockpit.yml
 - import_playbook: tljh.yml
