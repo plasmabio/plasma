@@ -6,6 +6,7 @@ from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyter_client.localinterfaces import public_ips
 from tljh.hooks import hookimpl
+from tljh.systemd import check_service_active
 from traitlets import default
 
 from .builder import DEFAULT_CPU_LIMIT, DEFAULT_MEMORY_LIMIT
@@ -121,15 +122,20 @@ def tljh_custom_jupyterhub_config(c):
     )
 
     # register the service to manage the user images
-    c.JupyterHub.services += [
+    c.JupyterHub.services.append(
         {
             "name": "environments",
             "admin": True,
             "url": "http://127.0.0.1:9988",
             "command": [sys.executable, "-m", "tljh_plasmabio.images"],
-        },
-        {"name": "cockpit", "url": "http://0.0.0.0:9090",},
-    ]
+        }
+    )
+
+    # register Cockpit as a service if active
+    if check_service_active("cockpit"):
+        c.JupyterHub.services.append(
+            {"name": "cockpit", "url": "http://0.0.0.0:9090",},
+        )
 
 
 @hookimpl
