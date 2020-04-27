@@ -22,3 +22,13 @@
 
           # SSL termination is done on the Traefik proxy
           AllowUnencrypted=true
+
+    - name: Ensure cockpit is running
+      systemd:
+        name: cockpit
+        state: started
+        daemon_reload: yes
+
+    # Restart JupyterHub to add the cockpit service
+    - name: Restart the hub
+      shell: "tljh-config reload hub"
