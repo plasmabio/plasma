@@ -1,12 +1,12 @@
 """
 This file is only used for local development
-and overrides some of the default values.
+and overrides some of the default values from the plugin.
 """
 
 import getpass
 import os
 
-from tljh_plasmabio import create_pre_spawn_hook, tljh_custom_jupyterhub_config
+from tljh_plasmabio import tljh_custom_jupyterhub_config
 
 c.JupyterHub.services = []
 
@@ -16,18 +16,6 @@ user = getpass.getuser()
 
 c.Authenticator.admin_users = {user}
 
-# configure volumes for local setup
-volumes_path = os.path.join(os.getcwd(), "volumes/user")
-shared_data_path = os.path.join(os.getcwd(), "volumes/data")
-
-c.SystemUserSpawner.volumes = {
-    os.path.join(
-        os.path.dirname(__file__),
-        "tljh-plasmabio",
-        "tljh_plasmabio",
-        "entrypoint",
-        "entrypoint.sh",
-    ): "/usr/local/bin/repo2docker-entrypoint",
-    shared_data_path: {"bind": "/srv/data", "mode": "ro"},
-}
-c.SystemUserSpawner.pre_spawn_hook = create_pre_spawn_hook(volumes_path)
+# configure the volumes paths for local setup
+c.PlasmaBioSpawner.base_path = os.path.join(os.getcwd(), "volumes/user")
+c.PlasmaBioSpawner.shared_data_path = os.path.join(os.getcwd(), "volumes/data")
