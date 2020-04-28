@@ -36,6 +36,11 @@
     - name: Set the idle culler timeout to 1 hour
       shell: "tljh-config set services.cull.timeout 3600"
 
+    - name: Set the default memory and cpu limits
+      shell: |
+        tljh-config set limits.mem_limit 2G
+        tljh-config set limits.cpu_limit 2
+
     - name: Reload the hub
       shell: "tljh-config reload hub"
 

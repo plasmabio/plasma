@@ -6,9 +6,9 @@ from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
-from tljh_docker import (
+from tljh_repo2docker import (
     TLJHDockerSpawner,
-    tljh_custom_jupyterhub_config as tljh_docker_config_hook,
+    tljh_custom_jupyterhub_config as tljh_repo2docker_config_hook,
 )
 from traitlets import default, Unicode
 
@@ -17,9 +17,16 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
 
     base_path = Unicode("/home", config=True, help="The base path for the user volumes")
 
-    shared_data_path = Unicode("/srv/data", help="The path to the shared data folder")
+    shared_data_path = Unicode(
+        "/srv/data", config=True, help="The path to the shared data folder"
+    )
 
-    def pre_spawn_hook(self, spawner):
+    def start(self):
+
+        # set the image limits
+        super().set_limits()
+
+        # escape the image name
         username = self.user.name
         imagename = self.user_options.get("image")
         imagename_escaped = imagename.replace(":", "-").replace("/", "-")
@@ -41,13 +48,13 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
             self.shared_data_path: {"bind": "/srv/data", "mode": "ro"},
         }
 
-        return super().pre_spawn_hook(spawner)
+        return super().start()
 
 
 @hookimpl
 def tljh_custom_jupyterhub_config(c):
-    # reuse the tljh-docker default configuration
-    tljh_docker_config_hook(c)
+    # reuse the base default configuration
+    tljh_repo2docker_config_hook(c)
 
     # override with the PlasmaBio JupyterHub configuration
 

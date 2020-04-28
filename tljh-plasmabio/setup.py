@@ -6,5 +6,5 @@ setup(
     entry_points={"tljh": ["tljh_plasmabio = tljh_plasmabio"]},
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["dockerspawner", "jupyter_client", "docker"],
+    install_requires=["dockerspawner"],
 )
