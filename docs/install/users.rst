@@ -39,7 +39,7 @@ When the user file is ready, execute the ``users.yml`` playbook with the followi
 
 .. code-block:: bash
 
-    ansible-playbook users.yml -i host -u ubuntu -e @users-config.yml
+    ansible-playbook users.yml -i hosts -u ubuntu -e @users-config.yml
 
 Handling secrets
 ----------------
