@@ -28,7 +28,10 @@
       when: tljh_plasmabio_installed.rc == 0
 
     - name: Run the TLJH installer
-      shell: "{{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env --plugin {{ tljh_plasmabio }}"
+      shell: |
+        {{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env \
+          --plugin {{ tljh_plasmabio }} \
+          --plugin {{ tljh_repo2docker }}
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"

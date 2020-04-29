@@ -6,10 +6,7 @@ from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
-from tljh_repo2docker import (
-    TLJHDockerSpawner,
-    tljh_custom_jupyterhub_config as tljh_repo2docker_config_hook,
-)
+from tljh_repo2docker import TLJHDockerSpawner
 from traitlets import default, Unicode
 
 
@@ -22,7 +19,6 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
     )
 
     def start(self):
-
         # set the image limits
         super().set_limits()
 
@@ -51,13 +47,8 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
         return super().start()
 
 
-@hookimpl
+@hookimpl(trylast=True)
 def tljh_custom_jupyterhub_config(c):
-    # reuse the base default configuration
-    tljh_repo2docker_config_hook(c)
-
-    # override with the PlasmaBio JupyterHub configuration
-
     # hub
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator

@@ -7,9 +7,14 @@ import getpass
 import os
 
 from tljh_plasmabio import tljh_custom_jupyterhub_config
+from tljh_repo2docker import (
+    tljh_custom_jupyterhub_config as tljh_repo2docker_config_hook,
+)
 
 c.JupyterHub.services = []
 
+# tljh-plasmabio depends on tljh-repo2docker
+tljh_repo2docker_config_hook(c)
 tljh_custom_jupyterhub_config(c)
 
 user = getpass.getuser()
