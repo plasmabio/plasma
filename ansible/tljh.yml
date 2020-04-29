@@ -24,14 +24,13 @@
       changed_when: False
 
     - name: Upgrade the tljh-plasmabio plugin first if it is already installed
-      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasmabio }}"
+      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasmabio }} {{ tljh_repo2docker }}"
       when: tljh_plasmabio_installed.rc == 0
 
     - name: Run the TLJH installer
       shell: |
         {{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env \
-          --plugin {{ tljh_plasmabio }} \
-          --plugin {{ tljh_repo2docker }}
+          --plugin {{ tljh_plasmabio }} {{ tljh_repo2docker }}
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
@@ -41,8 +40,8 @@
 
     - name: Set the default memory and cpu limits
       shell: |
-        tljh-config set limits.mem_limit 2G
-        tljh-config set limits.cpu_limit 2
+        tljh-config set limits.memory 2G
+        tljh-config set limits.cpu 2
 
     - name: Reload the hub
       shell: "tljh-config reload hub"
