@@ -1,10 +1,21 @@
 ---
 - hosts: all
   become: true
-  vars:
-    device: LABEL=cloudimg-rootfs
 
   tasks:
+    - name: List mounted devices on hosts
+      shell: cat /etc/fstab
+      register: fstab
+      tags:
+        - never
+        - discover
+  
+    - name: Print mounted devices on hosts
+      debug: var="fstab.stdout_lines + [ fstab.stderr ]"
+      tags:
+        - never
+        - discover
+  
     - name: Install tools to set quotas
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'quota', 'linux-image-extra-virtual' ]
@@ -12,17 +23,17 @@
     - name: Reboot the machine
       reboot:
 
-    - name: Mount up device by label
+    - name: Mount up device with quota
       mount:
-        path: /
-        src: "{{ device }}"
+        path: "{{ quota_device_path }}"
+        src: "{{ quota_device_name }}"
         opts: usrquota,grpquota
         fstype: ext4
         state: present
 
-    - name: Remount /
+    - name: Remount disk
       mount:
-        path: /
+        path: "{{ quota_device_path }}"
         state: remounted
 
     - stat:
