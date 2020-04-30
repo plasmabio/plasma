@@ -44,7 +44,7 @@ Make sure `Ansible <https://docs.ansible.com/ansible/latest/index.html>`_ is ins
 
 .. code-block:: bash
 
-    python -m pip install ansible
+    python -m pip install ansible>=2.9
 
 
 To verify the installation, run:
