@@ -46,6 +46,11 @@ Make sure `Ansible <https://docs.ansible.com/ansible/latest/index.html>`_ is ins
 
     python -m pip install ansible>=2.9
 
+.. note::
+
+    We recommend ansible >= 2.9 to get ride of unecessary warning message 
+    regarding the use of aptitude.
+
 
 To verify the installation, run:
 
