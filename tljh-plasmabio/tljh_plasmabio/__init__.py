@@ -18,9 +18,9 @@ class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
         "/srv/data", config=True, help="The path to the shared data folder"
     )
 
-    def start(self):
+    async def start(self):
         # set the image limits
-        super().set_limits()
+        await super().set_limits()
 
         # escape the display name of the environment
         username = self.user.name
@@ -44,7 +44,7 @@ class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
             self.shared_data_path: {"bind": "/srv/data", "mode": "ro"},
         }
 
-        return super().start()
+        return await super().start()
 
 
 @hookimpl(trylast=True)
