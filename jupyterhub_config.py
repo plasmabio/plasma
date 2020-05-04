@@ -22,5 +22,5 @@ user = getpass.getuser()
 c.Authenticator.admin_users = {user}
 
 # configure the volumes paths for local setup
-c.PlasmaBioSpawner.base_path = os.path.join(os.getcwd(), "volumes/user")
+c.PlasmaBioSpawner.base_volume_path = os.path.join(os.getcwd(), "volumes/user")
 c.PlasmaBioSpawner.shared_data_path = os.path.join(os.getcwd(), "volumes/data")

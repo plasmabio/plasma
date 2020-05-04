@@ -11,8 +11,14 @@ from traitlets import default, Unicode
 
 
 class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
+    """
+    A custom Spawner to start user servers using Docker images
+    built locally with repo2docker.
+    """
 
-    base_path = Unicode("/home", config=True, help="The base path for the user volumes")
+    base_volume_path = Unicode(
+        "/home", config=True, help="The base path for the user volumes"
+    )
 
     shared_data_path = Unicode(
         "/srv/data", config=True, help="The path to the shared data folder"
@@ -28,11 +34,13 @@ class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
         display_name_escaped = display_name.replace(":", "-").replace("/", "-")
 
         # create the user directory on the host if it does not exist
-        volume_path = os.path.join(self.base_path, username, display_name_escaped)
+        volume_path = os.path.join(
+            self.base_volume_path, username, display_name_escaped
+        )
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped environment name is used to create a new folder in the user home directory
-        self.host_homedir_format_string = f"{self.base_path}/{username}"
+        self.host_homedir_format_string = f"{self.base_volume_path}/{username}"
         # pass the image name to the Docker container
         self.environment = {"USER_IMAGE": display_name_escaped}
 
