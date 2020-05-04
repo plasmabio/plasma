@@ -6,11 +6,11 @@ from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
-from tljh_repo2docker import TLJHDockerSpawner
+from tljh_repo2docker import SpawnerMixin
 from traitlets import default, Unicode
 
 
-class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
+class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
 
     base_path = Unicode("/home", config=True, help="The base path for the user volumes")
 
@@ -18,23 +18,23 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
         "/srv/data", config=True, help="The path to the shared data folder"
     )
 
-    def start(self):
+    async def start(self, *args, **kwargs):
         # set the image limits
-        super().set_limits()
+        await super().set_limits()
 
-        # escape the image name
+        # escape the display name of the environment
         username = self.user.name
-        imagename = self.user_options.get("image")
-        imagename_escaped = imagename.replace(":", "-").replace("/", "-")
+        display_name = self.user_options.get("display_name")
+        display_name_escaped = display_name.replace(":", "-").replace("/", "-")
 
         # create the user directory on the host if it does not exist
-        volume_path = os.path.join(self.base_path, username, imagename_escaped)
+        volume_path = os.path.join(self.base_path, username, display_name_escaped)
         os.makedirs(volume_path, exist_ok=True)
 
-        # the escaped image name is used to create a new folder in the user home directory
+        # the escaped environment name is used to create a new folder in the user home directory
         self.host_homedir_format_string = f"{self.base_path}/{username}"
         # pass the image name to the Docker container
-        self.environment = {"USER_IMAGE": imagename_escaped}
+        self.environment = {"USER_IMAGE": display_name_escaped}
 
         # mount volumes
         self.volumes = {
@@ -44,7 +44,7 @@ class PlasmaBioSpawner(SystemUserSpawner, TLJHDockerSpawner):
             self.shared_data_path: {"bind": "/srv/data", "mode": "ro"},
         }
 
-        return super().start()
+        return await super().start(*args, **kwargs)
 
 
 @hookimpl(trylast=True)

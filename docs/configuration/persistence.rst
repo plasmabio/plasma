@@ -33,10 +33,10 @@ The following steps happen when a user starts their server:
 
 1. Mount the user home directory on the host into the container. This means that the file structure in the container reflects what is on the host.
 2. A new directory is created in the user home directory for each new environment (i.e for each Docker image).
-   For example if a user starts the ``plasmabio/template-python:12345`` environment, there will be a new folder created under ``/home/user/plasmabio-template-python-12345``.
+   For example if a user starts the ``2020-python-course`` environment, there will be a new folder created under ``/home/user/2020-python-course``.
    This folder is then persisted to disk in the user home directory on the host. Any file and notebook created from the notebook interface are also persisted to disk.
-3. On server startup, the entrypoint script copies the files from the base image that are initially in ``/home/jovyan`` to ``/home/user/plasmabio-template-python-12345`` in the container.
-   They are then persisted in ``/home/user/plasmabio-template-python-12345`` on the host.
+3. On server startup, the entrypoint script copies the files from the base image that are initially in ``/home/jovyan`` to ``/home/user/2020-python-course`` in the container.
+   They are then persisted in ``/home/user/2020-python-course`` on the host.
 
 .. image:: ../images/configuration/persistence.png
    :alt: Mounting user's home directories
@@ -76,10 +76,9 @@ They can then inspect their files:
    1565895 4.0K drwxrwxr-x  2 foo  foo  4.0K Apr 21 09:55 .ipynb_checkpoints
    1565898 4.0K drwxr-xr-x  5 foo  foo  4.0K Apr 21 09:27 .ipython
    1565880 4.0K drwxrwxr-x  3 foo  foo  4.0K Apr 21 09:26 .local
-    258181    0 -rw-rw-r--  1 foo  foo     0 Apr 21 16:53 out
-   1050223 4.0K drwxrwxr-x 12 foo  foo  4.0K Apr 20 10:44 plasmabio-template-bash-master
-   1043222 4.0K drwxrwxr-x 13 foo  foo  4.0K Apr 20 17:07 plasmabio-template-python-master
     262926 4.0K -rw-r--r--  1 foo  foo   807 May  5  2019 .profile
+   1050223 4.0K drwxrwxr-x 12 foo  foo  4.0K Apr 20 10:44 2020-python-course
+   1043222 4.0K drwxrwxr-x 13 foo  foo  4.0K Apr 20 17:07 r-intro
     258193 4.0K -rw-rw-r--  1 foo  foo   843 Apr 21 09:56 Untitled.ipynb
 
 Shared Data
