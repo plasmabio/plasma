@@ -30,19 +30,20 @@ class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
 
         # escape the display name of the environment
         username = self.user.name
-        display_name = self.user_options.get("display_name")
-        display_name_escaped = display_name.replace(":", "-").replace("/", "-")
+        image_name = self.user_options.get("image")
+
+        images = await super().list_images()
+        image = next(img for img in images if img["image_name"] == image_name)
+        display_name = image["display_name"].replace(":", "-").replace("/", "-")
 
         # create the user directory on the host if it does not exist
-        volume_path = os.path.join(
-            self.base_volume_path, username, display_name_escaped
-        )
+        volume_path = os.path.join(self.base_volume_path, username, display_name)
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped environment name is used to create a new folder in the user home directory
         self.host_homedir_format_string = f"{self.base_volume_path}/{username}"
         # pass the image name to the Docker container
-        self.environment = {"USER_IMAGE": display_name_escaped}
+        self.environment = {"USER_IMAGE": display_name}
 
         # mount volumes
         self.volumes = {

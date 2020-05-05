@@ -56,6 +56,21 @@ See the two previous sections to investigate why they are missing.
 
 The logs might contain silent errors that did not cause the build to fail.
 
+The name of the environment is not displayed in the top bar
+-----------------------------------------------------------
+
+This functionality requires the ``jupyter-topbar-text`` extension to be installed in the environment.
+
+This extension must be added to the ``postBuild`` file of the repository.
+See this `commit <https://github.com/plasmabio/template-python/commit/b3dd6c4b525ed4584e79175d4ae340a8b2395682>`_ as an example.
+
+The name of the environment will then be displayed as follows:
+
+.. image:: ../images/troubleshooting/topbar-env-name.png
+   :alt: The name of the environment in the top bar
+   :width: 75%
+   :align: center
+
 The environment is very slow to build
 -------------------------------------
 

@@ -26,6 +26,11 @@ then
   rm -r ${IMAGE_DIR}/.cache
 fi
 
+# set the name of the environment as the topbar text indicator
+TOPBAR_TEXT_SETTINGS_DIR=${IMAGE_DIR}/.jupyter/lab/user-settings/jupyterlab-topbar-text
+mkdir -p ${TOPBAR_TEXT_SETTINGS_DIR}
+echo "{\"editable\": false, \"text\":\"${USER_IMAGE}\"}" > ${TOPBAR_TEXT_SETTINGS_DIR}/plugin.jupyterlab-settings
+
 # set the correct permissions for the user home subdirectory
 chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 
