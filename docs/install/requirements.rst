@@ -3,7 +3,7 @@
 Requirements
 ============
 
-Before installing PlasmaBio, you will need:
+Before installing Plasma, you will need:
 
 * A server running at least **Ubuntu 18.04**
 * The public IP of the server
@@ -16,7 +16,7 @@ Before installing PlasmaBio, you will need:
 Adding the public SSH key to the server
 ---------------------------------------
 
-To deploy PlasmaBio, you need to be able to access the server via SSH.
+To deploy Plasma, you need to be able to access the server via SSH.
 
 This is typically done by copying the key to the remote server using the ``ssh-copy-id`` command, or
 by providing the key during the creation of the server (see section below).

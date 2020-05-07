@@ -1,5 +1,5 @@
 .. image:: images/logo/full-logo.png
-   :alt: PlasmaBio Logo
+   :alt: Plasma Logo
    :width: 100%
    :align: center
 

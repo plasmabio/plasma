@@ -18,8 +18,8 @@ Using ``conda``:
 
 .. code-block:: bash
 
-  conda create -n plasmasbio -c conda-forge python nodejs
-  conda activate plasmabio
+  conda create -n plasma -c conda-forge python nodejs
+  conda activate plasma
 
 Alternatively, with Python's built in ``venv`` module, you can create a virtual environment with:
 
@@ -35,8 +35,8 @@ Install the development requirements
 
   pip install -r dev-requirements.txt
 
-  # dev install of the plasmabio package
-  pip install -e tljh-plasmabio
+  # dev install of the plasma package
+  pip install -e tljh-plasma
 
   # Install (https://github.com/jupyterhub/configurable-http-proxy)
   npm -g install configurable-http-proxy

@@ -3,13 +3,13 @@ Preparing the environment
 
 An `environment` is defined as an immutable set of dependencies and files.
 
-Since PlasmaBio uses `jupyter-repo2docker <https://repo2docker.readthedocs.io>`_, it relies on the same set of rules
+Since Plasma uses `jupyter-repo2docker <https://repo2docker.readthedocs.io>`_, it relies on the same set of rules
 and patterns as ``repo2docker`` to create the environments.
 
 Create a new repository
 .......................
 
-PlasmaBio fetches the environments from publicly accessible Git repositories from code sharing platforms such as `GitHub <https://github.com>`_.
+Plasma fetches the environments from publicly accessible Git repositories from code sharing platforms such as `GitHub <https://github.com>`_.
 
 To create a new environment with its own set of dependencies, it is recommended to create a new repository on GitHub.
 
@@ -51,7 +51,7 @@ In the case of the `Python Template <https://github.com/plasmabio/template-pytho
 Testing on Binder
 .................
 
-Since both PlasmaBio and Binder use ``repo2docker`` to build the images, it is possible to try the
+Since both Plasma and Binder use ``repo2docker`` to build the images, it is possible to try the
 environment on Binder first to make sure they are working correctly before adding theme to the JupyterHub server.
 
 The template repository has a Binder button in the ``README.md`` file. This button will redirect to the

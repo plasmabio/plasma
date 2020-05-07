@@ -2,9 +2,9 @@ import os
 
 source_suffix = ['.rst']
 
-project = 'PlasmaBio'
-copyright = '2020, PlasmaBio Contributors'
-author = 'PlasmaBio Team'
+project = 'Plasma'
+copyright = '2020, Plasma Contributors'
+author = 'Plasma Team'
 
 # The short X.Y version
 version = ''

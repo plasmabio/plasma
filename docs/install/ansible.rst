@@ -18,8 +18,8 @@ official documentation website for more information.
 Installing Ansible
 ------------------
 
-PlasmaBio comes with several `Ansible Playbooks` to automatically provision the machine with
-the system requirements, as well as installing PlasmaBio and starting up the services.
+Plasma comes with several `Ansible Playbooks` to automatically provision the machine with
+the system requirements, as well as installing Plasma and starting up the services.
 
 .. note::
 
@@ -36,8 +36,8 @@ the system requirements, as well as installing PlasmaBio and starting up the ser
 
     .. code-block:: bash
 
-        conda create -n plasmabio -c conda-forge python nodejs
-        conda activate plasmabio
+        conda create -n plasma -c conda-forge python nodejs
+        conda activate plasma
 
 
 Make sure `Ansible <https://docs.ansible.com/ansible/latest/index.html>`_ is installed:
@@ -48,7 +48,7 @@ Make sure `Ansible <https://docs.ansible.com/ansible/latest/index.html>`_ is ins
 
 .. note::
 
-    We recommend ``ansible>=2.9`` to discard the warning messages 
+    We recommend ``ansible>=2.9`` to discard the warning messages
     regarding the use of ``aptitude``.
 
 
@@ -59,17 +59,17 @@ To verify the installation, run:
     which ansible
 
 This should return the path to the ansible CLI tool in the virtual environment.
-For example: ``/home/myuser/miniconda/envs/plasmabio/bin/ansible``
+For example: ``/home/myuser/miniconda/envs/plasma/bin/ansible``
 
 Running the Playbooks
 ---------------------
 
-Check out the repository, and go to the ``plasmabio/ansible/`` directory:
+Check out the repository, and go to the ``plasma/ansible/`` directory:
 
 .. code-block:: bash
 
-    git clone https://github.com/plasmabio/plasmabio
-    cd plasmabio/ansible
+    git clone https://github.com/plasmabio/plasma
+    cd plasma/ansible
 
 Create a ``hosts`` file with the following content:
 
@@ -162,7 +162,7 @@ Ansible will log the progress in the terminal, and will indicate which component
     TASK [Run the TLJH installer] ***************************************************************************************************************
     changed: [51.178.95.237]
 
-    TASK [Upgrade the tljh-plasmabio plugin] ****************************************************************************************************
+    TASK [Upgrade the tljh-plasma plugin] ****************************************************************************************************
     changed: [51.178.95.237]
 
     TASK [Restart JupyterHub] *******************************************************************************************************************
@@ -199,7 +199,7 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``users.yml``: create the tests users on the host
 - ``quotas.yml``: enable quotas on the host to limit disk usage
 - ``cockpit.yml``: install Cockpit on the host as a monitoring tool
-- ``tljh.yml``: install TLJH and the PlasmaBio TLJH plugin
+- ``tljh.yml``: install TLJH and the Plasma TLJH plugin
 - ``admins.yml``: add admin users to JupyterHub
 - ``https.yml``: enable HTTPS for TLJH
 - ``uninstall.yml``: uninstall TLJH only

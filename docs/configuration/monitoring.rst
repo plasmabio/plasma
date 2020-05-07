@@ -19,7 +19,7 @@ Then execute the ``cockpit.yml`` playbook:
 
     ansible-playbook cockpit.yml -i hosts -u ubuntu
 
-The PlasmaBio TLJH plugin registers ``cockpit`` as a JupyterHub service. This means that
+The Plasma TLJH plugin registers ``cockpit`` as a JupyterHub service. This means that
 Cockpit is accessible to JupyterHub admin users via the JupyterHub interface:
 
 .. image:: ../images/configuration/cockpit-navbar.png
