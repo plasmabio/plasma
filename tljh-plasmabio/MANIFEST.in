@@ -1,2 +1,0 @@
-recursive-include tljh_plasmabio/templates/ *
-recursive-include tljh_plasmabio/entrypoint/ *

@@ -10,7 +10,7 @@ from tljh_repo2docker import SpawnerMixin
 from traitlets import default, Unicode
 
 
-class PlasmaBioSpawner(SpawnerMixin, SystemUserSpawner):
+class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
     """
     A custom Spawner to start user servers using Docker images
     built locally with repo2docker.
@@ -61,7 +61,7 @@ def tljh_custom_jupyterhub_config(c):
     # hub
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
-    c.JupyterHub.spawner_class = PlasmaBioSpawner
+    c.JupyterHub.spawner_class = PlasmaSpawner
     c.JupyterHub.allow_named_servers = True
     c.JupyterHub.named_server_limit_per_user = 2
     c.JupyterHub.template_paths.insert(
@@ -70,16 +70,16 @@ def tljh_custom_jupyterhub_config(c):
 
     # spawner
     # update name template for named servers
-    c.PlasmaBioSpawner.name_template = "{prefix}-{username}-{servername}"
+    c.PlasmaSpawner.name_template = "{prefix}-{username}-{servername}"
     # increase the timeout to be able to pull larger Docker images
-    c.PlasmaBioSpawner.start_timeout = 120
-    c.PlasmaBioSpawner.pull_policy = "Never"
-    c.PlasmaBioSpawner.remove = True
-    c.PlasmaBioSpawner.default_url = "/lab"
+    c.PlasmaSpawner.start_timeout = 120
+    c.PlasmaSpawner.pull_policy = "Never"
+    c.PlasmaSpawner.remove = True
+    c.PlasmaSpawner.default_url = "/lab"
     # TODO: change back to jupyterhub-singleuser
-    c.PlasmaBioSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
+    c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
     # set the default cpu and memory limits
-    c.PlasmaBioSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+    c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
     # register Cockpit as a service if active
     if check_service_active("cockpit"):

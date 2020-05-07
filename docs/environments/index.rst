@@ -4,7 +4,7 @@ User Environments
 User environments are built as immutable `Docker images <https://docs.docker.com/engine/docker-overview>`_.
 The Docker images bundle the dependencies, extensions, and predefined notebooks that should be available to all users.
 
-PlasmaBio relies on the `tljh-repo2docker <https://github.com/plasmabio/tljh-repo2docker>`_ plugin to manage environments.
+Plasma relies on the `tljh-repo2docker <https://github.com/plasmabio/tljh-repo2docker>`_ plugin to manage environments.
 The ``tljh-repo2docker`` uses `jupyter-repo2docker <https://repo2docker.readthedocs.io>`_ to build the Docker images.
 
 Environments can be managed by admin users by clicking on ``Environments`` in the navigation bar:

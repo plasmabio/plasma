@@ -20,12 +20,12 @@ To know more about backing up the database please refer to:
 
 For more info on where TLJH is installed: `What does the installer do? <http://tljh.jupyter.org/en/latest/topic/installer-actions.html>`_
 
-PlasmaBio TLJH Plugin
-.....................
+Plasma TLJH Plugin
+..................
 
 This TLJH plugin is a regular Python package.
 
-It is installed in ``/opt/tljh/hub/lib/python3.6/site-packages/tljh_plasmabio``, and doesn't need to be backed up
+It is installed in ``/opt/tljh/hub/lib/python3.6/site-packages/tljh_plasma``, and doesn't need to be backed up
 as it doesn't hold any state.
 
 User Environments
@@ -51,7 +51,7 @@ To perform an upgrade of the setup, you can re-run the playbooks as explained in
 
 Re-running the playbooks will:
 
-- Update the TLJH PlasmaBio plugin
+- Update the TLJH Plasma plugin
 - Update TLJH
 - Restart JupyterHub and the Proxy to take new changes into account
 

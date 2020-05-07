@@ -1,7 +1,7 @@
 Installation
 ============
 
-This guide will walk you through the steps to install PlasmaBio on your own server.
+This guide will walk you through the steps to install Plasma on your own server.
 
 .. toctree::
    :maxdepth: 3

@@ -11,8 +11,8 @@ First, create a new environment:
 
 .. code-block:: bash
 
-  conda create -n plasmabio-docs -c conda-forge python
-  conda activate plasmabio-docs
+  conda create -n plasma-docs -c conda-forge python
+  conda activate plasma-docs
 
 In the ``docs`` folder, run:
 

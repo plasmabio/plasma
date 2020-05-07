@@ -14,20 +14,20 @@
         url: "{{ tljh_installer_url }}"
         dest: "{{ tljh_installer_dest }}"
 
-    - name: Check if the tljh-plasmabio is already installed
-      command: "{{ tljh_prefix }}/hub/bin/python3 -c 'import tljh_plasmabio'"
-      register: tljh_plasmabio_installed
-      failed_when: tljh_plasmabio_installed.rc > 2
+    - name: Check if the tljh-plasma is already installed
+      command: "{{ tljh_prefix }}/hub/bin/python3 -c 'import tljh_plasma'"
+      register: tljh_plasma_installed
+      failed_when: tljh_plasma_installed.rc > 2
       changed_when: False
 
-    - name: Upgrade the tljh-plasmabio plugin first if it is already installed
-      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasmabio }} {{ tljh_repo2docker }}"
-      when: tljh_plasmabio_installed.rc == 0
+    - name: Upgrade the tljh-plasma plugin first if it is already installed
+      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasma }} {{ tljh_repo2docker }}"
+      when: tljh_plasma_installed.rc == 0
 
     - name: Run the TLJH installer
       shell: |
         {{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env \
-          --plugin {{ tljh_plasmabio }} {{ tljh_repo2docker }}
+          --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
       # TODO: remove when --no-user-env (or equivalent) is available
       environment:
         TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
