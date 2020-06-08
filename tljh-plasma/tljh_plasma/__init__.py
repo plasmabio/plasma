@@ -12,7 +12,7 @@ from tljh_repo2docker import SpawnerMixin
 from tljh_repo2docker.images import MultiStaticFileHandler
 from traitlets import default, Unicode
 
-from .permissions import PermissionsHandler
+from .permissions import PermissionsHandler, PermissionsAPIHandler
 
 
 class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
@@ -81,6 +81,7 @@ def tljh_custom_jupyterhub_config(c):
     # add an extra handler to handle user group permissions
     c.JupyterHub.extra_handlers = [
         (r"permissions", PermissionsHandler),
+        (r"api/permissions", PermissionsAPIHandler),
         (
             r"permissions-static/(.*)",
             CacheControlStaticFilesHandler,

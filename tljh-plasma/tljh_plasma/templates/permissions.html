@@ -16,7 +16,7 @@
   <a role="button" class="remove-environment btn btn-danger btn-xs">Remove</a>
 </div>
 
-<form class="container form-inline" action="/hub/permissions" method="POST">
+<form class="container form-inline" action="">
   {% for group in groups %}
   <fieldset class="group-field" data-group="{{ group }}">
     <legend>Group: {{ group }}
@@ -24,7 +24,7 @@
     </legend>
   </fieldset>
   {% endfor %}
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="submit btn btn-primary">Submit</button>
 </form>
 
 {% endblock %}

@@ -7,6 +7,9 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
 ) {
   "use strict";
 
+  var base_url = window.jhdata.base_url;
+  var api = new JHAPI(base_url);
+
   function getGroup(element) {
     var original = element;
     while (!element.hasClass("group-field")) {
@@ -33,6 +36,19 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     select.find(".remove-environment").click(remove);
     select.removeClass('hidden');
     select.appendTo(field);
+  });
+
+  $(".submit").click(function(e) {
+    e.preventDefault();
+    var form = $('form');
+    var formData = form.serializeArray();
+    api.api_request("permissions", {
+      type: "POST",
+      data: JSON.stringify(formData),
+      success: function(reply) {
+        window.location.reload();
+      },
+    });
   });
 
 });
