@@ -7,14 +7,18 @@
 
 {% block main %}
 
-<div class="environment-select hidden">
-  <select class="form-control">
+{% macro image_selector(name='', selected_image='', hidden='') %}
+<div class="environment-select {{ hidden }}">
+  <select name="{{ name }}" class="form-control">
     {% for image in images %}
-    <option value="{{ image.image_name }}">{{ image.display_name }}</option>
+    <option value="{{ image.image_name }}" {% if image.image_name == selected_image %} selected="selected" {% endif %}>{{ image.display_name }}</option>
     {% endfor %}
   </select>
   <a role="button" class="remove-environment btn btn-danger btn-xs">Remove</a>
 </div>
+{% endmacro %}
+
+{{ image_selector('', '', 'hidden') }}
 
 <form class="container form-inline" action="">
   {% for group in groups %}
@@ -22,6 +26,12 @@
     <legend>Group: {{ group }}
       <button type="button" class="add-environment btn btn-primary btn-xs pull-right">Add Environment</button>
     </legend>
+
+    {% if group in permissions %}
+      {% for image in permissions[group] %}
+        {{ image_selector(group, image) }}
+      {% endfor %}
+    {%- endif %}
   </fieldset>
   {% endfor %}
   <button type="submit" class="submit btn btn-primary">Submit</button>

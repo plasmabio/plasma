@@ -51,4 +51,5 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     });
   });
 
+  $(".remove-environment").click(remove);
 });

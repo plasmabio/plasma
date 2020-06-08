@@ -1,3 +1,4 @@
+import grp
 import os
 import pwd
 import sys
@@ -12,7 +13,7 @@ from tljh_repo2docker import SpawnerMixin
 from tljh_repo2docker.images import MultiStaticFileHandler
 from traitlets import default, Unicode
 
-from .permissions import PermissionsHandler, PermissionsAPIHandler
+from .permissions import Permissions, PermissionsHandler, PermissionsAPIHandler
 
 
 class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
@@ -30,8 +31,13 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
     )
 
     async def list_images(self):
-        images = await super().list_images()
-        # TODO: filter based on the user group
+        all_images = await super().list_images()
+        groups = [
+            group.gr_name for group in grp.getgrall() if self.user.name in group.gr_mem
+        ]
+        permissions = self.db.query(Permissions).filter(Permissions.group.in_(groups))
+        whitelist = set(p.image for p in permissions)
+        images = [image for image in all_images if image["image_name"] in whitelist]
         return images
 
     async def start(self, *args, **kwargs):
