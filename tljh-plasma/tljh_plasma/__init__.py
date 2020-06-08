@@ -9,6 +9,8 @@ from tljh.systemd import check_service_active
 from tljh_repo2docker import SpawnerMixin
 from traitlets import default, Unicode
 
+from .permissions import PermissionsHandler
+
 
 class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
     """
@@ -67,6 +69,11 @@ def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.template_paths.insert(
         0, os.path.join(os.path.dirname(__file__), "templates")
     )
+
+    # add an extra handler to handle user group permissions
+    c.JupyterHub.extra_handlers = [
+        (r"permissions", PermissionsHandler)
+    ]
 
     # spawner
     # update name template for named servers

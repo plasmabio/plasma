@@ -5,7 +5,8 @@
 <li><a href="{{base_url}}token">Token</a></li>
 {% if user.admin %}
 <li><a href="{{base_url}}admin">Admin</a></li>
- <li><a href="{{base_url}}environments">Environments</a></li>
+<li><a href="{{base_url}}environments">Environments</a></li>
+<li><a href="{{base_url}}permissions">Permissions</a></li>
 {% if services %}
 {% for service in services %}
 <li><a href="{{service.prefix}}" style="text-transform: capitalize;">{{service.name}}</a></li>

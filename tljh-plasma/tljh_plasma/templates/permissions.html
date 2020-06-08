@@ -1,0 +1,34 @@
+{% extends "page.html" %}
+
+{% block stylesheet %}
+{{ super() }}
+<link rel="stylesheet" href="{{ static_url("css/style.css") }}" type="text/css"/>
+{% endblock %}
+
+{% block main %}
+
+<div class="container images-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="text-center"><a role="button" class="btn btn-primary btn-xs">Submit</a></th>
+        {% for image in images %}
+        <th class="text-center">{{ image.display_name }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for group in groups %}
+      <tr>
+        <td class="text-center">{{ group }}</td>
+        {% for image in images %}
+        <td class="text-center"><input type="checkbox"/></td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
