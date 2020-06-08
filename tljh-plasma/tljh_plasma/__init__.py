@@ -1,16 +1,13 @@
 import grp
 import os
-import pwd
-import sys
 
 from dockerspawner import SystemUserSpawner
-from jupyterhub._data import DATA_FILES_PATH
 from jupyterhub.auth import PAMAuthenticator
 from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
 from tljh_repo2docker import SpawnerMixin
-from traitlets import default, Unicode
+from traitlets import Unicode
 
 from .permissions import Permissions, PermissionsHandler, PermissionsAPIHandler
 
@@ -84,15 +81,17 @@ def tljh_custom_jupyterhub_config(c):
     )
 
     # add an extra handler to handle user group permissions
-    c.JupyterHub.extra_handlers.extend([
-        (r"permissions", PermissionsHandler),
-        (r"api/permissions", PermissionsAPIHandler),
-        (
-            r"permissions-static/(.*)",
-            CacheControlStaticFilesHandler,
-            {"path": os.path.join(os.path.dirname(__file__), "static")},
-        ),
-    ])
+    c.JupyterHub.extra_handlers.extend(
+        [
+            (r"permissions", PermissionsHandler),
+            (r"api/permissions", PermissionsAPIHandler),
+            (
+                r"permissions-static/(.*)",
+                CacheControlStaticFilesHandler,
+                {"path": os.path.join(os.path.dirname(__file__), "static")},
+            ),
+        ]
+    )
 
     # spawner
     # update name template for named servers
