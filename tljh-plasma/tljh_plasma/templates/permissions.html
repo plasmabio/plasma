@@ -2,33 +2,36 @@
 
 {% block stylesheet %}
 {{ super() }}
-<link rel="stylesheet" href="{{ static_url("css/style.css") }}" type="text/css"/>
+<link rel="stylesheet" href="{{ base_url }}permissions-static/css/style.css" type="text/css"/>
 {% endblock %}
 
 {% block main %}
 
-<div class="container images-container">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th class="text-center"><a role="button" class="btn btn-primary btn-xs">Submit</a></th>
-        {% for image in images %}
-        <th class="text-center">{{ image.display_name }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for group in groups %}
-      <tr>
-        <td class="text-center">{{ group }}</td>
-        {% for image in images %}
-        <td class="text-center"><input type="checkbox"/></td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-      </tr>
-    </tbody>
-  </table>
+<div class="environment-select hidden">
+  <select class="form-control">
+    {% for image in images %}
+    <option value="{{ image.image_name }}">{{ image.display_name }}</option>
+    {% endfor %}
+  </select>
+  <a role="button" class="remove-environment btn btn-danger btn-xs">Remove</a>
 </div>
 
+<form class="container form-inline" action="/hub/permissions" method="POST">
+  {% for group in groups %}
+  <fieldset class="group-field" data-group="{{ group }}">
+    <legend>Group: {{ group }}
+      <button type="button" class="add-environment btn btn-primary btn-xs pull-right">Add Environment</button>
+    </legend>
+  </fieldset>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script type="text/javascript">
+require(["{{ base_url }}permissions-static/js/permissions.js"]);
+</script>
 {% endblock %}

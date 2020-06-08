@@ -3,10 +3,13 @@ import pwd
 import sys
 
 from dockerspawner import SystemUserSpawner
+from jupyterhub._data import DATA_FILES_PATH
 from jupyterhub.auth import PAMAuthenticator
+from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
 from tljh_repo2docker import SpawnerMixin
+from tljh_repo2docker.images import MultiStaticFileHandler
 from traitlets import default, Unicode
 
 from .permissions import PermissionsHandler
@@ -25,6 +28,11 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
     shared_data_path = Unicode(
         "/srv/data", config=True, help="The path to the shared data folder"
     )
+
+    async def list_images(self):
+        images = await super().list_images()
+        # TODO: filter based on the user group
+        return images
 
     async def start(self, *args, **kwargs):
         # set the image limits
@@ -72,7 +80,12 @@ def tljh_custom_jupyterhub_config(c):
 
     # add an extra handler to handle user group permissions
     c.JupyterHub.extra_handlers = [
-        (r"permissions", PermissionsHandler)
+        (r"permissions", PermissionsHandler),
+        (
+            r"permissions-static/(.*)",
+            CacheControlStaticFilesHandler,
+            {"path": os.path.join(os.path.dirname(__file__), "static")},
+        ),
     ]
 
     # spawner
