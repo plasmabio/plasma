@@ -10,7 +10,6 @@ from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
 from tljh_repo2docker import SpawnerMixin
-from tljh_repo2docker.images import MultiStaticFileHandler
 from traitlets import default, Unicode
 
 from .permissions import Permissions, PermissionsHandler, PermissionsAPIHandler
@@ -85,7 +84,7 @@ def tljh_custom_jupyterhub_config(c):
     )
 
     # add an extra handler to handle user group permissions
-    c.JupyterHub.extra_handlers = [
+    c.JupyterHub.extra_handlers.extend([
         (r"permissions", PermissionsHandler),
         (r"api/permissions", PermissionsAPIHandler),
         (
@@ -93,7 +92,7 @@ def tljh_custom_jupyterhub_config(c):
             CacheControlStaticFilesHandler,
             {"path": os.path.join(os.path.dirname(__file__), "static")},
         ),
-    ]
+    ])
 
     # spawner
     # update name template for named servers
