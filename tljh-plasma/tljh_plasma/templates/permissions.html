@@ -7,35 +7,40 @@
 
 {% block main %}
 
-{% macro image_selector(name='', selected_image='', hidden='') %}
-<div class="environment-select {{ hidden }}">
+{% macro group_selector(name='', selected_group='', hidden='') %}
+<div class="group-select {{ hidden }}">
   <select name="{{ name }}" class="form-control">
-    {% for image in images %}
-    <option value="{{ image.image_name }}" {% if image.image_name == selected_image %} selected="selected" {% endif %}>{{ image.display_name }}</option>
+    {% for group in groups %}
+    <option value="{{ group }}" {% if group == selected_group %} selected="selected" {% endif %}>{{ group }}</option>
     {% endfor %}
   </select>
-  <a role="button" class="remove-environment btn btn-danger btn-xs">Remove</a>
+  <a role="button" class="remove-group btn btn-danger btn-xs">Remove</a>
 </div>
 {% endmacro %}
 
-{{ image_selector('', '', 'hidden') }}
+{{ group_selector('', '', 'hidden') }}
 
 <form class="container form-inline" action="">
-  {% for group in groups %}
-  <fieldset class="group-field" data-group="{{ group }}">
-    <legend>Group: {{ group }}
-      <button type="button" class="add-environment btn btn-primary btn-xs pull-right">Add Environment</button>
+  {% for image in images %}
+  <fieldset class="group-field" data-environment="{{ image.image_name }}">
+    <legend><a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.display_name }}</a>
+      <button type="button" class="add-group btn btn-primary btn-xs pull-right">Add Group</button>
     </legend>
-
-    {% if group in permissions %}
-      {% for image in permissions[group] %}
-        {{ image_selector(group, image) }}
+    {% if image.image_name in permissions %}
+      {% for group in permissions[image.image_name] %}
+        {{ group_selector(image.image_name, group) }}
       {% endfor %}
     {%- endif %}
   </fieldset>
   {% endfor %}
   <button type="submit" class="submit btn btn-primary">Submit</button>
 </form>
+
+{% call modal('Saving Permissions', btn_label='OK', btn_class='btn-primary saving-button') %}
+  <div class="text-center">
+    <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
+  </div>
+{% endcall %}
 
 {% endblock %}
 

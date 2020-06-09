@@ -13,8 +13,8 @@ from tornado.web import authenticated
 
 def list_groups():
     """ Get the list of available groups """
-    # TODO: filter default groups
-    return [g.gr_name for g in grp.getgrall()][:10]
+    # TODO: filter default groups?
+    return [g.gr_name for g in grp.getgrall()]
 
 
 class Permissions(Base):
@@ -24,6 +24,7 @@ class Permissions(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     group = Column(Unicode(255))
     image = Column(Unicode(255))
+
 
 class PermissionsHandler(BaseHandler):
     """
@@ -35,8 +36,8 @@ class PermissionsHandler(BaseHandler):
     async def get(self):
         permissions = list(self.db.query(Permissions))
         mapping = {
-            group: [p.image for p in images]
-            for group, images in groupby(permissions, lambda p: p.group)
+            image: [p.group for p in groups]
+            for image, groups in groupby(permissions, lambda p: p.image)
         }
         images = await list_images()
         html = self.render_template(
@@ -60,7 +61,7 @@ class PermissionsAPIHandler(APIHandler):
         raw_args = self.request.body.decode("utf-8")
         args = json.loads(raw_args)
         self.db.query(Permissions).delete()
-        permissions = [Permissions(group=arg['name'], image=arg['value']) for arg in args]
+        permissions = [Permissions(image=arg['name'], group=arg['value']) for arg in args]
         for permission in permissions:
             self.db.add(permission)
         self.db.commit()

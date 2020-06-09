@@ -27,13 +27,13 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     el.parent().remove();
   }
 
-  $(".add-environment").click(function() {
+  $(".add-group").click(function() {
     var el = $(this);
     var field = getGroup(el);
-    var select = $(".environment-select").first().clone();
-    var group = field.data('group');
-    select.find('select').attr('name', group)
-    select.find(".remove-environment").click(remove);
+    var select = $(".group-select").first().clone();
+    var environment = field.data('environment');
+    select.find('select').attr('name', environment)
+    select.find(".remove-group").click(remove);
     select.removeClass('hidden');
     select.appendTo(field);
   });
@@ -42,6 +42,9 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     e.preventDefault();
     var form = $('form');
     var formData = form.serializeArray();
+    var spinner = $("#saving-permissions-dialog");
+    spinner.find('.modal-footer').remove();
+    spinner.modal();
     api.api_request("permissions", {
       type: "POST",
       data: JSON.stringify(formData),
@@ -51,5 +54,5 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     });
   });
 
-  $(".remove-environment").click(remove);
+  $(".remove-group").click(remove);
 });
