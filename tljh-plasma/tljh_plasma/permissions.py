@@ -11,15 +11,14 @@ from tljh_repo2docker.images import list_images
 from tornado.web import authenticated
 
 
-def list_groups():
+def list_groups(exclude_groups):
     """ Get the list of available groups """
-    # TODO: filter default groups?
-    return [g.gr_name for g in grp.getgrall()]
+    return [g.gr_name for g in grp.getgrall() if g.gr_name not in exclude_groups]
 
 
 class Permissions(Base):
 
-    __tablename__ = 'permissions'
+    __tablename__ = "permissions"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     group = Column(Unicode(255))
@@ -40,11 +39,12 @@ class PermissionsHandler(BaseHandler):
             for image, groups in groupby(permissions, lambda p: p.image)
         }
         images = await list_images()
+        exclude_groups = self.settings.get("exclude_groups")
         html = self.render_template(
             "permissions.html",
             static_url=self.static_url,
             images=images,
-            groups=list_groups(),
+            groups=list_groups(exclude_groups),
             permissions=mapping,
         )
         self.write(html)
@@ -61,7 +61,9 @@ class PermissionsAPIHandler(APIHandler):
         raw_args = self.request.body.decode("utf-8")
         args = json.loads(raw_args)
         self.db.query(Permissions).delete()
-        permissions = [Permissions(image=arg['name'], group=arg['value']) for arg in args]
+        permissions = [
+            Permissions(image=arg["name"], group=arg["value"]) for arg in args
+        ]
         for permission in permissions:
             self.db.add(permission)
         self.db.commit()

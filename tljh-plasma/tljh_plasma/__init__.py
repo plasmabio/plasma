@@ -4,6 +4,7 @@ import os
 from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyterhub.handlers.static import CacheControlStaticFilesHandler
+from tljh.configurer import load_config, CONFIG_FILE
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
 from tljh_repo2docker import SpawnerMixin
@@ -69,7 +70,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
 
 
 @hookimpl(trylast=True)
-def tljh_custom_jupyterhub_config(c):
+def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # hub
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
@@ -79,6 +80,13 @@ def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.template_paths.insert(
         0, os.path.join(os.path.dirname(__file__), "templates")
     )
+
+    # fetch the list of excluded UNIX groups from the TLJH config
+    tljh_config = load_config(tljh_config_file)
+    exclude_list = tljh_config.get("plasma", {}).get("groups", {}).get("exclude", [])
+    exclude_groups = set(exclude_list)
+
+    c.JupyterHub.tornado_settings.update({"exclude_groups": exclude_groups})
 
     # add an extra handler to handle user group permissions
     c.JupyterHub.extra_handlers.extend(

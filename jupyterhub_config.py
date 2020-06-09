@@ -15,7 +15,7 @@ c.JupyterHub.services = []
 
 # tljh-plasma depends on tljh-repo2docker
 tljh_repo2docker_config_hook(c)
-tljh_custom_jupyterhub_config(c)
+tljh_custom_jupyterhub_config(c, 'config.yaml')
 
 user = getpass.getuser()
 

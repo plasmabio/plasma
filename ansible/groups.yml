@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Reset the list of excluded UNIX groups to avoid duplication
+      shell: tljh-config unset plasma.groups.exclude
+      register: groups
+      failed_when: groups.rc > 1
+
+    - name: Configure the list of excluded UNIX groups
+      shell: tljh-config add-item plasma.groups.exclude {{ item }}
+      loop: "{{ exclude }}"
