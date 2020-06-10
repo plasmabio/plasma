@@ -33,18 +33,19 @@ class PermissionsHandler(BaseHandler):
     @authenticated
     @admin_only
     async def get(self):
+        exclude_groups = self.settings.get("exclude_groups")
+        all_groups = list_groups(exclude_groups)
         permissions = list(self.db.query(Permissions))
         mapping = {
-            image: [p.group for p in groups]
+            image: [p.group for p in groups if p.group in all_groups]
             for image, groups in groupby(permissions, lambda p: p.image)
         }
         images = await list_images()
-        exclude_groups = self.settings.get("exclude_groups")
         html = self.render_template(
             "permissions.html",
             static_url=self.static_url,
             images=images,
-            groups=list_groups(exclude_groups),
+            groups=all_groups,
             permissions=mapping,
         )
         self.write(html)
