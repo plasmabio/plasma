@@ -6,7 +6,7 @@
     - name: Add users
       user:
         name: "{{ item.name }}"
-        groups: "{{ item.name }}"
+        groups: "{{ item.groups if item.groups is defined else item.name }}"
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
       loop: "{{ users }}"
