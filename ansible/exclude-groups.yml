@@ -1,6 +1,9 @@
 ---
 - hosts: all
   become: true
+  vars_files:
+    - vars/default.yml
+    - exclude-groups-config.yml
 
   tasks:
     - name: Reset the list of excluded UNIX groups to avoid duplication

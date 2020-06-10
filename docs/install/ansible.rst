@@ -219,6 +219,7 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``quotas.yml``: enable quotas on the host to limit disk usage
 - ``cockpit.yml``: install Cockpit on the host as a monitoring tool
 - ``tljh.yml``: install TLJH and the Plasma TLJH plugin
+- ``exclude-groups.yml``: exclude unix groups from the permissions managemenent
 - ``admins.yml``: add admin users to JupyterHub
 - ``https.yml``: enable HTTPS for TLJH
 - ``uninstall.yml``: uninstall TLJH only
