@@ -22,7 +22,6 @@ volumes/
 # the Ansible file
 ansible/hosts
 ansible/users-config.yml
-ansible/groups-config.yml
 
 # local TLJH config used for testing
 config.yaml
