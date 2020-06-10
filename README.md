@@ -1,6 +1,6 @@
 # Plasma
 
-![Github Actions Status](https://github.com/plasmabio/plasma/workflows/Build/badge.svg)
+![Github Actions Status](https://github.com/plasmabio/plasma/workflows/Tests/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/plasmabio/badge/?version=latest)](https://plasmabio.readthedocs.io/en/latest/?badge=latest)
 
 ![logo](./docs/images/logo/full-logo.png)
