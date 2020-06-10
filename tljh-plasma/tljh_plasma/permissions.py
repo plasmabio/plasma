@@ -7,7 +7,7 @@ from jupyterhub.apihandlers import APIHandler
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Base, Column, Integer, Unicode
 from jupyterhub.utils import admin_only
-from tljh_repo2docker.images import list_images
+from tljh_repo2docker.docker import list_images
 from tornado.web import authenticated
 
 
