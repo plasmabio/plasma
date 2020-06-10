@@ -6,7 +6,7 @@ to enable fine-grained permission management.
 
 The page to edit permissions is accessible via the navigation bar:
 
-.. image:: ../images/configuration/permissions-navbar.png
+.. image:: ../images/permissions/permissions-navbar.png
    :alt: Manage the permissions
    :width: 100%
    :align: center
@@ -16,7 +16,7 @@ Mapping new groups to user environments
 
 By default, users don't have access to any environment:
 
-.. image:: ../images/configuration/permissions-empty.png
+.. image:: ../images/permissions/permissions-empty.png
    :alt: No access to user environments
    :width: 100%
    :align: center
@@ -24,7 +24,7 @@ By default, users don't have access to any environment:
 Environments can be added on a group level by clicking on the ``Add Group`` button and selecting
 the group using the dropdown menu:
 
-.. image:: ../images/configuration/permissions-group-dropdown.png
+.. image:: ../images/permissions/permissions-group-dropdown.png
    :alt: Choosing a group for an image
    :width: 100%
    :align: center
@@ -42,7 +42,7 @@ Choosing the environment on the spawn page
 The environment will be listed on the spawn page if it is assigned to a group a user
 belongs to:
 
-.. image:: ../images/configuration/permissions-spawn.png
+.. image:: ../images/permissions/permissions-spawn.png
    :alt: Choosing an environment
    :width: 100%
    :align: center
