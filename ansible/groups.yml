@@ -11,3 +11,6 @@
     - name: Configure the list of excluded UNIX groups
       shell: tljh-config add-item plasma.groups.exclude {{ item }}
       loop: "{{ exclude }}"
+
+    - name: Reload the hub
+      shell: "tljh-config reload hub"
