@@ -83,10 +83,10 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
 
     # fetch the list of excluded UNIX groups from the TLJH config
     tljh_config = load_config(tljh_config_file)
-    exclude_list = tljh_config.get("plasma", {}).get("groups", {}).get("exclude", [])
-    exclude_groups = set(exclude_list)
+    include_list = tljh_config.get("plasma", {}).get("groups", [])
+    include_groups = set(include_list)
 
-    c.JupyterHub.tornado_settings.update({"exclude_groups": exclude_groups})
+    c.JupyterHub.tornado_settings.update({"include_groups": include_groups})
 
     # add an extra handler to handle user group permissions
     c.JupyterHub.extra_handlers.extend(

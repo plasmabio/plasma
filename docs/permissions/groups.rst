@@ -1,54 +1,40 @@
 Managing UNIX groups
 ====================
 
-Most Ubuntu installations include a default list of groups. These groups can be listed with the
-following command:
-
-.. code-block:: bash
-
-    $ cat /etc/group
-    root:x:0:
-    daemon:x:1:
-    bin:x:2:
-    sys:x:3:
-    adm:x:4:syslog,ubuntu
-    tty:x:5:
-    disk:x:6:
-    lp:x:7:
-    mail:x:8:
-    ...
-
-By default this list can be relatively long:
-
-.. code-block:: bash
-
-    $ cat /etc/group | wc -l
-    64
-
-The group exclude list
+The group include list
 ----------------------
 
-To prevent the default groups from being displayed in the JupyterHub interface, Plasma
-defines a list of groups to ``exclude`` via an Ansible variable.
+By default Plasma users don't have access to any environments.
 
-The list is defined in ``ansible/exclude-groups-config.yml``.
+Users must be assigned to UNIX groups, and included groups be defined in the Plasma configuration.
 
-The ``ansible/exclude-groups.yml`` playbook automatically adds the list of excluded groups to
-the TLJH config when it is executed.
+To define the list of groups, create a file called ``ansible/include-groups-config.yml`` with the following content:
 
-If you would like to modify the list of groups to exclude, edit ``ansible/exclude-groups-config.yml``
-and run the following command:
+.. code-block:: yaml
+
+    plasma:
+        groups:
+            - python-course
+            - bash-intro
+
+And execute the ``ansible/include-groups.yml`` playbook:
 
 .. code-block:: bash
 
     cd ansible/
-    ansible-playbook -i hosts exclude-groups.yml -u ubuntu
+    ansible-playbook -i hosts include-groups.yml -u ubuntu
 
+The playbook creates the groups on the host machine if they don't already exist, and defines the list
+of included groups in the TLJH config.
 
 Adding a user to a group via the command line
 ---------------------------------------------
 
 New groups can be created using the following command:
+
+.. code-block:: bash
+
+    groupadd -g 1234 test
 
 To add a user ``alice`` to the ``test`` group:
 
@@ -69,12 +55,31 @@ To add users to specific groups, edit ``users-config.yml`` to add the ``groups``
 
     users:
       - name: foo
-        groups: python,bash
+        groups: python-course,bash-intro
         password: PLAIN_TEXT_PASSWORD
 
       - name: bar
-        groups: test,bash
+        groups: test,bash-intro
         password: PLAIN_TEXT_PASSWORD
 
 This can also be a convenient way to create a default group and give every user access to all user
 environments.
+
+Listing the groups
+------------------
+
+Groups can be listed using the following command:
+
+.. code-block:: bash
+
+    $ cat /etc/group
+    root:x:0:
+    daemon:x:1:
+    bin:x:2:
+    sys:x:3:
+    adm:x:4:syslog,ubuntu
+    tty:x:5:
+    disk:x:6:
+    lp:x:7:
+    mail:x:8:
+    ...

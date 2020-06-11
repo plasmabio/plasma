@@ -18,6 +18,8 @@ By default, users don't have access to any environment:
    :width: 100%
    :align: center
 
+Admins can prepare a list of environments before assigning them to user groups.
+
 Environments can be added on a group level by clicking on the ``Add Group`` button and selecting
 the group using the dropdown menu:
 

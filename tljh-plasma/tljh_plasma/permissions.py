@@ -11,9 +11,9 @@ from tljh_repo2docker.docker import list_images
 from tornado.web import authenticated
 
 
-def list_groups(exclude_groups):
+def list_groups(include_groups):
     """ Get the list of available groups """
-    return [g.gr_name for g in grp.getgrall() if g.gr_name not in exclude_groups]
+    return [g.gr_name for g in grp.getgrall() if g.gr_name in include_groups]
 
 
 class Permissions(Base):
@@ -33,8 +33,8 @@ class PermissionsHandler(BaseHandler):
     @authenticated
     @admin_only
     async def get(self):
-        exclude_groups = self.settings.get("exclude_groups")
-        all_groups = list_groups(exclude_groups)
+        include_groups = self.settings.get("include_groups")
+        all_groups = list_groups(include_groups)
         permissions = list(self.db.query(Permissions))
         mapping = {
             image: [p.group for p in groups if p.group in all_groups]

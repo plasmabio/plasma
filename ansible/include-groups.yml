@@ -3,17 +3,23 @@
   become: true
   vars_files:
     - vars/default.yml
-    - exclude-groups-config.yml
+    - include-groups-config.yml
 
   tasks:
+    - name: Ensure the groups exist
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ plasma.groups }}"
+
     - name: Reset the list of excluded UNIX groups to avoid duplication
-      shell: tljh-config unset plasma.groups.exclude
+      shell: tljh-config unset plasma.groups
       register: groups
       failed_when: groups.rc > 1
 
     - name: Configure the list of excluded UNIX groups
-      shell: tljh-config add-item plasma.groups.exclude {{ item }}
-      loop: "{{ exclude }}"
+      shell: tljh-config add-item plasma.groups {{ item }}
+      loop: "{{ plasma.groups }}"
 
     - name: Reload the hub
       shell: "tljh-config reload hub"
