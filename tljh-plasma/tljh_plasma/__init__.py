@@ -81,7 +81,7 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
         0, os.path.join(os.path.dirname(__file__), "templates")
     )
 
-    # fetch the list of excluded UNIX groups from the TLJH config
+    # fetch the list of allowed UNIX groups from the TLJH config
     tljh_config = load_config(tljh_config_file)
     include_list = tljh_config.get("plasma", {}).get("groups", [])
     include_groups = set(include_list)

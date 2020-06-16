@@ -12,12 +12,12 @@
         state: present
       loop: "{{ plasma.groups }}"
 
-    - name: Reset the list of excluded UNIX groups to avoid duplication
+    - name: Reset the list of allowed UNIX groups to avoid duplication
       shell: tljh-config unset plasma.groups
       register: groups
       failed_when: groups.rc > 1
 
-    - name: Configure the list of excluded UNIX groups
+    - name: Configure the list of UNIX groups
       shell: tljh-config add-item plasma.groups {{ item }}
       loop: "{{ plasma.groups }}"
 
