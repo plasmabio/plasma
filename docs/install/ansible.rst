@@ -189,6 +189,25 @@ and update The Littlest JupyterHub):
 For more in-depth details about the Ansible playbook, check out the
 `official documentation <https://docs.ansible.com/ansible/latest/user_guide/playbooks.html>`_.
 
+Using a specific version of Plasma
+----------------------------------
+
+By default the Ansible playbooks use the latest version from the ``master`` branch.
+
+This is specified in the ``ansible/vars/default.yml`` file:
+
+.. code-block:: yaml
+
+    tljh_plasma: git+https://github.com/plasmabio/plasma@master#"egg=tljh-plasma&subdirectory=tljh-plasma"
+
+
+But it is also possible to use a specific git commit hash, branch or tag. For example to use the version of Plasma
+tagged as ``v0.1``:
+
+.. code-block:: yaml
+
+    tljh_plasma: git+https://github.com/plasmabio/plasma@v0.1#"egg=tljh-plasma&subdirectory=tljh-plasma"
+
 List of available playbooks
 ---------------------------
 
