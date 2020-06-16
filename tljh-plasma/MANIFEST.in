@@ -1,2 +1,3 @@
 recursive-include tljh_plasma/templates/ *
 recursive-include tljh_plasma/entrypoint/ *
+recursive-include tljh_plasma/static/ *

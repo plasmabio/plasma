@@ -1,0 +1,8 @@
+fieldset {
+  margin-bottom: 20px;
+}
+
+.group-select {
+  display: inline-block;
+  margin-right: 20px;
+}

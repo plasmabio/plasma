@@ -1,0 +1,52 @@
+{% extends "page.html" %}
+
+{% block stylesheet %}
+{{ super() }}
+<link rel="stylesheet" href="{{ base_url }}permissions-static/css/style.css" type="text/css"/>
+{% endblock %}
+
+{% block main %}
+
+{% macro group_selector(name='', selected_group='', hidden='') %}
+<div class="group-select {{ hidden }}">
+  <select name="{{ name }}" class="form-control">
+    {% for group in groups %}
+    <option value="{{ group }}" {% if group == selected_group %} selected="selected" {% endif %}>{{ group }}</option>
+    {% endfor %}
+  </select>
+  <a role="button" class="remove-group btn btn-danger btn-xs">Remove</a>
+</div>
+{% endmacro %}
+
+{{ group_selector('', '', 'hidden') }}
+
+<form class="container form-inline" action="">
+  {% for image in images %}
+  <fieldset class="group-field" data-environment="{{ image.image_name }}">
+    <legend><a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.display_name }}</a>
+      <button type="button" class="add-group btn btn-primary btn-xs pull-right">Add Group</button>
+    </legend>
+    {% if image.image_name in permissions %}
+      {% for group in permissions[image.image_name] %}
+        {{ group_selector(image.image_name, group) }}
+      {% endfor %}
+    {%- endif %}
+  </fieldset>
+  {% endfor %}
+  <button type="submit" class="submit btn btn-primary">Submit</button>
+</form>
+
+{% call modal('Saving Permissions', btn_label='OK', btn_class='btn-primary saving-button') %}
+  <div class="text-center">
+    <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
+  </div>
+{% endcall %}
+
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script type="text/javascript">
+require(["{{ base_url }}permissions-static/js/permissions.js"]);
+</script>
+{% endblock %}

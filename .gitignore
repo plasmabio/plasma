@@ -1,6 +1,7 @@
 *.py[co]
 *~
 .cache
+.coverage
 dist
 docs/_build
 docs/build
@@ -21,3 +22,7 @@ volumes/
 # the Ansible file
 ansible/hosts
 ansible/users-config.yml
+ansible/include-groups-config.yml
+
+# local TLJH config used for testing
+config.yaml

@@ -50,6 +50,19 @@ User environments are built with ``repo2docker`` running in a Docker container. 
 
   docker pull jupyter/repo2docker
 
+Create a config file for the group list
+---------------------------------------
+
+Create a ``config.yaml`` file at the root of the repository with a list of groups your user belongs to.
+For example:
+
+.. code-block:: yaml
+
+    plasma:
+      groups:
+        - docker
+        - adm
+
 Run
 ---
 
