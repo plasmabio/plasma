@@ -1,12 +1,26 @@
 ---
 - hosts: all
   become: true
+  
+  vars:
+    default_user_group: plasma-users
 
   tasks:
+    - name: Add default user group
+      group:
+        name: "{{ default_user_group }}"
+        state: present
+  
+    - name: Add groups
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ user_groups }}"
+
     - name: Add users
       user:
         name: "{{ item.name }}"
-        groups: "{{ item.groups if item.groups is defined else item.name }}"
+        groups: "{{ item.groups if item.groups is defined else default_user_group }}"
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
       loop: "{{ users }}"
