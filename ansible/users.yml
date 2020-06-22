@@ -9,6 +9,7 @@
         groups: "{{ item.groups if item.groups is defined else item.name }}"
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
+        home: "{{ user_base_dir if user_base_dir is defined else '/home' }}/{{ item.name }}"
       loop: "{{ users }}"
 
     - name: Set user quota
