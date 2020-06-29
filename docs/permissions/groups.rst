@@ -31,7 +31,7 @@ of included groups in the TLJH config.
 Managing user groups via the command line
 -----------------------------------------
 
-New groups can be created using the following command:
+To create a new group ``test``:
 
 .. code-block:: bash
 
