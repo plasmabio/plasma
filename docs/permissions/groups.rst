@@ -27,7 +27,7 @@ The playbook creates the groups on the host machine if they don't already exist,
 of included groups in the TLJH config.
 
 Managing user groups via the command line
----------------------------------------------
+-----------------------------------------
 
 New groups can be created using the following command:
 
