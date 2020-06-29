@@ -1,6 +1,8 @@
 Managing UNIX groups
 ====================
 
+.. _permissions/groups:
+
 The group include list
 ----------------------
 
