@@ -15,7 +15,7 @@
       group:
         name: "{{ item }}"
         state: present
-      loop: "{{ user_groups }}"
+      loop: "{{ plasma_groups }}"
 
     - name: Add users
       user:

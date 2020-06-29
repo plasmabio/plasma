@@ -8,65 +8,44 @@ By default Plasma users don't have access to any environments.
 
 Users must be assigned to UNIX groups, and included groups be defined in the Plasma configuration.
 
-To define the list of groups, create a file called ``ansible/include-groups-config.yml`` with the following content:
+Unix groups are defined in the config file `users-config.yml` already used for users creation (see :ref:`install/users-playbook`).
 
 .. code-block:: yaml
 
-    plasma:
-        groups:
-            - python-course
-            - bash-intro
+    plasma_groups:
+        - python-course
+        - bash-intro
 
-And execute the ``ansible/include-groups.yml`` playbook:
+To add these groups into allowed groups to access environments, execute the ``ansible/include-groups.yml`` playbook:
 
 .. code-block:: bash
 
     cd ansible/
-    ansible-playbook -i hosts include-groups.yml -u ubuntu
+    ansible-playbook include-groups.yml -i hosts -u ubuntu -e @users-config.yml
 
 The playbook creates the groups on the host machine if they don't already exist, and defines the list
 of included groups in the TLJH config.
 
-Adding a user to a group via the command line
+Managing user groups via the command line
 ---------------------------------------------
 
 New groups can be created using the following command:
 
 .. code-block:: bash
 
-    groupadd -g 1234 test
+    groupadd test
 
 To add a user ``alice`` to the ``test`` group:
 
 .. code-block:: bash
 
-    usermod -G test alice
+    usermod -a -G test alice
 
-There are also plenty of good resources online to learn more about UNIX user and groups management.
+To remove a user ``alice`` to the ``test`` group:
 
-Adding a user to groups with Ansible
-------------------------------------
+.. code-block:: bash
 
-Alternatively, groups can be defined in the users playbook, as mentioned in :ref:`install/users-playbook`.
-
-To add users to specific groups, edit ``users-config.yml`` to add the ``groups`` field:
-
-.. code-block:: yaml
-
-    users:
-      - name: foo
-        groups: python-course,bash-intro
-        password: PLAIN_TEXT_PASSWORD
-
-      - name: bar
-        groups: test,bash-intro
-        password: PLAIN_TEXT_PASSWORD
-
-This can also be a convenient way to create a default group and give every user access to all user
-environments.
-
-Listing the groups
-------------------
+    deluser alice test
 
 Groups can be listed using the following command:
 
@@ -83,3 +62,6 @@ Groups can be listed using the following command:
     lp:x:7:
     mail:x:8:
     ...
+
+
+There are also plenty of good resources online to learn more about UNIX user and groups management.

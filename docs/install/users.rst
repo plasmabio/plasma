@@ -20,7 +20,7 @@ First you need to create a new ``users-config.yml`` with the following content:
 
 .. code-block:: yaml
 
-    user_groups:
+    plasma_groups:
       - group_1
       - group_2
       - group_3
@@ -38,6 +38,8 @@ First you need to create a new ``users-config.yml`` with the following content:
           - group_3
 
 Replace the ``groups``, ``name`` and ``password`` entries by the real values.
+
+User groups will be later used to adjust permissions to access environments (see :ref:`permissions/groups`).
 
 ``password`` should correspond to the plain text value of the user password.
 
