@@ -1,12 +1,12 @@
 .. _install/users:
 
-Creating Users on the host
-==========================
+Creating users and user groups on the host
+==========================================
 
 .. note::
-  By default the ``site.yml`` playbook does not create any users on the host machine.
+  By default the ``site.yml`` playbook does not create any users nor user groups on the host machine.
 
-  This step is optional because in some scenarios users might already exist on the host machine
+  This step is optional because in some scenarios users and user groups might already exist on the host machine
   and don't need to be created.
 
 .. _install/users-playbook:
@@ -14,20 +14,32 @@ Creating Users on the host
 Using the users playbook
 ------------------------
 
-The ``ansible/`` directory contains a ``users.yml`` playbook that makes it easier to create new users on the host in batches.
+The ``ansible/`` directory contains a ``users.yml`` playbook that makes it easier to create new users and user groups on the host in batches.
 
 First you need to create a new ``users-config.yml`` with the following content:
 
 .. code-block:: yaml
 
+    plasma_groups:
+      - group_1
+      - group_2
+      - group_3
+    
     users:
       - name: foo
         password: PLAIN_TEXT_PASSWORD
+        groups:
+          - group_1
+          - group_2
 
       - name: bar
         password: PLAIN_TEXT_PASSWORD
+        groups:
+          - group_3
 
-Replace the ``name`` and ``password`` entries by the real values.
+Replace the ``groups``, ``name`` and ``password`` entries by the real values.
+
+User groups will be later used to adjust permissions to access environments (see :ref:`permissions/groups`).
 
 ``password`` should correspond to the plain text value of the user password.
 
@@ -116,9 +128,17 @@ The ``users.yml`` playbook can also be used to set the user quotas. In ``users-c
     soft: 10G
     hard: 12G
 
+  user_groups:
+    - group_1
+    - group_2
+    - group_3
+
   users:
     - name: foo
       password: foo
+      groups:
+        - group_1
+        - group_2
       # override quota for a specific user
       quota:
         soft: 512M
@@ -126,6 +146,8 @@ The ``users.yml`` playbook can also be used to set the user quotas. In ``users-c
 
     - name: bar
       password: bar
+      groups:
+        - group_3
 
 Then re-run the ``users.yml`` playbook as mentioned in :ref:`install/users-playbook`.
 
