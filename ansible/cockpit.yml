@@ -5,6 +5,12 @@
     - vars/default.yml
 
   tasks:
+    - name: Add eoan-backports repository to be able to install cockpit-docker
+      apt_repository:
+        repo: deb http://fr.archive.ubuntu.com/ubuntu eoan-backports main universe
+        state: present
+      when: ansible_distribution_release == 'focal'
+
     - name: Install Cockpit with the Docker plugin
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'cockpit', 'cockpit-docker' ]
