@@ -37,7 +37,7 @@
         state: remounted
 
     - stat:
-          path: /aquota.user
+          path: "{{ quota_device_path }}/aquota.user"
       register: quota
 
     - name: Enable quotas
