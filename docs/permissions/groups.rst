@@ -43,7 +43,7 @@ To add a user ``alice`` to the ``test`` group:
 
     usermod -a -G test alice
 
-To remove a user ``alice`` to the ``test`` group:
+To remove the user ``alice`` from the ``test`` group:
 
 .. code-block:: bash
 
