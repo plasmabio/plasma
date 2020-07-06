@@ -11,7 +11,8 @@
         - discover
   
     - name: Print mounted devices on hosts
-      debug: var="fstab.stdout_lines + [ fstab.stderr ]"
+      debug: 
+        msg: "{{ fstab.stdout + fstab.stderr }} " 
       tags:
         - never
         - discover
@@ -42,6 +43,6 @@
 
     - name: Enable quotas
       shell: |
-        quotacheck -ugm /
-        quotaon -v /
+        quotacheck -ugm {{ quota_device_path }}
+        quotaon -v {{ quota_device_path }}
       when: quota.stat.exists == False

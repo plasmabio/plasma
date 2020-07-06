@@ -53,6 +53,27 @@ When the user file is ready, execute the ``users.yml`` playbook with the followi
 
     ansible-playbook users.yml -i hosts -u ubuntu -e @users-config.yml
 
+By default, user home directory is created in ``/home``. A custom home directory can be configured by setting the variable ``home_path`` in the ``hosts`` file.
+For instance:
+
+.. code-block:: text
+
+  [server]
+  51.178.95.237
+
+  [server:vars]
+  ansible_python_interpreter=/usr/bin/python3
+  name_server=dev.plasmabio.org
+  letsencrypt_email=contact@plasmabio.org
+  home_path=/srv/home
+
+
+.. note::
+
+  The first time, this playbook will failed complaining with the error message ``setquota: not found``.
+  This is normal considering quotas are not yet enforced.
+
+
 Handling secrets
 ----------------
 
@@ -83,38 +104,64 @@ Check it out for more info on user and group quotas.
 
   It is recommended to do the initial quota setup **before** letting users connect to the hub.
 
+
 Finding the source device
 .........................
 
-`As mentioned in the tutorial <https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-18-04>`_, the first step is to find the device to apply quotas to.
-
-To do so, SSH into the machine (:ref:`install/requirements`) and execute the following command:
+Run the ``quotas.yml`` playbook with the ``discover`` tag to find out the device and path on which to apply quota:
 
 .. code-block:: bash
 
-  cat /etc/fstab
+  ansible-playbook quotas.yml -i hosts -u ubuntu --tags discover
 
-The output will be similar to:
+
+The output could be similar to:
 
 .. code-block:: text
 
-  LABEL=cloudimg-rootfs   /        ext4   defaults        0 0
-  LABEL=UEFI      /boot/efi       vfat    defaults        0 0
+    msg: |-
+      LABEL=cloudimg-rootfs   /        ext4   defaults        0 0
+      LABEL=UEFI      /boot/efi       vfat    defaults        0 0
 
-The source device for ``/`` might be different than ``LABEL=cloudimg-rootfs``. If this is the case, copy the value somewhere so it can be used in the next step with the playbook.
+or 
 
-Using the quotas playbook
-.........................
+.. code-block:: text
 
-To enable quotas on the machine, execute the ``quotas.yml`` playbook with the source device found in the previous section (if different):
+    msg: |-
+      /dev/disk/by-uuid/55fe8be8-0e4e-46cd-a643-d74284eae15a / ext4 defaults 0 0
+      /dev/disk/by-uuid/ecae1a6e-f240-4f3c-adda-56d22691f159 /srv ext4 defaults 0 0
+
+
+In our case, we want to apply quotas on device ``LABEL=cloudimg-rootfs`` that is mounted on path ``/``. 
+Copy this values in the ``hosts`` file:
+
+.. code-block:: text
+
+  [server]
+  51.178.95.237
+
+  [server:vars]
+  ansible_python_interpreter=/usr/bin/python3
+  name_server=dev.plasmabio.org
+  letsencrypt_email=contact@plasmabio.org
+  quota_device_name=LABEL=cloudimg-rootfs
+  quota_device_path=/
+
+.. warning::
+
+  Be extra cautious when reporting the device name and path in the ``hosts`` file. 
+  A typo could prevent to mount your device and requite a physical intervention on the server (or a reset if its a virtual machine).
+
+
+Installing quotas
+.................
+
+To enable quotas on the machine, execute the ``quotas.yml`` playbook (this time without the ``discover`` tag):
 
 .. code-block:: bash
 
-  # if the device is also named LABEL=cloudimg-rootfs
   ansible-playbook quotas.yml -i hosts -u ubuntu
 
-  # if the source device is different (replace with the real value)
-  ansible-playbook quotas.yml -i hosts -u ubuntu -e "device=UUID=aaef63c7-8c31-4329-8b7f-b90085ecccd4"
 
 Setting the user quotas
 .......................
@@ -128,7 +175,7 @@ The ``users.yml`` playbook can also be used to set the user quotas. In ``users-c
     soft: 10G
     hard: 12G
 
-  user_groups:
+  plasma_groups:
     - group_1
     - group_2
     - group_3
@@ -141,8 +188,8 @@ The ``users.yml`` playbook can also be used to set the user quotas. In ``users-c
         - group_2
       # override quota for a specific user
       quota:
-        soft: 512M
-        hard: 1G
+        soft: 5G
+        hard: 10G
 
     - name: bar
       password: bar
@@ -155,7 +202,7 @@ For example, if a user exceeds their quota when creating a file from the termina
 
 .. code-block:: text
 
-  foo@549539d386e5:~/plasmabio-template-python-master$ fallocate -l 1G test.img
+  foo@549539d386e5:~/plasmabio-template-python-master$ fallocate -l 12G test.img
   fallocate: fallocate failed: Disk quota exceeded
 
 On the host machine, a user can check their quota by running the following command:
@@ -163,9 +210,9 @@ On the host machine, a user can check their quota by running the following comma
 .. code-block:: text
 
   foo@test-server:~$ quota -vs
-  Disk quotas for user foo (uid 1001):
-       Filesystem   space   quota   limit   grace   files   quota   limit   grace
-        /dev/sda1   1024M*   512M   1024M   6days   33910       0       0
+  Disk quotas for user foo (uid 1006): 
+      Filesystem   space   quota   limit   grace   files   quota   limit   grace
+        /dev/sda1     16K   5120M  10240M 
 
 If the quota is exceeded and the user tries to create a new notebook from the interface, they will be shown an error dialog:
 
@@ -173,3 +220,26 @@ If the quota is exceeded and the user tries to create a new notebook from the in
    :alt: User quota exceeded
    :width: 80%
    :align: center
+
+On the host machine, an admin can check user quotas by running the following command:
+
+.. code-block:: text
+
+  ubuntu@plasmabio-pierrepo:~$ sudo repquota -as
+  *** Report for user quotas on device /dev/sda1
+  Block grace time: 7days; Inode grace time: 7days
+                          Space limits                File limits
+  User            used    soft    hard  grace    used  soft  hard  grace
+  ----------------------------------------------------------------------
+  root      --   3668M      0K      0K           160k     0     0       
+  daemon    --     64K      0K      0K              4     0     0       
+  man       --   1652K      0K      0K            141     0     0       
+  syslog    --   1328K      0K      0K             11     0     0       
+  _apt      --     24K      0K      0K              4     0     0       
+  lxd       --      4K      0K      0K              1     0     0       
+  landscape --      8K      0K      0K              3     0     0       
+  pollinate --      4K      0K      0K              2     0     0       
+  ubuntu    --     84K      0K      0K             16     0     0          
+  foo       --     16K   5120M  10240M              4     0     0       
+  bar       --     16K  10240M  12288M              4     0     0       
+  #62583    --      4K      0K      0K              2     0     0  
