@@ -1,5 +1,6 @@
 import grp
 import os
+import pwd
 
 from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
@@ -49,12 +50,19 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         image = next(img for img in images if img["image_name"] == image_name)
         display_name = image["display_name"].replace(":", "-").replace("/", "-")
 
+        # get the user home directory
+        if self.base_volume_path is not None and self.base_volume_path != "":
+            user_home = os.path.join(self.base_volume_path, username)
+        else:
+            user_home = pwd.getpwnam(username).pw_dir
+
         # create the user directory on the host if it does not exist
-        volume_path = os.path.join(self.base_volume_path, username, display_name)
+        volume_path = os.path.join(user_home, display_name)
         os.makedirs(volume_path, exist_ok=True)
 
         # the escaped environment name is used to create a new folder in the user home directory
-        self.host_homedir_format_string = f"{self.base_volume_path}/{username}"
+        home = os.path.abspath(os.path.join(user_home, os.path.pardir))
+        self.host_homedir_format_string = f"{home}/{username}"
         # pass the image name to the Docker container
         self.environment = {"USER_IMAGE": display_name}
 
@@ -80,6 +88,9 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     c.JupyterHub.template_paths.insert(
         0, os.path.join(os.path.dirname(__file__), "templates")
     )
+
+    # let the spawner infer the user home directory
+    c.PlasmaSpawner.base_volume_path = None
 
     # fetch the list of allowed UNIX groups from the TLJH config
     tljh_config = load_config(tljh_config_file)
