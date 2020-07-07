@@ -24,7 +24,7 @@ First you need to create a new ``users-config.yml`` with the following content:
       - group_1
       - group_2
       - group_3
-    
+
     users:
       - name: foo
         password: PLAIN_TEXT_PASSWORD
@@ -53,7 +53,7 @@ When the user file is ready, execute the ``users.yml`` playbook with the followi
 
     ansible-playbook users.yml -i hosts -u ubuntu -e @users-config.yml
 
-By default, user home directory is created in ``/home``. A custom home directory can be configured by setting the variable ``home_path`` in the ``hosts`` file.
+By default the user home directory is created in ``/home``. A custom home directory can be configured by setting the variable ``home_path`` in the ``hosts`` file.
 For instance:
 
 .. code-block:: text
@@ -115,7 +115,7 @@ Run the ``quotas.yml`` playbook with the ``discover`` tag to find out the device
   ansible-playbook quotas.yml -i hosts -u ubuntu --tags discover
 
 
-The output could be similar to:
+The output will be similar to:
 
 .. code-block:: text
 
@@ -123,7 +123,7 @@ The output could be similar to:
       LABEL=cloudimg-rootfs   /        ext4   defaults        0 0
       LABEL=UEFI      /boot/efi       vfat    defaults        0 0
 
-or 
+or
 
 .. code-block:: text
 
@@ -132,8 +132,8 @@ or
       /dev/disk/by-uuid/ecae1a6e-f240-4f3c-adda-56d22691f159 /srv ext4 defaults 0 0
 
 
-In our case, we want to apply quotas on device ``LABEL=cloudimg-rootfs`` that is mounted on path ``/``. 
-Copy this values in the ``hosts`` file:
+In our case, we want to apply quotas on device ``LABEL=cloudimg-rootfs`` that is mounted on path ``/``.
+Copy these values in the ``hosts`` file:
 
 .. code-block:: text
 
@@ -149,12 +149,12 @@ Copy this values in the ``hosts`` file:
 
 .. warning::
 
-  Be extra cautious when reporting the device name and path in the ``hosts`` file. 
-  A typo could prevent to mount your device and requite a physical intervention on the server (or a reset if its a virtual machine).
+  Be extra cautious when reporting the device name and path in the ``hosts`` file.
+  A typo could prevent to mount your device and require a physical intervention on the server (or a reset if its a virtual machine).
 
 
-Installing quotas
-.................
+Enabling quotas
+...............
 
 To enable quotas on the machine, execute the ``quotas.yml`` playbook (this time without the ``discover`` tag):
 
@@ -210,9 +210,9 @@ On the host machine, a user can check their quota by running the following comma
 .. code-block:: text
 
   foo@test-server:~$ quota -vs
-  Disk quotas for user foo (uid 1006): 
+  Disk quotas for user foo (uid 1006):
       Filesystem   space   quota   limit   grace   files   quota   limit   grace
-        /dev/sda1     16K   5120M  10240M 
+        /dev/sda1     16K   5120M  10240M
 
 If the quota is exceeded and the user tries to create a new notebook from the interface, they will be shown an error dialog:
 
@@ -231,15 +231,15 @@ On the host machine, an admin can check user quotas by running the following com
                           Space limits                File limits
   User            used    soft    hard  grace    used  soft  hard  grace
   ----------------------------------------------------------------------
-  root      --   3668M      0K      0K           160k     0     0       
-  daemon    --     64K      0K      0K              4     0     0       
-  man       --   1652K      0K      0K            141     0     0       
-  syslog    --   1328K      0K      0K             11     0     0       
-  _apt      --     24K      0K      0K              4     0     0       
-  lxd       --      4K      0K      0K              1     0     0       
-  landscape --      8K      0K      0K              3     0     0       
-  pollinate --      4K      0K      0K              2     0     0       
-  ubuntu    --     84K      0K      0K             16     0     0          
-  foo       --     16K   5120M  10240M              4     0     0       
-  bar       --     16K  10240M  12288M              4     0     0       
-  #62583    --      4K      0K      0K              2     0     0  
+  root      --   3668M      0K      0K           160k     0     0
+  daemon    --     64K      0K      0K              4     0     0
+  man       --   1652K      0K      0K            141     0     0
+  syslog    --   1328K      0K      0K             11     0     0
+  _apt      --     24K      0K      0K              4     0     0
+  lxd       --      4K      0K      0K              1     0     0
+  landscape --      8K      0K      0K              3     0     0
+  pollinate --      4K      0K      0K              2     0     0
+  ubuntu    --     84K      0K      0K             16     0     0
+  foo       --     16K   5120M  10240M              4     0     0
+  bar       --     16K  10240M  12288M              4     0     0
+  #62583    --      4K      0K      0K              2     0     0
