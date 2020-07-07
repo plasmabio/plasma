@@ -1,7 +1,7 @@
 ---
 - hosts: all
   become: true
-  
+
   vars:
     default_user_group: plasma-users
 
@@ -10,7 +10,7 @@
       group:
         name: "{{ default_user_group }}"
         state: present
-  
+
     - name: Add groups
       group:
         name: "{{ item }}"
@@ -33,3 +33,16 @@
         0 0 /
       when: quota is defined or item.quota is defined
       loop: "{{ users }}"
+
+    - name: Reset the list of admin users to avoid duplicates
+      shell: tljh-config unset users.admin
+      register: admins
+      failed_when: admins.rc > 1
+
+    - name: Add admin users
+      shell: tljh-config add-item users.admin {{ item.name }}
+      when: item.admin is defined and item.admin
+      loop: "{{ users }}"
+
+    - name: Reload the hub
+      shell: "tljh-config reload hub"
