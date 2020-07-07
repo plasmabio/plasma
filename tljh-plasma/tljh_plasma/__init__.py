@@ -90,7 +90,7 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     )
 
     # let the spawner infer the user home directory
-    c.PlasmaSpawner.base_volume_path = None
+    c.PlasmaSpawner.base_volume_path = ""
 
     # fetch the list of allowed UNIX groups from the TLJH config
     tljh_config = load_config(tljh_config_file)
