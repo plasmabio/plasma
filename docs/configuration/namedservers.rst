@@ -3,7 +3,7 @@ Named Servers
 
 By default, users can run only one server at once.
 
-`Named servers functionality<https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_ in JupyterHub
+`Named servers functionality <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_ in JupyterHub
 can be activated to let the user run several servers.
 
 To allow up to 2 simultaneous named servers (in addition to the default one), create the file ``named_servers_config.py``
@@ -20,5 +20,5 @@ Then, reload tljh:
 
    sudo tljh-config reload
 
-Have a look to `named servers documentation<https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_
+Have a look to `named servers documentation <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_
 for more details.
