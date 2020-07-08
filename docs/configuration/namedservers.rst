@@ -20,5 +20,5 @@ Then, reload tljh:
 
    sudo tljh-config reload
 
-Have a look to `named servers documentation <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_
+Have a look at the `named servers documentation <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`_
 for more details.
