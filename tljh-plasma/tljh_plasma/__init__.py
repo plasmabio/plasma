@@ -83,7 +83,6 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
     c.JupyterHub.spawner_class = PlasmaSpawner
-    c.JupyterHub.allow_named_servers = False
     c.JupyterHub.template_paths.insert(
         0, os.path.join(os.path.dirname(__file__), "templates")
     )
