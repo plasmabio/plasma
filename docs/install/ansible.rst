@@ -75,10 +75,10 @@ Create a ``hosts`` file with the following content:
 
 .. code-block:: text
 
-    [servers]
+    [server]
     51.178.95.237
 
-    [servers:vars]
+    [server:vars]
     ansible_python_interpreter=/usr/bin/python3
 
 Replace the IP corresponds to your server. If you already defined the hostname (see :ref:`install/https`),
@@ -86,10 +86,26 @@ you can also specify the domain name:
 
 .. code-block:: text
 
-    [servers]
+    [server]
     dev.plasmabio.org
 
-    [servers:vars]
+    [server:vars]
+    ansible_python_interpreter=/usr/bin/python3
+
+If you have multiple servers, the ``hosts`` file will look like the following:
+
+.. code-block:: text
+
+    [server1]
+    51.178.95.237 
+
+    [server2]
+    51.178.95.238
+
+    [server1:vars]
+    ansible_python_interpreter=/usr/bin/python3
+
+    [server2:vars]
     ansible_python_interpreter=/usr/bin/python3
 
 Then run the following command after replacing ``<user>`` by your user on the remote machine:
@@ -227,6 +243,7 @@ Ansible will log the progress in the terminal, and will indicate which component
 
 .. _install/individual-playbook:
 
+
 Running individual playbooks
 ----------------------------
 
@@ -242,6 +259,7 @@ and update The Littlest JupyterHub):
 For more in-depth details about the Ansible playbook, check out the
 `official documentation <https://docs.ansible.com/ansible/latest/user_guide/playbooks.html>`_.
 
+
 Using a specific version of Plasma
 ----------------------------------
 
@@ -253,13 +271,13 @@ This is specified in the ``ansible/vars/default.yml`` file:
 
     tljh_plasma: git+https://github.com/plasmabio/plasma@master#"egg=tljh-plasma&subdirectory=tljh-plasma"
 
-
 But it is also possible to use a specific git commit hash, branch or tag. For example to use the version of Plasma
 tagged as ``v0.1``:
 
 .. code-block:: yaml
 
     tljh_plasma: git+https://github.com/plasmabio/plasma@v0.1#"egg=tljh-plasma&subdirectory=tljh-plasma"
+
 
 List of available playbooks
 ---------------------------
@@ -270,8 +288,19 @@ The Ansible playbooks are located in the ``ansible/`` directory:
 - ``utils.yml``: install extra system packages useful for debugging and system administration
 - ``users.yml``: create the tests users on the host
 - ``quotas.yml``: enable quotas on the host to limit disk usage
+- ``include-groups.yml``: add user groups to JupyterHub
 - ``cockpit.yml``: install Cockpit on the host as a monitoring tool
 - ``tljh.yml``: install TLJH and the Plasma TLJH plugin
 - ``https.yml``: enable HTTPS for TLJH
 - ``uninstall.yml``: uninstall TLJH only
 - ``site.yml``: the main playbook that references some of the other playbooks
+
+
+Running playbook on a given server
+----------------------------------
+
+If you have multiple servers defined in the ``hosts`` file, you can run a playbook on a single server with the ``--limit`` option:
+
+.. code-block:: bash
+
+    ansible-playbook site.yml -i hosts -u ubuntu --limit server1

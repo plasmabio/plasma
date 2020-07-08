@@ -15,28 +15,39 @@ Enable HTTPS
 ------------
 
 Support for HTTPS is handled automatically thanks to `Let's Encrypt <https://letsencrypt.org>`_, which also
-handles the renewal of the certificates when they are about to expire.
+handles the automatic renewal of the certificates when they are about to expire.
 
-In your ``hosts`` file, add the ``name_server`` and ``letsencrypt_email`` variables on the same line as the server IP:
+In your ``hosts`` file, add the ``name_server`` and ``letsencrypt_email`` variables:
 
 .. code-block:: text
 
-    [servers]
-    51.178.95.237 name_server=dev.plasmabio.org letsencrypt_email=contact@plasmabio.org
+    [server]
+    51.178.95.237
 
-    [servers:vars]
+    [server:vars]
     ansible_python_interpreter=/usr/bin/python3
+    name_server=dev.plasmabio.org
+    letsencrypt_email=contact@plasmabio.org
 
 If you have multiple servers, the ``hosts`` file will look like the following:
 
 .. code-block:: text
 
-    [servers]
-    51.178.95.237 name_server=dev1.plasmabio.org letsencrypt_email=contact@plasmabio.org
-    51.178.95.238 name_server=dev2.plasmabio.org letsencrypt_email=contact@plasmabio.org
+    [server1]
+    51.178.95.237 
 
-    [servers:vars]
+    [server2]
+    51.178.95.238
+
+    [server1:vars]
     ansible_python_interpreter=/usr/bin/python3
+    name_server=dev1.plasmabio.org
+    letsencrypt_email=contact@plasmabio.org
+
+    [server2:vars]
+    ansible_python_interpreter=/usr/bin/python3
+    name_server=dev2.plasmabio.org
+    letsencrypt_email=contact@plasmabio.org
 
 Modify these values to the ones you want to use.
 
