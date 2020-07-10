@@ -63,6 +63,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         # the escaped environment name is used to create a new folder in the user home directory
         home = os.path.abspath(os.path.join(user_home, os.path.pardir))
         self.host_homedir_format_string = f"{home}/{username}"
+        self.image_homedir_format_string = f"{home}/{username}"
         # pass the image name to the Docker container
         self.environment = {"USER_IMAGE": display_name}
 
