@@ -48,7 +48,7 @@ User environments are built with ``repo2docker`` running in a Docker container. 
 
 .. code-block:: bash
 
-  docker pull jupyter/repo2docker
+  docker pull jupyter/repo2docker:master
 
 Create a config file for the group list
 ---------------------------------------
@@ -72,4 +72,4 @@ Finally, start ``jupyterhub`` with the config in ``debug`` mode:
 
   python3 -m jupyterhub -f jupyterhub_config.py --debug
 
-Open `https://localhost:8000 <https://localhost:8000>`_ in a web browser.
+Open `http://localhost:8000 <http://localhost:8000>`_ in a web browser.
