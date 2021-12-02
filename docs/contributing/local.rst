@@ -48,7 +48,7 @@ User environments are built with ``repo2docker`` running in a Docker container. 
 
 .. code-block:: bash
 
-  docker pull jupyter/repo2docker:master
+  docker pull quay.io/jupyterhub/repo2docker:main
 
 Create a config file for the group list
 ---------------------------------------
