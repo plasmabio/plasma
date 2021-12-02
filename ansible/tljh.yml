@@ -44,8 +44,8 @@
       shell: "tljh-config reload hub"
 
     # Pull the repo2docker image to build user images
-    - name: Pull jupyter/repo2docker
+    - name: Pull the repo2docker Docker image
       docker_image:
-        name: jupyter/repo2docker
-        tag: master
+        name: quay.io/jupyterhub/repo2docker
+        tag: main
         source: pull

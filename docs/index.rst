@@ -12,7 +12,7 @@ Based on the Jupyter ecosystem, Plasma allows the creation and the management of
 with an easy deployement on bare-metal servers or virtual machines.
 
 Plasma utilizes `tljh-repo2docker <https://github.com/plasmabio/tljh-repo2docker>`_, 
-a `repo2docker <https://github.com/jupyter/repo2docker>`_ plugin for `The Littlest JupyterHub <https://tljh.jupyter.org/en/latest/>`_.
+a `repo2docker <https://github.com/jupyterhub/repo2docker>`_ plugin for `The Littlest JupyterHub <https://tljh.jupyter.org/en/latest/>`_.
 
 For more details, have a look at:
 

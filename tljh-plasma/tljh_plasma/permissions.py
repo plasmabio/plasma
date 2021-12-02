@@ -3,6 +3,7 @@ import json
 
 from itertools import groupby
 
+from inspect import isawaitable
 from jupyterhub.apihandlers import APIHandler
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Base, Column, Integer, Unicode
@@ -12,7 +13,7 @@ from tornado.web import authenticated
 
 
 def list_groups(include_groups):
-    """ Get the list of available groups """
+    """Get the list of available groups"""
     return [g.gr_name for g in grp.getgrall() if g.gr_name in include_groups]
 
 
@@ -48,7 +49,10 @@ class PermissionsHandler(BaseHandler):
             groups=all_groups,
             permissions=mapping,
         )
-        self.write(html)
+        if isawaitable(html):
+            self.write(await html)
+        else:
+            self.write(html)
 
 
 class PermissionsAPIHandler(APIHandler):
