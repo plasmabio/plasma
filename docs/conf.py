@@ -56,6 +56,6 @@ html_sidebars = {
         'globaltoc.html',
         'relations.html',
         'searchbox.html',
-        'donate.html',
+        # 'donate.html',
     ]
 }
