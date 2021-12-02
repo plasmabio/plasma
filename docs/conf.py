@@ -52,7 +52,7 @@ if os.path.exists(os.path.join(here, '_static')):
 # and seems to be hard to control.
 html_sidebars = {
     '**': [
-        'about.html',
+        # 'about.html',
         'globaltoc.html',
         'relations.html',
         'searchbox.html',
