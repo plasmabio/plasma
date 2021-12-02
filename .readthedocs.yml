@@ -1,7 +1,8 @@
 version: 2
 
-conda:
-  environment: docs/requirements.txt
+python:
+   install:
+   - requirements: docs/requirements.txt
 
 sphinx:
   builder: html
