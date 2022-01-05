@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+  become: yes
+
+  vars:
+    default_user_group: plasma-users
+
+  tasks:
+    # Read a CSV file with users
+    - name: Read users from CSV file and return a list
+      read_csv:
+        path: "{{ studentdef }}"
+      register: users
+      delegate_to: localhost
+      become: no
+
+    - debug:
+        msg: "Read user {{ item.login }} with password {{ item.password }} in group {{ item.group }}"
+      loop: "{{ users.list }}"
+      delegate_to: localhost
+      become: no
+
+    - name: Add users
+      user:
+        name: "{{ item.login }}"
+        groups: "{{ item.group if item.group is defined else default_user_group }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        shell: /bin/bash
+        home: "{{ home_path if home_path is defined else '/home' }}/{{ item.login }}"
+      loop: "{{ users.list  }}"
+
+    - name: Set user quota
+      shell: |
+        setquota -u {{ item.login }} \
+        {{ item.quota.soft if item.quota.soft is defined else quota.soft }} \
+        {{ item.quota.hard if item.quota.hard is defined else quota.hard }} \
+        0 0 {{ quota_device_path }}
+      when: quota is defined or item.quota is defined
+      loop: "{{ users.list  }}"
+
+
