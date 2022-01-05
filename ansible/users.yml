@@ -24,6 +24,7 @@
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
         home: "{{ home_path if home_path is defined else '/home' }}/{{ item.name }}"
+        update_password: on_create
       loop: "{{ users }}"
 
     - name: Set user quota
