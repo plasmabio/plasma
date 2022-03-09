@@ -34,6 +34,38 @@ We recommend building the environment either locally with ``repo2docker`` (next 
 See :ref:`environments/prepare/binder` and the `repo2docker FAQ <https://repo2docker.readthedocs.io/en/latest/faq.html>`_
 for more details.
 
+Accessing the ``repo2docker`` container
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In Plasma, ``repo2docker`` runs in a Docker container, based on the Docker image available at
+``quay.io/jupyterhub/repo2docker:main``.
+
+If you are not able to run ``repo2docker`` manually to investigate a build failure (see section below), you can try to access the
+logs of the Docker container.
+
+On the machine running TLJH, run the ``docker ps`` command. The output should look like the following:
+
+.. code-block:: bash
+
+   CONTAINER ID        IMAGE                                 COMMAND                  CREATED             STATUS              PORTS               NAMES
+   146b4d335215        quay.io/jupyterhub/repo2docker:main   "/usr/local/bin/entr…"   31 seconds ago      Up 30 seconds       52000/tcp           naughty_thompson
+
+You can then access the logs of the container with:
+
+.. code-block:: bash
+
+   docker logs 146b4d335215
+   # or with the generated name
+   docker logs naughty_thompson
+
+If the ``repo2docker`` container has stopped, then you can use the ``docker ps -a`` to display all the containers.
+The output will show ``Exited`` as part of the ``STATUS``:
+
+.. code-block:: bash
+
+   CONTAINER ID        IMAGE                                 COMMAND                  CREATED             STATUS                          PORTS               NAMES
+   146b4d335215        quay.io/jupyterhub/repo2docker:main   "/usr/local/bin/entr…"   4 minutes ago       Exited (0) About a m
+
 Running the environments on my local machine
 --------------------------------------------
 
