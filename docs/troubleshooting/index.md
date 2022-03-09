@@ -21,6 +21,63 @@ ssh ubuntu@51.178.95.143
 
 See: [The Littlest JupyterHub documentation](https://the-littlest-jupyterhub.readthedocs.io/en/latest/troubleshooting/logs.html).
 
+The main components to have a look at are:
+
+- the JupyterHub instance
+- Traefik (proxy)
+- the user server
+
+The logs for the hub and proxy can be inspected with:
+
+```bash
+sudo journalctl -u jupyterhub
+sudo journalctl -u traefik
+```
+
+```{note}
+To follow the logs of the services and print more content on the screen, you can combine the
+`-f` (print the end and follow new logs) and `-n` (specify the number of lines to display) options:
+
+```bash
+sudo journalctl -u jupyterhub -f -n 1000
+```
+````
+
+If you want a clean restart of these services, run:
+
+```bash
+sudo systemctl restart jupyterhub
+sudo systemctl restart traefik
+```
+
+In Plasma, the user servers run in Docker containers. To access the logs of a particular server, first
+identify the name of the user.
+
+Then run:
+
+```bash
+# list all the containers
+docker ps
+# use -f to follow the logs
+docker logs -f jupyter-username
+```
+
+The logs will look like the following:
+
+```bash
+$ docker logs -f jupyter-alice
+[I 2022-03-09 08:42:40.322 SingleUserNotebookApp notebookapp:1593] Authentication of /metrics is OFF, since other authentication is disabled.
+[I 2022-03-09 08:42:40.856 LabApp] JupyterLab extension loaded from /usr/local/lib/python3.9/site-packages/jupyterlab
+[I 2022-03-09 08:42:40.856 LabApp] JupyterLab application directory is /usr/local/share/jupyter/lab
+Patching auth into jupyter_server.base.handlers.JupyterHandler(jupyter_server.base.handlers.AuthenticatedHandler) -> JupyterHandler(jupyterhub.singleuser.mixins.HubAuthenticatedHandler, jupyter_server.base.handlers.AuthenticatedHandler)
+[I 2022-03-09 08:42:40.864 SingleUserNotebookApp mixins:576] Starting jupyterhub-singleuser server version 1.5.0
+[I 2022-03-09 08:42:40.867 SingleUserNotebookApp notebookapp:2329] Serving notebooks from local directory: /home/jovyan
+[I 2022-03-09 08:42:40.867 SingleUserNotebookApp notebookapp:2329] Jupyter Notebook 6.4.8 is running at:
+[I 2022-03-09 08:42:40.867 SingleUserNotebookApp notebookapp:2329] http://4aace966ddb0:8888/user/alice/
+[I 2022-03-09 08:42:40.867 SingleUserNotebookApp notebookapp:2330] Use Control-C to stop this server and shut dow
+```
+
+
 ## Why is my environment not building?
 
 If for some reasons an environment does not appear after {ref}`environments-add`, it is possible that
