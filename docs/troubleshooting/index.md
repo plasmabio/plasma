@@ -34,7 +34,7 @@ sudo journalctl -u jupyterhub
 sudo journalctl -u traefik
 ```
 
-```{note}
+````{note}
 To follow the logs of the services and print more content on the screen, you can combine the
 `-f` (print the end and follow new logs) and `-n` (specify the number of lines to display) options:
 
