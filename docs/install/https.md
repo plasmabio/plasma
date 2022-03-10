@@ -2,13 +2,13 @@
 
 # HTTPS
 
-:::{warning}
+```{warning}
 HTTPS is **not** enabled by default.
 
 **We do not recommend deploying JupyterHub without HTTPS for production use.**
 
 However in some situations it can be handy to do so, for example when testing the setup.
-:::
+```
 
 ## Enable HTTPS
 

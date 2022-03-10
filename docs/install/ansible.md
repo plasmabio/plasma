@@ -18,7 +18,7 @@ official documentation website for more information.
 Plasma comes with several `Ansible Playbooks` to automatically provision the machine with
 the system requirements, as well as installing Plasma and starting up the services.
 
-:::{note}
+````{note}
 We recommend creating a new virtual environment to install Python packages.
 
 Using the built-in `venv` module:
@@ -34,7 +34,7 @@ Using `conda`:
 conda create -n plasma -c conda-forge python nodejs
 conda activate plasma
 ```
-:::
+````
 
 Make sure [Ansible](https://docs.ansible.com/ansible/latest/index.html) is installed:
 
@@ -42,10 +42,10 @@ Make sure [Ansible](https://docs.ansible.com/ansible/latest/index.html) is insta
 python -m pip install ansible>=2.9
 ```
 
-:::{note}
+```{note}
 We recommend `ansible>=2.9` to discard the warning messages
 regarding the use of `aptitude`.
-:::
+```
 
 To verify the installation, run:
 

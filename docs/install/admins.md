@@ -23,9 +23,9 @@ And re-running the `users.yml` playbook:
 ansible-playbook users.yml -i hosts -u ubuntu -e @users-config.yml
 ```
 
-:::{warning}
+```{warning}
 The list of existing admin users is first reset before adding the new admin users.
-:::
+```
 
 Alternatively it is also possible to use the `tljh-config` command on the server directly.
 Please refer to [the Littlest JupyterHub documentation](http://tljh.jupyter.org/en/latest/howto/admin/admin-users.html#adding-admin-users-from-the-command-line)

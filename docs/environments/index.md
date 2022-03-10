@@ -14,9 +14,9 @@ Environments can be managed by admin users by clicking on `Environments` in the 
 :width: 50%
 ```
 
-:::{note}
+```{note}
 The user must be an **admin** to be able to access and manage the list of environments.
-:::
+```
 
 The page will show the list of environments currently available:
 

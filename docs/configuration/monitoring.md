@@ -1,8 +1,8 @@
 # Monitoring
 
-:::{warning}
+```{warning}
 HTTPS must be enabled to be able to access Cockpit. Refer to {ref}`install-https` for more info.
-:::
+```
 
 ## Installing Cockpit
 
@@ -36,7 +36,7 @@ Users will be asked to login with their system credentials. They can then access
 
 ## Monitoring user servers with Cockpit
 
-:::{note}
+````{note}
 Access to Docker Containers requires access to `docker`.
 
 Make sure your user can access docker on the machine with:
@@ -59,7 +59,7 @@ sudo passwd ubuntu
 ```
 
 To add more users as admin or change permissions from the Cockpit UI, see {ref}`monitoring-permissions`.
-:::
+````
 
 Since user servers are started as Docker containers, they will be displayed in the Cockpit interface in the
 `Docker Containers` section:
@@ -82,7 +82,7 @@ It is also possible to stop the user server by clicking on the "Stop" button.
 
 ## Changing user permissions from the Cockpit UI
 
-:::{note}
+```{note}
 You first need to be logged in with a user that has the `sudo` permission.
 :::
 

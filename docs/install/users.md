@@ -2,12 +2,12 @@
 
 # Creating users and user groups on the host
 
-:::{note}
+```{note}
 By default the `site.yml` playbook does not create any users nor user groups on the host machine.
 
 This step is optional because in some scenarios users and user groups might already exist on the host machine
 and don't need to be created.
-:::
+```
 
 (install-users-playbook)=
 
@@ -66,20 +66,20 @@ letsencrypt_email=contact@plasmabio.org
 home_path=/srv/home
 ```
 
-:::{note}
+```{note}
 The first time, this playbook will failed complaining with the error message `setquota: not found`.
 This is normal considering quotas are not yet enforced.
-:::
+```
 
 ## Handling secrets
 
-:::{warning}
+```{warning}
 Passwords are sensitive data. The `users.yml` playbook mentioned in the previous section
 automatically encrypts the password from a plain text file.
 
 For production use, you should consider protecting the passwords using the
 [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html#playbooks-vault).
-:::
+```
 
 This `users.yml` playbook is mostly provided as a convenience script to quickly bootstrap the host machine with
 a predefined set of users.
@@ -95,9 +95,9 @@ If you would like to enable quotas for users to limit how much disk space they c
 The playbook is heavily inspired by the excellent [DigitalOcean tutorial on user quotas](https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-18-04).
 Check it out for more info on user and group quotas.
 
-:::{warning}
+```{warning}
 It is recommended to do the initial quota setup **before** letting users connect to the hub.
-:::
+```
 
 ### Finding the source device
 
@@ -138,10 +138,10 @@ quota_device_name=LABEL=cloudimg-rootfs
 quota_device_path=/
 ```
 
-:::{warning}
+```{warning}
 Be extra cautious when reporting the device name and path in the `hosts` file.
 A typo could prevent to mount your device and require a physical intervention on the server (or a reset if its a virtual machine).
-:::
+```
 
 ### Enabling quotas
 

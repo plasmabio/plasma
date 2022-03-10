@@ -11,11 +11,11 @@ To run the playbook:
 ansible-playbook uninstall.yml -i hosts -u ubuntu
 ```
 
-:::{note}
+```{note}
 The playbook will **only** uninstall TLJH from the server.
 
 It will **not**:
 
 - delete user data
 - remove environments and Docker images
-:::
+```
