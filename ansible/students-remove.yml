@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  become: yes
+
+  vars:
+    default_user_group: plasma-users
+
+  tasks:
+    # Read a CSV file with users
+    - name: Read users from CSV file and return a list
+      read_csv:
+        path: "{{ studentdef }}"
+      register: users
+      delegate_to: localhost
+      become: no
+
+    - debug:
+        msg: "Read user {{ item.username }} in group {{ item.group }}"
+      loop: "{{ users.list }}"
+      delegate_to: localhost
+      become: no
+
+    - name: Remove users
+      user:
+        name: "{{ item.username }}"
+        state: absent
+        remove: yes
+      loop: "{{ users.list }}"

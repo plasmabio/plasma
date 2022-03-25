@@ -231,3 +231,7 @@ foo       --     16K   5120M  10240M              4     0     0
 bar       --     16K  10240M  12288M              4     0     0
 #62583    --      4K      0K      0K              2     0     0
 ```
+
+### Creating user in batches
+
+The {ref}`batch-users` section details another way to create users in batches.
