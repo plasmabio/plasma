@@ -59,7 +59,7 @@ quota:
   hard: 250G
 ```
 
-You can run the playbook to reference that extra file:
+You can run the playbook and reference that extra file:
 
 ```bash
 ansible-playbook student-create.yml -u ubuntu -e "studentdef=students.csv" -e @students-config.yml
