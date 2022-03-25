@@ -16,14 +16,14 @@
       become: no
 
     - debug:
-        msg: "Read user {{ item.login }} in group {{ item.group }}"
+        msg: "Read user {{ item.username }} in group {{ item.group }}"
       loop: "{{ users.list }}"
       delegate_to: localhost
       become: no
 
     - name: Remove users
       user:
-        name: "{{ item.login }}"
+        name: "{{ item.username }}"
         state: absent
         remove: yes
       loop: "{{ users.list }}"

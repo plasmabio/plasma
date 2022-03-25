@@ -5,6 +5,7 @@
 
 monitoring
 persistence
+batch-users
 resources
 cull
 namedservers
