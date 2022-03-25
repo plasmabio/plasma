@@ -29,6 +29,10 @@ stu-megm1-09,soIb4txJDPjo1d,megm1
 stu-megm1-10,QjhalcW9Uq5wxo,megm1
 ```
 
+````{warning}
+Since the fields in the CSV file are delimited by commas, passwords should not contain any `,` character.
+````
+
 ## Running the playbooks
 
 To create the users, go to the `ansible/` folder and run the `student-create.yml` playbook with:
