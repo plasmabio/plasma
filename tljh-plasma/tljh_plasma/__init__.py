@@ -124,6 +124,10 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # set the default cpu and memory limits
     c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
 
+    # prevent PID 1 running in the Docker container to stop when children processes are killed
+    # see https://github.com/plasmabio/plasma/issues/191 for more info
+    c.PlasmaSpawner.extra_host_config = {'init': True}
+
     # register Cockpit as a service if active
     if check_service_active("cockpit"):
         c.JupyterHub.services.append(
