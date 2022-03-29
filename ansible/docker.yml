@@ -23,3 +23,14 @@
     - name: Install Docker Module for Python
       pip:
         name: docker
+
+    - name: Enable the journald logging driver
+      copy:
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+
+    - name: Reload Docker
+      systemd:
+        name: docker
+        state: restarted
+        daemon_reload: yes
