@@ -1,6 +1,7 @@
 import grp
 import os
 import pwd
+import shutil
 
 from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
@@ -59,6 +60,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         # create the user directory on the host if it does not exist
         volume_path = os.path.join(user_home, display_name)
         os.makedirs(volume_path, exist_ok=True)
+        shutil.chown(volume_path, username, username)
 
         # the escaped environment name is used to create a new folder in the user home directory
         home = os.path.abspath(os.path.join(user_home, os.path.pardir))
