@@ -77,6 +77,48 @@ Patching auth into jupyter_server.base.handlers.JupyterHandler(jupyter_server.ba
 [I 2022-03-09 08:42:40.867 SingleUserNotebookApp notebookapp:2330] Use Control-C to stop this server and shut dow
 ```
 
+If the user servers have stopped, logs can still be accessed via `journald`:
+
+```bash
+sudo journalctl CONTAINER_NAME=jupyter-username-
+```
+
+The logs will look like the following:
+
+```
+-- Logs begin at Tue 2022-03-01 05:32:13 UTC, end at Tue 2022-03-29 07:04:03 UTC. --
+Mar 29 07:02:13 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:13.162 SingleUserNotebookApp notebookapp:1593] Authentication of /metrics is OFF, since other authentication is disabled.
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.011 LabApp] JupyterLab extension loaded from /srv/conda/envs/notebook/lib/python3.7/site-packages/jupyterlab
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.011 LabApp] JupyterLab application directory is /srv/conda/envs/notebook/share/jupyter/lab
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.020 SingleUserNotebookApp extension:22] nteract extension loaded from /srv/conda/envs/notebook/lib/python3.7/site-packages/nteract_on_jupyter
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: Patching auth into jupyter_server.base.handlers.JupyterHandler(jupyter_server.base.handlers.AuthenticatedHandler) -> JupyterHandler(jupyterhub.singleuser.mixins.HubAuthenticatedHandler, jupyter_server.base.handlers.AuthenticatedHan>
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.023 SingleUserNotebookApp mixins:576] Starting jupyterhub-singleuser server version 1.5.0
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [W 2022-03-29 07:02:14.030 SingleUserNotebookApp _version:73] jupyterhub version 1.1.0 != jupyterhub-singleuser version 1.5.0. This could cause failure to authenticate and result in redirect loops!
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.030 SingleUserNotebookApp notebookapp:2302] Serving notebooks from local directory: /srv/home/foo/test-gist
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.030 SingleUserNotebookApp notebookapp:2302] Jupyter Notebook 6.3.0 is running at:
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.030 SingleUserNotebookApp notebookapp:2302] http://1237fbae7d24:8888/user/foo/
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.030 SingleUserNotebookApp notebookapp:2303] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.035 SingleUserNotebookApp mixins:557] Updating Hub with activity every 300 seconds
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.810 SingleUserNotebookApp log:189] 302 GET /user/foo/ -> /user/foo/lab? (@172.17.0.1) 1.28ms
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.887 SingleUserNotebookApp log:189] 302 GET /user/foo/ -> /user/foo/lab? (@1.2.3.4) 1.32ms
+Mar 29 07:02:14 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:14.923 SingleUserNotebookApp log:189] 302 GET /user/foo/lab -> /hub/api/oauth2/authorize?client_id=jupyterhub-user-foo&redirect_uri=%2Fuser%2Ffoo%2Foauth_callback&response_type=code&state=[secret] (@1.2.3.4>
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.047 SingleUserNotebookApp auth:992] Logged-in user {'kind': 'user', 'name': 'foo', 'admin': True, 'groups': [], 'server': '/user/foo/', 'pending': None, 'created': '2022-03-29T06:43:56.625610Z', 'last_activit>
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.048 SingleUserNotebookApp log:189] 302 GET /user/foo/oauth_callback?code=[secret]&state=[secret] -> /user/foo/lab (@1.2.3.4) 51.45ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.913 SingleUserNotebookApp log:189] 200 GET /user/foo/api/kernelspecs?1648537335747 (foo@1.2.3.4) 114.00ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.988 SingleUserNotebookApp log:189] 200 GET /user/foo/lab/api/settings?1648537335752 (foo@1.2.3.4) 72.87ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.990 SingleUserNotebookApp log:189] 200 GET /user/foo/api/kernels?1648537335759 (foo@1.2.3.4) 70.30ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.991 SingleUserNotebookApp log:189] 200 GET /user/foo/api/terminals?1648537335760 (foo@1.2.3.4) 71.07ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.993 SingleUserNotebookApp log:189] 200 GET /user/foo/api/sessions?1648537335760 (foo@1.2.3.4) 2.67ms
+Mar 29 07:02:15 plasmabio-test 1237fbae7d24[23293]: [I 2022-03-29 07:02:15.996 SingleUserNotebookApp log:189] 200 GET /user/foo/api/kernelspecs?1648537335922 (foo@1.2.3.4) 1.56ms
+```
+
+````{note}
+Similar to the command above, you can also combine the `-f`  and `-n` options:
+
+```bash
+sudo journalctl CONTAINER_NAME=jupyter-username- -f -n 1000
+```
+````
 
 ## Why is my environment not building?
 
