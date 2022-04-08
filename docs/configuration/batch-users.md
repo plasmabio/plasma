@@ -69,7 +69,7 @@ ansible-playbook student-create.yml -u ubuntu -e "studentdef=students.csv" -e @s
 
 ## Running the playbook to delete users
 
-To create the users, go to the `ansible/` folder and run the `student-remove.yml` playbook with:
+To delete users, go to the `ansible/` folder and run the `student-remove.yml` playbook with:
 
 ```sh
 ansible-playbook student-remove.yml -u ubuntu -e "studentdef=students.csv"
