@@ -41,11 +41,6 @@ To create the users, go to the `ansible/` folder and run the `student-create.yml
 ansible-playbook student-create.yml -u ubuntu -e "studentdef=students.csv"
 ```
 
-It is also possible to delete the users from the same CSV definition, using the `student-remove.yml` playbook:
-
-```sh
-ansible-playbook student-remove.yml -u ubuntu -e "studentdef=students.csv"
-```
 
 ````{note}
 It is possible to pass additional parameters when creating users in batches.
@@ -61,7 +56,7 @@ quota:
 
 You can run the playbook and reference that extra file:
 
-```bash
+```sh
 ansible-playbook student-create.yml -u ubuntu -e "studentdef=students.csv" -e @students-config.yml
 ```
 ````
