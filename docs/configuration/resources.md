@@ -1,6 +1,6 @@
 # Resources
 
-Plasma provides default values to limit the Memory and CPU usage.
+Plasma provides default values to limit the memory and CPU usage.
 
 ## Memory
 
@@ -19,7 +19,7 @@ Users can monitor their memory usage using the indicator in the top bar area if 
 
 ## CPU
 
-By default Plasma sets a limit of `2 cpus` for each user server.
+By default Plasma sets a limit of `2 CPUs` for each user server.
 
 This limit is enforced by the operating system, which throttles access to the CPU by the processes running in the
 Docker container.
@@ -37,13 +37,11 @@ Users can monitor their CPU usage using the indicator in the top bar area if the
 
 ## Displaying the indicators
 
-To enable the Memory and CPU indicators as shown above, the following dependencies must be added to the user environment:
+To enable the memory and CPU indicators as shown above, the following dependencies must be added to the user environment:
 
-- `nbresuse`
-- `jupyterlab-topbar-extension`
+- `jupyter-resource-usage`
+- `jupyterlab-topbar`
+- `jupyterlab-topbar-text`
 - `jupyterlab-system-monitor`
 
-As an example, checkout the following two links:
-
-- [Adding nbresuse](https://github.com/plasmabio/template-python/blob/a4edf334c6b4b16be3a184d0d6e8196137ee1b06/environment.yml#L9)
-- [Adding the JupyterLab extensions](https://github.com/plasmabio/template-python/blob/a4edf334c6b4b16be3a184d0d6e8196137ee1b06/postBuild#L4-L5)
+As an example, checkout this [template](https://github.com/plasmabio/template-python/blob/master/binder/environment.yml) for a Python environment.
