@@ -47,5 +47,6 @@
     - name: Pull the repo2docker Docker image
       docker_image:
         name: quay.io/jupyterhub/repo2docker
-        tag: main
+        tag: 2023.06.0-41.g57d229e
         source: pull
+        force_source: yes
