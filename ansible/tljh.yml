@@ -46,7 +46,7 @@
     # Pull the repo2docker image to build user images
     - name: Pull the repo2docker Docker image
       docker_image:
-        name: quay.io/jupyterhub/repo2docker
-        tag: 2023.06.0-41.g57d229e
+        name: {{ repo2docker_docker_name }}
+        tag: {{ repo2docker_docker_tag }}
         source: pull
         force_source: yes
