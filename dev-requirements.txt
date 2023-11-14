@@ -1,7 +1,7 @@
 git+https://github.com/jupyterhub/the-littlest-jupyterhub
 git+https://github.com/plasmabio/tljh-repo2docker
-jupyterhub~=1.5
-notebook
+jupyterhub~=1.4.5
+notebook<7
 pytest
 pytest-aiohttp
 pytest-asyncio
