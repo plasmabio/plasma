@@ -6,5 +6,5 @@ setup(
     entry_points={"tljh": ["tljh_plasma = tljh_plasma"]},
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["dockerspawner~=12.1", "tljh_repo2docker"],
+    install_requires=["dockerspawner~=12.1", "tljh_repo2docker", "sqlalchemy<2"],
 )
