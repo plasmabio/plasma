@@ -7,4 +7,7 @@ tljh_prefix: /opt/tljh
 tljh_installer_url: https://tljh.jupyter.org/bootstrap.py
 tljh_version: 2.0.0
 
+repo2docker_docker_name: quay.io/jupyterhub/repo2docker
+repo2docker_docker_tag: 2023.06.0-41.g57d229e
+
 ...
