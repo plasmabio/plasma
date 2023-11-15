@@ -268,6 +268,21 @@ tagged as `v0.1`:
 tljh_plasma: git+https://github.com/plasmabio/plasma@v0.1#"egg=tljh-plasma&subdirectory=tljh-plasma"
 ```
 
+## Using a specific version of `repo2docker`
+
+`repo2docker` is used to build the user environments from the Git repositories.
+
+By default the Ansible playbooks use a pinned version of the `jupyterhub/repo2docker`, which is defined in the
+`ansible/vars/default.yml` file.
+
+Like other Ansible variables, it is possible to use a different version of `repo2docker` by overriding the variable
+via the command line:
+
+```bash
+# use an older version of the repo2docker image
+ansible-playbook tljh.yml -i hosts -u ubuntu -e "repo2docker_docker_tag=2022.10.0-232.g0ea6f7d"
+```
+
 ## List of available playbooks
 
 The Ansible playbooks are located in the `ansible/` directory:
