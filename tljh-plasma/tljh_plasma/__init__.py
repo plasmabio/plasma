@@ -70,7 +70,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         # mount volumes
         self.volumes = {
             os.path.join(
-                os.path.dirname(__file__), "entrypoint", "entrypoint.sh"
+                os.path.dirname(__file__), "entrypoint", "repo2docker-entrypoint"
             ): "/usr/local/bin/repo2docker-entrypoint",
             self.shared_data_path: {"bind": "/srv/data", "mode": "ro"},
         }
@@ -117,7 +117,7 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # increase the timeout to be able to pull larger Docker images
     c.PlasmaSpawner.start_timeout = 120
     c.PlasmaSpawner.pull_policy = "Never"
-    c.PlasmaSpawner.remove = True
+    # c.PlasmaSpawner.remove = True
     c.PlasmaSpawner.default_url = "/lab"
     # TODO: change back to jupyterhub-singleuser
     c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
