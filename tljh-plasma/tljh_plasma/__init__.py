@@ -70,7 +70,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         # mount volumes
         self.volumes = {
             os.path.join(
-                os.path.dirname(__file__), "entrypoint", "repo2docker-entrypoint"
+                os.path.dirname(__file__), "entrypoint", "entrypoint.sh"
             ): "/usr/local/bin/repo2docker-entrypoint",
             self.shared_data_path: {"bind": "/srv/data", "mode": "ro"},
         }
@@ -117,12 +117,14 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # increase the timeout to be able to pull larger Docker images
     c.PlasmaSpawner.start_timeout = 120
     c.PlasmaSpawner.pull_policy = "Never"
-    # c.PlasmaSpawner.remove = True
+    c.PlasmaSpawner.remove = False
     c.PlasmaSpawner.default_url = "/lab"
     # TODO: change back to jupyterhub-singleuser
     c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
     # set the default cpu and memory limits
     c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+    # explicitely opt-in to enable the custom entrypoint logic
+    c.PlasmaSpawner.run_as_root = True
 
     # prevent PID 1 running in the Docker container to stop when child processes are killed
     # see https://github.com/plasmabio/plasma/issues/191 for more info
