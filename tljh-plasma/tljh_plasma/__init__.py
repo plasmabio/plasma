@@ -117,8 +117,7 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # increase the timeout to be able to pull larger Docker images
     c.PlasmaSpawner.start_timeout = 120
     c.PlasmaSpawner.pull_policy = "Never"
-    # TODO: re-enable
-    c.PlasmaSpawner.remove = False
+    c.PlasmaSpawner.remove = True
     c.PlasmaSpawner.default_url = "/lab"
     # TODO: change back to jupyterhub-singleuser
     c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
