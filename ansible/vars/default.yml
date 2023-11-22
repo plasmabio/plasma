@@ -9,4 +9,7 @@ tljh_prefix: /opt/tljh
 tljh_bootstrap_pip_spec: git+https://github.com/jtpio/the-littlest-jupyterhub.git@skip-install#"egg=the_littlest_jupyterhub"
 tljh_installer_url: https://raw.githubusercontent.com/jtpio/the-littlest-jupyterhub/skip-install/bootstrap/bootstrap.py
 
+repo2docker_docker_name: quay.io/jupyterhub/repo2docker
+repo2docker_docker_tag: 2023.06.0-41.g57d229e
+
 ...
