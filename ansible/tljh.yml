@@ -28,6 +28,7 @@
       shell: |
         {{ ansible_python_interpreter }} {{ tljh_installer_dest }} \
           --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
+          --version {{ tljh_version }}
 
     - name: Set the idle culler timeout to 1 hour
       shell: "tljh-config set services.cull.timeout 3600"
