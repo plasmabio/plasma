@@ -5,5 +5,6 @@ tljh_repo2docker: tljh-repo2docker==1.0.2
 tljh_installer_dest: /srv/tljh-installer.py
 tljh_prefix: /opt/tljh
 tljh_installer_url: https://tljh.jupyter.org/bootstrap.py
+tljh_version: 1.0.0
 
 ...
