@@ -1,4 +1,4 @@
-git+https://github.com/jupyterhub/the-littlest-jupyterhub
+git+https://github.com/jupyterhub/the-littlest-jupyterhub@1.0.0
 git+https://github.com/plasmabio/tljh-repo2docker
 jupyterhub~=1.5
 notebook<7
