@@ -1,9 +1,10 @@
-git+https://github.com/jupyterhub/the-littlest-jupyterhub
+git+https://github.com/jupyterhub/the-littlest-jupyterhub@1.0.0
 tljh-repo2docker>=2.1,<3
-jupyterhub~=1.5
-notebook<7
+jupyterhub>=4,<5
+notebook
 pytest
 pytest-aiohttp
 pytest-asyncio
 pytest-cov
+pytest-jupyterhub
 requests-mock
