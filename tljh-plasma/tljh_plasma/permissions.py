@@ -7,7 +7,7 @@ from inspect import isawaitable
 from jupyterhub.apihandlers import APIHandler
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Base, Column, Integer, Unicode
-from jupyterhub.utils import admin_only
+from jupyterhub.scopes import needs_scope
 from tljh_repo2docker.docker import list_images
 from tornado.web import authenticated
 
@@ -32,7 +32,7 @@ class PermissionsHandler(BaseHandler):
     """
 
     @authenticated
-    @admin_only
+    @needs_scope("admin-ui")
     async def get(self):
         include_groups = self.settings.get("include_groups")
         all_groups = list_groups(include_groups)
@@ -60,8 +60,8 @@ class PermissionsAPIHandler(APIHandler):
     Handle edits to the mapping of environments and groups.
     """
 
-    @admin_only
     @authenticated
+    @needs_scope("admin-ui")
     async def post(self):
         raw_args = self.request.body.decode("utf-8")
         args = json.loads(raw_args)
