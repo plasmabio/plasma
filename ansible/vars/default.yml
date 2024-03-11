@@ -1,7 +1,7 @@
 ---
 
 tljh_plasma: git+https://github.com/plasmabio/plasma@master#"egg=tljh-plasma&subdirectory=tljh-plasma"
-tljh_repo2docker: git+https://github.com/plasmabio/tljh-repo2docker@master
+tljh_repo2docker: tljh-repo2docker==1.0.1
 tljh_installer_dest: /srv/tljh-installer.py
 tljh_prefix: /opt/tljh
 # TODO: update to upstream TLJH links when the --no-user-env (or similar) is available
