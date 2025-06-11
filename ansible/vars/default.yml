@@ -1,7 +1,7 @@
 ---
 
 tljh_plasma: git+https://github.com/plasmabio/plasma@master#"egg=tljh-plasma&subdirectory=tljh-plasma"
-tljh_repo2docker: tljh-repo2docker==2.0.0
+tljh_repo2docker: tljh-repo2docker==3.0.0a0
 tljh_installer_dest: /srv/tljh-installer.py
 tljh_prefix: /opt/tljh
 tljh_installer_url: https://tljh.jupyter.org/bootstrap.py
