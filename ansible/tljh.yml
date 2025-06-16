@@ -27,8 +27,15 @@
     - name: Run the TLJH installer
       shell: |
         {{ ansible_python_interpreter }} {{ tljh_installer_dest }} \
+          --version {{ tljh_version }} \
           --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
-          --version {{ tljh_version }}
+
+    # Wait for initial setup to complete
+    - name: Wait for JupyterHub to be ready after installation
+      wait_for:
+        port: 80
+        delay: 10
+        timeout: 300
 
     - name: Set the idle culler timeout to 1 hour
       shell: "tljh-config set services.cull.timeout 3600"
@@ -38,8 +45,58 @@
         tljh-config set limits.memory 2G
         tljh-config set limits.cpu 2
 
-    - name: Reload the hub
-      shell: "tljh-config reload hub"
+    # Validate configuration before reloading
+    - name: Validate TLJH configuration
+      shell: "tljh-config show"
+      register: config_validation
+
+    - name: Stop JupyterHub service gracefully before reload
+      shell: "systemctl stop jupyterhub.service"
+      ignore_errors: yes
+
+    # Wait a moment for the service to stop
+    - name: Wait for service to stop
+      wait_for:
+        port: 80
+        state: stopped
+        timeout: 30
+      ignore_errors: yes
+
+    - name: Check for any remaining JupyterHub processes
+      shell: "pkill -f jupyterhub || true"
+      ignore_errors: yes
+
+    - name: Start JupyterHub service
+      shell: "systemctl start jupyterhub.service"
+      register: start_result
+      ignore_errors: yes
+
+    - name: Wait for JupyterHub to start
+      wait_for:
+        port: 80
+        delay: 5
+        timeout: 60
+      when: start_result.rc == 0
+
+    - name: Check JupyterHub service status
+      shell: "systemctl status jupyterhub.service"
+      register: final_status
+      ignore_errors: yes
+
+    - name: Show JupyterHub logs if service failed
+      shell: "journalctl -xeu jupyterhub.service --no-pager -n 100"
+      register: service_logs
+      when: start_result.rc != 0
+
+    - name: Display service logs if startup failed
+      debug:
+        msg: "{{ service_logs.stdout }}"
+      when: start_result.rc != 0
+
+    - name: Fail if JupyterHub couldn't start
+      fail:
+        msg: "JupyterHub service failed to start. Check the logs above."
+      when: start_result.rc != 0
 
     # Pull the repo2docker image to build user images
     - name: Pull the repo2docker Docker image

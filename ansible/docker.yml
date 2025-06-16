@@ -3,33 +3,150 @@
   become: true
 
   tasks:
-    - name: Install required system packages
-      apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+    - name: Get Ubuntu codename
+      shell: lsb_release -cs
+      register: ubuntu_codename
+      changed_when: false
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
-        state: present
-
-    - name: Update apt and install docker-ce
-      apt: update_cache=yes name=docker-ce state=latest
-
-    - name: Install Docker Module for Python
-      pip:
+    - name: Stop Docker service if running
+      systemd:
         name: docker
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove all Docker packages to avoid conflicts
+      apt:
+        name: "{{ item }}"
+        state: absent
+        purge: yes
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+        - docker.io
+        - docker-doc
+        - docker-compose
+        - podman-docker
+        - containerd
+        - runc
+      ignore_errors: yes
+
+    - name: Remove all existing Docker repository files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/docker.list
+        - /etc/apt/sources.list.d/docker-ce.list
+        - /etc/apt/sources.list.d/docker.sources
+        - /etc/apt/sources.list.d/archive_uri-https_download_docker_com_linux_ubuntu-jammy.list
+        - /etc/apt/sources.list.d/archive_uri-https_download_docker_com_linux_ubuntu-focal.list
+        - /etc/apt/sources.list.d/archive_uri-https_download_docker_com_linux_ubuntu-noble.list
+      ignore_errors: yes
+
+    - name: Remove Docker entries from main sources.list and sources.list.d
+      shell: |
+        sed -i '/download\.docker\.com/d' /etc/apt/sources.list
+        find /etc/apt/sources.list.d/ -name "*.list" -exec sed -i '/download\.docker\.com/d' {} \;
+      ignore_errors: yes
+
+    - name: Remove existing Docker GPG keys
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/keyrings/docker.gpg
+        - /usr/share/keyrings/docker-archive-keyring.gpg
+        - /etc/apt/trusted.gpg.d/docker.gpg
+      ignore_errors: yes
+
+    - name: Clean apt cache completely
+      shell: |
+        apt-get clean
+        rm -rf /var/lib/apt/lists/*
+        apt-get update
+      ignore_errors: yes
+
+    - name: Install required system packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop:
+        - 'apt-transport-https'
+        - 'ca-certificates'
+        - 'curl'
+        - 'software-properties-common'
+        - 'python3-pip'
+        - 'virtualenv'
+        - 'python3-setuptools'
+        - 'gnupg'
+        - 'lsb-release'
+
+    - name: Create directory for Docker GPG key
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker GPG key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /tmp/docker.gpg
+        mode: '0644'
+
+    - name: Add Docker GPG key to keyring
+      shell: |
+        gpg --dearmor < /tmp/docker.gpg > /etc/apt/keyrings/docker.gpg
+        chmod a+r /etc/apt/keyrings/docker.gpg
+      args:
+        creates: /etc/apt/keyrings/docker.gpg
+
+    - name: Add Docker Repository with proper signing
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_codename.stdout }} stable"
+        state: present
+        filename: docker
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
 
     - name: Enable the journald logging driver
       copy:
         src: daemon.json
         dest: /etc/docker/daemon.json
+      notify: restart docker
 
-    - name: Reload Docker
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    - name: Add current user to docker group (if not root)
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+      when: ansible_user != "root"
+
+  handlers:
+    - name: restart docker
       systemd:
         name: docker
         state: restarted
