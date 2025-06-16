@@ -43,4 +43,4 @@ export JUPYTER_PATH=${IMAGE_DIR}/.local/share/jupyter
 cd ${IMAGE_DIR}
 
 # execute the notebook process as the given user
-exec su $NB_USER -m -c '"$0" "$@"' -- "$@"
+exec su - $NB_USER -m -c '"$0" "$@"' -- "$@"
