@@ -26,3 +26,4 @@ ansible/*.csv
 
 # local TLJH config used for testing
 config.yaml
+hosts
