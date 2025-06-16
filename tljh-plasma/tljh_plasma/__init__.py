@@ -126,6 +126,9 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # explicitely opt-in to enable the custom entrypoint logic
     c.PlasmaSpawner.run_as_root = True
 
+    # Since dockerspawner 13
+    c.DockerSpawner.allowed_images = "*"
+
     # prevent PID 1 running in the Docker container to stop when child processes are killed
     # see https://github.com/plasmabio/plasma/issues/191 for more info
     c.PlasmaSpawner.extra_host_config = {'init': True}
