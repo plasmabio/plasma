@@ -1,5 +1,6 @@
 import grp
 import os
+import platform
 import pwd
 
 from dockerspawner import SystemUserSpawner
@@ -83,6 +84,7 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     # hub
     c.JupyterHub.cleanup_servers = False
     c.JupyterHub.authenticator_class = PAMAuthenticator
+    c.Authenticator.allow_all = True
     c.JupyterHub.spawner_class = PlasmaSpawner
     c.JupyterHub.template_paths.insert(
         0, os.path.join(os.path.dirname(__file__), "templates")
@@ -123,13 +125,18 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
     # set the default cpu and memory limits
     c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+    # explicitely opt-in to enable the custom entrypoint logic
+    c.PlasmaSpawner.run_as_root = True
 
     # prevent PID 1 running in the Docker container to stop when child processes are killed
     # see https://github.com/plasmabio/plasma/issues/191 for more info
-    c.PlasmaSpawner.extra_host_config = {'init': True}
+    c.PlasmaSpawner.extra_host_config = {"init": True}
 
     # register Cockpit as a service if active
-    if check_service_active("cockpit"):
+    if platform.system() == "Linux" and check_service_active("cockpit"):
         c.JupyterHub.services.append(
-            {"name": "cockpit", "url": "http://0.0.0.0:9090",},
+            {
+                "name": "cockpit",
+                "url": "http://0.0.0.0:9090",
+            },
         )

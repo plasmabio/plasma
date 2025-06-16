@@ -26,11 +26,9 @@
 
     - name: Run the TLJH installer
       shell: |
-        {{ ansible_python_interpreter }} {{ tljh_installer_dest }} --no-user-env \
+        {{ ansible_python_interpreter }} {{ tljh_installer_dest }} \
           --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
-      # TODO: remove when --no-user-env (or equivalent) is available
-      environment:
-        TLJH_BOOTSTRAP_PIP_SPEC: "{{ tljh_bootstrap_pip_spec }}"
+          --version {{ tljh_version }}
 
     - name: Set the idle culler timeout to 1 hour
       shell: "tljh-config set services.cull.timeout 3600"
@@ -46,6 +44,7 @@
     # Pull the repo2docker image to build user images
     - name: Pull the repo2docker Docker image
       docker_image:
-        name: quay.io/jupyterhub/repo2docker
-        tag: main
+        name: "{{ repo2docker_docker_name }}"
+        tag: "{{ repo2docker_docker_tag }}"
         source: pull
+        force_source: yes
