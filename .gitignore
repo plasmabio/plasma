@@ -26,3 +26,6 @@ ansible/*.csv
 
 # local TLJH config used for testing
 config.yaml
+
+# tljh-repo2docker
+*.sqlite
