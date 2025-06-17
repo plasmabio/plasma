@@ -120,9 +120,14 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
     c.PlasmaSpawner.remove = True
     c.PlasmaSpawner.default_url = "/lab"
     # TODO: change back to jupyterhub-singleuser
-    c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
+    c.PlasmaSpawner.cmd = ["jupyterhub-singleuser"]
     # set the default cpu and memory limits
     c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+    # explicitely opt-in to enable the custom entrypoint logic
+    c.PlasmaSpawner.run_as_root = True
+
+    # Since dockerspawner 13
+    c.DockerSpawner.allowed_images = "*"
 
     # prevent PID 1 running in the Docker container to stop when child processes are killed
     # see https://github.com/plasmabio/plasma/issues/191 for more info

@@ -31,6 +31,11 @@ TOPBAR_TEXT_SETTINGS_DIR=${IMAGE_DIR}/.jupyter/lab/user-settings/jupyterlab-topb
 mkdir -p ${TOPBAR_TEXT_SETTINGS_DIR}
 echo "{\"editable\": false, \"text\":\"${USER_IMAGE}\"}" > ${TOPBAR_TEXT_SETTINGS_DIR}/plugin.jupyterlab-settings
 
+# enable the resource usage indicators in the topbar
+RESOURCE_USAGE_SETTINGS_DIR=${IMAGE_DIR}/.jupyter/lab/user-settings/@jupyter-server/resource-usage
+mkdir -p ${RESOURCE_USAGE_SETTINGS_DIR}
+echo "{\"enabled\": true}" > ${RESOURCE_USAGE_SETTINGS_DIR}/topbar-item.jupyterlab-settings
+
 # set the correct permissions for the user home subdirectory
 chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 

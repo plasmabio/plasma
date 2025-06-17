@@ -2,7 +2,7 @@
 
 # Overview
 
-Plasma is built with [The Littlest JupyterHub](https://the-littlest-jupyterhub.readthedocs.io/en/latest/) (TLJH)
+Plasma is built with [The Littlest JupyterHub](https://the-littlest-jupyterhub.readthedocs.io/en/latest/) (TLJH) 1.0
 and uses Docker containers to start the user servers.
 
 The project provides:

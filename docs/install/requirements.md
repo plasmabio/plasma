@@ -4,7 +4,7 @@
 
 Before installing Plasma, you will need:
 
-- A server running at least **Ubuntu 18.04**
+- A server running **Ubuntu 24.04**
 - The public IP of the server
 - SSH access to the machine
 - A `priviledged user` on the remote machine that can issue commands using `sudo`
@@ -32,7 +32,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCeeTSTvuZ4KzWBwUj2yIKNhX9Jw+LLdNfjOaVONfnY
 
 It can then be manually added to `~/.ssh/authorized_keys` on the server.
 
-For more information, checkout [this tutorial on DigitalOcean to set up SSH Keys on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804).
+For more information, checkout [this tutorial on DigitalOcean to set up SSH Keys on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-1804), which should be similar for Ubuntu 24.04.
 
 (requirements-server)=
 
