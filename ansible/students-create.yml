@@ -8,9 +8,28 @@
 
   tasks:
     # Read a CSV file with users
+    - name: Get CSV file path
+      set_fact:
+        studentdefpath: "{{ inventory_dir }}/{{ studentdef }}"
+      delegate_to: localhost
+      become: no
+
+    - name: Ensure CSV file exists
+      stat:
+        path: "{{ studentdefpath }}"
+      register: csv_file
+      delegate_to: localhost
+      become: no
+
+    - name: Show CSV file path
+      debug:
+        msg: "CSV file path is {{ studentdefpath }}"
+      delegate_to: localhost
+      become: no
+
     - name: Read users from CSV file and return a list
       read_csv:
-        path: "{{ studentdef }}"
+        path: "{{ studentdefpath }}"
       register: users
       delegate_to: localhost
       become: no
