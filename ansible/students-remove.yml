@@ -1,29 +1,50 @@
 ---
 
-- hosts: all
-  become: yes
+- name: "Delete student accounts"
+  hosts: all
+  become: true
 
   vars:
     default_user_group: plasma-users
 
   tasks:
     # Read a CSV file with users
-    - name: Read users from CSV file and return a list
-      read_csv:
-        path: "{{ studentdef }}"
+    - name: "Get CSV file path"
+      ansible.builtin.set_fact:
+        studentdefpath: "{{ lookup('env', 'PWD') }}/{{ studentdef }}"
+      delegate_to: localhost
+      become: false
+
+    - name: "Ensure CSV file exists"
+      ansible.builtin.stat:
+        path: "{{ studentdefpath }}"
+      register: csv_file
+      delegate_to: localhost
+      become: false
+
+    - name: "Show CSV file path"
+      ansible.builtin.debug:
+        msg: "CSV file path is {{ studentdefpath }}"
+      delegate_to: localhost
+      become: false
+
+    - name: "Read users from CSV file and return a list"
+      community.general.read_csv:
+        path: "{{ studentdefpath }}"
       register: users
       delegate_to: localhost
-      become: no
+      become: false
 
-    - debug:
+    - name: "Print user details"
+      ansible.builtin.debug:
         msg: "Read user {{ item.username }} in group {{ item.group }}"
       loop: "{{ users.list }}"
       delegate_to: localhost
-      become: no
+      become: false
 
-    - name: Remove users
-      user:
+    - name: "Remove users"
+      ansible.builtin.user:
         name: "{{ item.username }}"
         state: absent
-        remove: yes
+        remove: true
       loop: "{{ users.list }}"
