@@ -1,24 +1,26 @@
 ---
-- hosts: all
+
+- name: "Create groups"
+  hosts: all
   become: true
   vars_files:
     - vars/default.yml
 
   tasks:
-    - name: Ensure the groups exist
-      group:
+    - name: "Ensure the groups exist"
+      ansible.builtin.group:
         name: "{{ item }}"
         state: present
       loop: "{{ plasma_groups }}"
 
-    - name: Reset the list of allowed UNIX groups to avoid duplication
-      shell: tljh-config unset user_groups
+    - name: "Reset the list of allowed UNIX groups to avoid duplication"
+      ansible.builtin.shell: tljh-config unset user_groups
       register: groups
       failed_when: groups.rc > 1
 
-    - name: Configure the list of UNIX groups
-      shell: tljh-config add-item plasma.groups {{ item }}
+    - name: "Configure the list of UNIX groups"
+      ansible.builtin.shell: tljh-config add-item plasma.groups {{ item }}
       loop: "{{ plasma_groups }}"
 
-    - name: Reload the hub
-      shell: "tljh-config reload hub"
+    - name: "Reload the hub"
+      ansible.builtin.shell: "tljh-config reload hub"
