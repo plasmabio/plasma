@@ -1,61 +1,62 @@
 ---
 
-- hosts: all
-  become: yes
+- name: "Create student accounts"
+  hosts: all
+  become: true
 
   vars:
     default_user_group: plasma-users
 
   tasks:
     # Read a CSV file with users
-    - name: Get CSV file path
-      set_fact:
-        studentdefpath: "{{ inventory_dir }}/{{ studentdef }}"
+    - name: "Get CSV file path"
+      ansible.builtin.set_fact:
+        studentdefpath: "{{ lookup('env', 'PWD') }}/{{ studentdef }}"
       delegate_to: localhost
-      become: no
+      become: false
 
-    - name: Ensure CSV file exists
-      stat:
+    - name: "Ensure CSV file exists"
+      ansible.builtin.stat:
         path: "{{ studentdefpath }}"
       register: csv_file
       delegate_to: localhost
-      become: no
+      become: false
 
-    - name: Show CSV file path
-      debug:
+    - name: "Show CSV file path"
+      ansible.builtin.debug:
         msg: "CSV file path is {{ studentdefpath }}"
       delegate_to: localhost
-      become: no
+      become: false
 
-    - name: Read users from CSV file and return a list
-      read_csv:
+    - name: "Read users from CSV file and return a list"
+      community.general.read_csv:
         path: "{{ studentdefpath }}"
       register: users
       delegate_to: localhost
-      become: no
+      become: false
 
-    - debug:
+    - name: "Print user details"
+      ansible.builtin.debug:
         msg: "Read user {{ item.username }} with password {{ item.password }} in group {{ item.group }}"
       loop: "{{ users.list }}"
       delegate_to: localhost
-      become: no
+      become: false
 
-    - name: Add users
-      user:
+    - name: "Add users"
+      ansible.builtin.user:
         name: "{{ item.username }}"
         groups: "{{ item.group if item.group is defined else default_user_group }}"
         password: "{{ item.password | password_hash('sha512') }}"
         shell: /bin/bash
         home: "{{ home_path if home_path is defined else '/home' }}/{{ item.username }}"
-      loop: "{{ users.list  }}"
+        update_password: on_create
+      loop: "{{ users.list }}"
 
-    - name: Set user quota
-      shell: |
+    - name: "Apply user quota"
+      ansible.builtin.shell: |
         setquota -u {{ item.username }} \
         {{ item.quota.soft if item.quota.soft is defined else quota.soft }} \
         {{ item.quota.hard if item.quota.hard is defined else quota.hard }} \
         0 0 {{ quota_device_path }}
       when: quota is defined or item.quota is defined
-      loop: "{{ users.list  }}"
-
-
+      loop: "{{ users.list }}"
