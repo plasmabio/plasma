@@ -2,6 +2,8 @@ import grp
 import os
 import pwd
 
+from urllib.parse import urlparse, parse_qs
+
 from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
 from jupyterhub.handlers.static import CacheControlStaticFilesHandler
@@ -29,6 +31,7 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
     )
 
     async def list_images(self):
+        # filter images based on the group permissions
         all_images = await super().list_images()
         groups = [
             group.gr_name for group in grp.getgrall() if self.user.name in group.gr_mem
@@ -36,6 +39,17 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         permissions = self.db.query(Permissions).filter(Permissions.group.in_(groups))
         whitelist = set(p.image for p in permissions)
         images = [image for image in all_images if image["image_name"] in whitelist]
+
+        # filter images based on the url query parameter
+        next_url = self.handler.get_argument("next", default="")
+        query = urlparse(next_url).query
+        parsed = parse_qs(query)
+        if "environment-name" in parsed:
+            display_name = parsed["environment-name"][0]
+            images = [
+                image for image in images if image["display_name"] == display_name
+            ]
+
         return images
 
     async def start(self, *args, **kwargs):
