@@ -131,10 +131,13 @@ def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
 
     # prevent PID 1 running in the Docker container to stop when child processes are killed
     # see https://github.com/plasmabio/plasma/issues/191 for more info
-    c.PlasmaSpawner.extra_host_config = {'init': True}
+    c.PlasmaSpawner.extra_host_config = {"init": True}
 
     # register Cockpit as a service if active
     if check_service_active("cockpit"):
         c.JupyterHub.services.append(
-            {"name": "cockpit", "url": "http://0.0.0.0:9090",},
+            {
+                "name": "cockpit",
+                "url": "http://0.0.0.0:9090",
+            },
         )
