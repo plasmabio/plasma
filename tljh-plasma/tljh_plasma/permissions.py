@@ -1,4 +1,3 @@
-import grp
 import json
 
 from itertools import groupby
@@ -10,11 +9,6 @@ from jupyterhub.orm import Base, Column, Integer, Unicode
 from jupyterhub.scopes import needs_scope
 from tljh_repo2docker.docker import list_images
 from tornado.web import authenticated
-
-
-def list_groups(include_groups):
-    """Get the list of available groups"""
-    return [g.gr_name for g in grp.getgrall() if g.gr_name in include_groups]
 
 
 class Permissions(Base):
@@ -35,7 +29,7 @@ class PermissionsHandler(BaseHandler):
     @needs_scope("admin-ui")
     async def get(self):
         include_groups = self.settings.get("include_groups")
-        all_groups = list_groups(include_groups)
+        all_groups = list(include_groups)
         permissions = list(self.db.query(Permissions))
         mapping = {
             image: [p.group for p in groups if p.group in all_groups]
@@ -64,7 +58,7 @@ class PermissionsAPIHandler(APIHandler):
     @needs_scope("admin-ui")
     async def post(self):
         raw_args = self.request.body.decode("utf-8")
-        args = json.loads(raw_args)
+        args = json.loads(json.loads(raw_args)['data'])
         self.db.query(Permissions).delete()
         permissions = [
             Permissions(image=arg["name"], group=arg["value"]) for arg in args

@@ -14,17 +14,17 @@
     <option value="{{ group }}" {% if group == selected_group %} selected="selected" {% endif %}>{{ group }}</option>
     {% endfor %}
   </select>
-  <a role="button" class="remove-group btn btn-danger btn-xs">Remove</a>
+  <a role="button" class="remove-group btn btn-danger btn-sm">Remove</a>
 </div>
 {% endmacro %}
 
-{{ group_selector('', '', 'hidden') }}
+{{ group_selector('', '', 'd-none') }}
 
-<form class="container form-inline" action="">
+<form class="container form" action="">
   {% for image in images %}
   <fieldset class="group-field" data-environment="{{ image.image_name }}">
     <legend><a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.display_name }}</a>
-      <button type="button" class="add-group btn btn-primary btn-xs pull-right">Add Group</button>
+      <button type="button" class="add-group btn btn-primary btn-sm float-end">Add Group</button>
     </legend>
     {% if image.image_name in permissions %}
       {% for group in permissions[image.image_name] %}
