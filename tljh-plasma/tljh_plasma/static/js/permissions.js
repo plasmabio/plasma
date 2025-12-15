@@ -54,9 +54,7 @@ require(["jquery"], function ($) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        data: JSON.stringify(formData)
-      }),
+      body: JSON.stringify(formData),
       credentials: "same-origin"
     })
       .then((response) => {

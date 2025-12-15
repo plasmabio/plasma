@@ -58,7 +58,7 @@ class PermissionsAPIHandler(APIHandler):
     @needs_scope("admin-ui")
     async def post(self):
         raw_args = self.request.body.decode("utf-8")
-        args = json.loads(json.loads(raw_args)['data'])
+        args = json.loads(raw_args)
         self.db.query(Permissions).delete()
         permissions = [
             Permissions(image=arg["name"], group=arg["value"]) for arg in args

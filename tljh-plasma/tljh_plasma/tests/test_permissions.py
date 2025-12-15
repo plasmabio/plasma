@@ -31,7 +31,8 @@ async def test_permissions_page(app):
 async def test_permissions_api_endpoint(app, minimal_repo, image_name):
     # create a new environment
     name, ref = image_name.split(":")
-    await add_environment(app, repo=minimal_repo, name=name, ref=ref)
+    r = await add_environment(app, repo=minimal_repo, name=name, ref=ref)
+    assert r.status_code == 200
     await wait_for_image(image_name=image_name)
 
     # update the permissions
