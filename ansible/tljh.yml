@@ -20,7 +20,7 @@
       failed_when: tljh_plasma_installed.rc > 2
       changed_when: False
 
-    - name: Upgrade the tljh-plasma plugin first if it is already installed
+    - name: Upgrade the tljh-plasma plugins first if it is already installed
       shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasma }} {{ tljh_repo2docker }}"
       when: tljh_plasma_installed.rc == 0
 
