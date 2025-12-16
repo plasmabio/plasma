@@ -1,36 +1,31 @@
 import json
-
+from inspect import isawaitable
 from itertools import groupby
 
-from inspect import isawaitable
-from jupyterhub.apihandlers import APIHandler
-from jupyterhub.handlers.base import BaseHandler
-from jupyterhub.orm import Base, Column, Integer, Unicode
-from jupyterhub.scopes import needs_scope
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from tljh_repo2docker.base import BaseHandler, require_admin_role
 from tljh_repo2docker.docker import list_images
-from tornado.web import authenticated
+from tornado import web
 
-
-class Permissions(Base):
-
-    __tablename__ = "permissions"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    group = Column(Unicode(255))
-    image = Column(Unicode(255))
+from . import Permissions
 
 
 class PermissionsHandler(BaseHandler):
     """
-    Renders the page to assign environments to user groups.
+    Expose a handler to handle permissions
     """
 
-    @authenticated
-    @needs_scope("admin-ui")
+    @web.authenticated
+    @require_admin_role
     async def get(self):
         include_groups = self.settings.get("include_groups")
         all_groups = list(include_groups)
-        permissions = list(self.db.query(Permissions))
+
+        engine = create_engine(self.settings.get("db_url"))
+        Session = sessionmaker(bind=engine)
+        with Session() as session:
+            permissions = list(session.query(Permissions))
         mapping = {
             image: [p.group for p in groups if p.group in all_groups]
             for image, groups in groupby(permissions, lambda p: p.image)
@@ -49,22 +44,25 @@ class PermissionsHandler(BaseHandler):
             self.write(html)
 
 
-class PermissionsAPIHandler(APIHandler):
+class PermissionsAPIHandler(BaseHandler):
     """
     Handle edits to the mapping of environments and groups.
     """
 
-    @authenticated
-    @needs_scope("admin-ui")
+    @web.authenticated
+    @require_admin_role
     async def post(self):
         raw_args = self.request.body.decode("utf-8")
         args = json.loads(raw_args)
-        self.db.query(Permissions).delete()
-        permissions = [
-            Permissions(image=arg["name"], group=arg["value"]) for arg in args
-        ]
-        for permission in permissions:
-            self.db.add(permission)
-        self.db.commit()
+        engine = create_engine(self.settings.get("db_url"))
+        Session = sessionmaker(bind=engine)
+        with Session() as session:
+            session.query(Permissions).delete()
+            permissions = [
+                Permissions(image=arg["name"], group=arg["value"]) for arg in args
+            ]
+            session.add_all(permissions)
+            session.commit()
+
         self.finish(json.dumps({"status": "ok"}))
         self.set_status(200)

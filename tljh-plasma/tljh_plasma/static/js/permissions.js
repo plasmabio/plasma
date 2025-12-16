@@ -49,7 +49,7 @@ require(["jquery"], function ($) {
     spinner.find(".modal-footer").remove();
     spinner.modal();
 
-    fetch(`/hub/api/permissions?_xsrf=${getXSRFToken()}`, {
+    fetch(`/services/tljh_plasma/api/permissions?_xsrf=${getXSRFToken()}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

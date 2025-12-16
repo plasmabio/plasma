@@ -2,10 +2,15 @@
 
 {% block stylesheet %}
 {{ super() }}
-<link rel="stylesheet" href="{{ base_url }}permissions-static/css/style.css" type="text/css"/>
+<link rel="stylesheet" href="{{ service_prefix }}service_static/css/style.css" type="text/css" />
 {% endblock %}
 
 {% block main %}
+
+<script type="text/javascript">
+    require(["{{ service_prefix }}service_static/js/permissions.js"]);
+</script>
+
 
 {% macro group_selector(name='', selected_group='', hidden='') %}
 <div class="group-select {{ hidden }}">
@@ -42,11 +47,4 @@
   </div>
 {% endcall %}
 
-{% endblock %}
-
-{% block script %}
-{{ super() }}
-<script type="text/javascript">
-require(["{{ base_url }}permissions-static/js/permissions.js"]);
-</script>
 {% endblock %}

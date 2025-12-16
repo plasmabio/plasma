@@ -1,17 +1,36 @@
 import grp
 import os
 import pwd
+import sys
 
 from dockerspawner import SystemUserSpawner
 from jupyterhub.auth import PAMAuthenticator
-from jupyterhub.handlers.static import CacheControlStaticFilesHandler
-from tljh.configurer import load_config, CONFIG_FILE
+from sqlalchemy import Column, Integer
+from sqlalchemy import Unicode as SAUnicode
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from tljh.hooks import hookimpl
 from tljh.systemd import check_service_active
-from tljh_repo2docker import SpawnerMixin
+from tljh_repo2docker import TLJH_R2D_ADMIN_SCOPE, SpawnerMixin
 from traitlets import Unicode
 
-from .permissions import Permissions, PermissionsHandler, PermissionsAPIHandler
+DB_URL = "sqlite:///tljh_plasma.sqlite"
+Base = declarative_base()
+
+
+class Permissions(Base):
+
+    __tablename__ = "permissions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    group = Column(SAUnicode(255))
+    image = Column(SAUnicode(255))
+
+
+engine = create_engine(DB_URL)
+Session = sessionmaker(bind=engine)
+Base.metadata.create_all(engine)
 
 
 class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
@@ -33,7 +52,10 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         groups = [
             group.gr_name for group in grp.getgrall() if self.user.name in group.gr_mem
         ]
-        permissions = self.db.query(Permissions).filter(Permissions.group.in_(groups))
+        with Session() as session:
+            permissions = session.query(Permissions).filter(
+                Permissions.group.in_(groups)
+            )
         whitelist = set(p.image for p in permissions)
         images = [image for image in all_images if image["image_name"] in whitelist]
         return images
@@ -78,66 +100,123 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         return await super().start(*args, **kwargs)
 
 
-@hookimpl(trylast=True)
-def tljh_custom_jupyterhub_config(c, tljh_config_file=CONFIG_FILE):
-    # hub
-    c.JupyterHub.cleanup_servers = False
-    c.JupyterHub.authenticator_class = PAMAuthenticator
-    c.JupyterHub.spawner_class = PlasmaSpawner
-    c.JupyterHub.template_paths.insert(
-        0, os.path.join(os.path.dirname(__file__), "templates")
-    )
+if hookimpl:
 
-    # let the spawner infer the user home directory
-    c.PlasmaSpawner.base_volume_path = ""
-
-    # fetch the list of allowed UNIX groups from the TLJH config
-    tljh_config = load_config(tljh_config_file)
-    include_list = tljh_config.get("plasma", {}).get("groups", [])
-    include_groups = set(include_list)
-
-    c.JupyterHub.tornado_settings.update({"include_groups": include_groups})
-
-    # add an extra handler to handle user group permissions
-    c.JupyterHub.extra_handlers.extend(
-        [
-            (r"permissions", PermissionsHandler),
-            (r"api/permissions", PermissionsAPIHandler),
-            (
-                r"permissions-static/(.*)",
-                CacheControlStaticFilesHandler,
-                {"path": os.path.join(os.path.dirname(__file__), "static")},
-            ),
-        ]
-    )
-
-    # spawner
-    # update name template for named servers
-    c.PlasmaSpawner.name_template = "{prefix}-{username}-{servername}"
-    # increase the timeout to be able to pull larger Docker images
-    c.PlasmaSpawner.start_timeout = 120
-    c.PlasmaSpawner.pull_policy = "Never"
-    c.PlasmaSpawner.remove = True
-    c.PlasmaSpawner.default_url = "/lab"
-    # TODO: change back to jupyterhub-singleuser
-    c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
-    # set the default cpu and memory limits
-    c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
-    # explicitely opt-in to enable the custom entrypoint logic
-    c.PlasmaSpawner.run_as_root = True
-
-    # Since dockerspawner 13
-    c.DockerSpawner.allowed_images = "*"
-
-    # prevent PID 1 running in the Docker container to stop when child processes are killed
-    # see https://github.com/plasmabio/plasma/issues/191 for more info
-    c.PlasmaSpawner.extra_host_config = {"init": True}
-
-    # register Cockpit as a service if active
-    if check_service_active("cockpit"):
-        c.JupyterHub.services.append(
-            {
-                "name": "cockpit",
-                "url": "http://0.0.0.0:9090",
-            },
+    @hookimpl(trylast=True)
+    def tljh_custom_jupyterhub_config(c):
+        # hub
+        c.JupyterHub.cleanup_servers = False
+        c.JupyterHub.authenticator_class = PAMAuthenticator
+        c.Authenticator.allow_all = True
+        c.JupyterHub.template_paths.insert(
+            0, os.path.join(os.path.dirname(__file__), "templates")
         )
+        c.JupyterHub.allow_named_servers = True
+
+        # spawner
+        c.JupyterHub.spawner_class = PlasmaSpawner
+        # let the spawner infer the user home directory
+        c.PlasmaSpawner.base_volume_path = ""
+        # update name template for named servers
+        c.PlasmaSpawner.name_template = "{prefix}-{username}-{servername}"
+        # increase the timeout to be able to pull larger Docker images
+        c.PlasmaSpawner.start_timeout = 120
+        c.PlasmaSpawner.pull_policy = "Never"
+        c.PlasmaSpawner.remove = True
+        c.PlasmaSpawner.default_url = "/lab"
+        # TODO: change back to jupyterhub-singleuser
+        c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
+        # set the default cpu and memory limits
+        c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+        # explicitely opt-in to enable the custom entrypoint logic
+        c.PlasmaSpawner.run_as_root = True
+
+        # Since dockerspawner 13
+        c.PlasmaSpawner.allowed_images = "*"
+
+        # prevent PID 1 running in the Docker container to stop when child processes are killed
+        # see https://github.com/plasmabio/plasma/issues/191 for more info
+        c.PlasmaSpawner.extra_host_config = {"init": True}
+
+        # services
+        c.JupyterHub.services.extend(
+            [
+                {
+                    "name": "tljh_plasma",
+                    "url": "http://127.0.0.1:6788",
+                    "display": False,
+                    "command": [
+                        sys.executable,
+                        "-m",
+                        "tljh_plasma",
+                        "--ip",
+                        "127.0.0.1",
+                        "--port",
+                        "6788",
+                    ],
+                    "oauth_no_confirm": True,
+                    "oauth_client_allowed_scopes": [
+                        TLJH_R2D_ADMIN_SCOPE,
+                    ],
+                },
+                {
+                    "name": "tljh_repo2docker",
+                    "url": "http://127.0.0.1:6789",
+                    "display": False,
+                    "command": [
+                        sys.executable,
+                        "-m",
+                        "tljh_repo2docker",
+                        "--ip",
+                        "127.0.0.1",
+                        "--port",
+                        "6789",
+                        "--machine_profiles",
+                        '[{"label": "Small", "cpu": 2, "memory": 2},'
+                        ' {"label": "Medium", "cpu": 4, "memory": 4},'
+                        ' {"label": "Large", "cpu": 8, "memory": 8}]',
+                        "--node_selector",
+                        '{"gpu": {"description": "GPU description", "values": ["yes", "no"]},'
+                        ' "ssd": {"description": "SSD description", "values": ["yes", "no"]}}',
+                        "--custom_links",
+                        '{"Permissions": "../tljh_plasma/permissions"}',
+                    ],
+                    "oauth_no_confirm": True,
+                    "oauth_client_allowed_scopes": [
+                        TLJH_R2D_ADMIN_SCOPE,
+                    ],
+                },
+            ]
+        )
+
+        c.JupyterHub.custom_scopes = {
+            TLJH_R2D_ADMIN_SCOPE: {
+                "description": "Admin access to tljh_repo2docker",
+            },
+        }
+
+        c.JupyterHub.load_roles = [
+            {
+                "description": "Role for tljh_repo2docker and tljh_plasma services",
+                "name": "tljh-services",
+                "scopes": ["read:users", "read:roles:users", "admin:servers"],
+                "services": ["tljh_repo2docker", "tljh_plasma"],
+            },
+            {
+                "name": "user",
+                "scopes": [
+                    "self",
+                    # access to the environments and servers pages
+                    "access:services!service=tljh_repo2docker",
+                ],
+            },
+        ]
+
+        # register Cockpit as a service if active
+        if check_service_active("cockpit"):
+            c.JupyterHub.services.append(
+                {
+                    "name": "cockpit",
+                    "url": "http://0.0.0.0:9090",
+                },
+            )
