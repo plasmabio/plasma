@@ -211,12 +211,3 @@ if hookimpl:
                 ],
             },
         ]
-
-        # register Cockpit as a service if active
-        if check_service_active("cockpit"):
-            c.JupyterHub.services.append(
-                {
-                    "name": "cockpit",
-                    "url": "http://0.0.0.0:9090",
-                },
-            )
