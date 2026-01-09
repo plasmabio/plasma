@@ -1,6 +1,6 @@
-git+https://github.com/jupyterhub/the-littlest-jupyterhub@1.0.0
-tljh-repo2docker>=1.0.2,<2
-jupyterhub>=4,<5
+git+https://github.com/jupyterhub/the-littlest-jupyterhub@2.0.0
+tljh-repo2docker==3.0.0
+jupyterhub>=5,<6
 notebook
 pytest
 pytest-aiohttp

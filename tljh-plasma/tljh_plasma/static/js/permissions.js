@@ -1,14 +1,5 @@
-require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
-  $,
-  bs,
-  moment,
-  JHAPI,
-  utils
-) {
+require(["jquery"], function ($) {
   "use strict";
-
-  var base_url = window.jhdata.base_url;
-  var api = new JHAPI(base_url);
 
   function getGroup(element) {
     var original = element;
@@ -27,31 +18,55 @@ require(["jquery", "bootstrap", "moment", "jhapi", "utils"], function(
     el.parent().remove();
   }
 
-  $(".add-group").click(function() {
+  function getXSRFToken() {
+    const name = "_xsrf=";
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return decodeURIComponent(cookie.substring(name.length, cookie.length));
+      }
+    }
+    return null;
+  }
+
+  $(".add-group").click(function () {
     var el = $(this);
     var field = getGroup(el);
     var select = $(".group-select").first().clone();
-    var environment = field.data('environment');
-    select.find('select').attr('name', environment)
+    var environment = field.data("environment");
+    select.find("select").attr("name", environment);
     select.find(".remove-group").click(remove);
-    select.removeClass('hidden');
+    select.removeClass("d-none");
     select.appendTo(field);
   });
 
-  $(".submit").click(function(e) {
+  $(".submit").click(function (e) {
     e.preventDefault();
-    var form = $('form');
+    var form = $("form");
     var formData = form.serializeArray();
     var spinner = $("#saving-permissions-dialog");
-    spinner.find('.modal-footer').remove();
+    spinner.find(".modal-footer").remove();
     spinner.modal();
-    api.api_request("permissions", {
-      type: "POST",
-      data: JSON.stringify(formData),
-      success: function(reply) {
-        window.location.reload();
+
+    fetch(`/services/tljh_plasma/api/permissions?_xsrf=${getXSRFToken()}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-    });
+      body: JSON.stringify(formData),
+      credentials: "same-origin"
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          console.error("Error:", response.error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
 
   $(".remove-group").click(remove);

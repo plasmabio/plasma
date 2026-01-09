@@ -6,3 +6,52 @@ fieldset {
   display: inline-block;
   margin-right: 20px;
 }
+
+legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+
+  margin-bottom: 20px;
+  font-size: 21px;
+  line-height: inherit;
+  color: #333;
+  border: 0;
+
+  border-bottom-width: 0px;
+  border-bottom-style: none;
+  border-bottom-color: currentcolor;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.form-wrapper, .form, .form-scroll, .form-submit {
+  box-sizing: border-box;
+}
+
+.form-wrapper {
+  height: 40em;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.form-scroll {
+  flex: 1;
+  overflow-y: scroll;
+  padding-right: 5px;
+  margin-bottom: 20px;
+}
+
+.form-submit {
+  flex-shrink: 0;
+  padding-top: 20px;
+  text-align: right;
+}
