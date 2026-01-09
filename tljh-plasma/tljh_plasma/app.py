@@ -12,7 +12,7 @@ from tornado import ioloop, web
 from traitlets import Dict, Int, List, Set, Unicode, default, validate
 from traitlets.config.application import Application
 
-from . import DB_URL
+from . import TLJH_PLASMA_DB_URL
 from .permissions import PermissionsAPIHandler, PermissionsHandler
 
 if os.environ.get("JUPYTERHUB_API_TOKEN"):
@@ -123,8 +123,12 @@ class TljhPlasma(Application):
         include_list = tljh_config.get("plasma", {}).get("groups", [])
         return set(include_list)
 
+    @default("db_url")
+    def _db_url_default(self):
+        return os.environ.get("TLJH_PLASMA_DB_URL", "sqlite:///tljh_plasma.sqlite")
+
     db_url = Unicode(
-        DB_URL,
+        "",
         help="url for the database.",
         config=True,
     )
