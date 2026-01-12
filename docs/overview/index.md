@@ -17,7 +17,6 @@ Plasma can be seen as an **opinionated TLJH distribution**:
 - It provides an interface to build the user environments, accessible from the JupyterHub panel, using
   [tljh-repo2docker](https://github.com/plasmabio/tljh-repo2docker)
 - It uses PAM as the authenticator, and relies on system users for data persistence (home directories) and authentication
-- It provides additional Ansible Playbooks to provision the server with extra monitoring tools
 
 Here is an overview of all the different components and their interactions after Plasma has been deployed on a new server:
 
