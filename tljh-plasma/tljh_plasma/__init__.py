@@ -15,7 +15,7 @@ from tljh.systemd import check_service_active
 from tljh_repo2docker import TLJH_R2D_ADMIN_SCOPE, SpawnerMixin
 from traitlets import Unicode
 
-DB_URL = "sqlite:///tljh_plasma.sqlite"
+TLJH_PLASMA_DB_URL = os.environ.get("TLJH_PLASMA_DB_URL", "sqlite:///tljh_plasma.sqlite")
 Base = declarative_base()
 
 
@@ -28,7 +28,7 @@ class Permissions(Base):
     image = Column(SAUnicode(255))
 
 
-engine = create_engine(DB_URL)
+engine = create_engine(TLJH_PLASMA_DB_URL)
 Session = sessionmaker(bind=engine)
 Base.metadata.create_all(engine)
 
@@ -154,6 +154,9 @@ if hookimpl:
                         "--port",
                         "6788",
                     ],
+                    "environment": {
+                        "TLJH_PLASMA_DB_URL": TLJH_PLASMA_DB_URL,
+                    },
                     "oauth_no_confirm": True,
                     "oauth_client_allowed_scopes": [
                         TLJH_R2D_ADMIN_SCOPE,
