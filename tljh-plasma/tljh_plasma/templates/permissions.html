@@ -34,8 +34,8 @@
             <fieldset class="group-field" data-environment="{{ image.image_name }}">
                 <legend>
                     <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.display_name }}</a>
-                    <button type="button" class="add-group btn btn-primary btn-sm float-end">Add Group</button>
                 </legend>
+                <button type="button" class="add-group btn btn-primary btn-sm">Add Group</button>
                 {% if image.image_name in permissions %}
                 {% for group in permissions[image.image_name] %}
                 {{ group_selector(image.image_name, group) }}
