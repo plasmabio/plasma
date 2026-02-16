@@ -55,3 +55,36 @@ legend {
   padding-top: 20px;
   text-align: right;
 }
+
+.group-select {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 20px;
+  position: relative;
+}
+
+.group-select .form-control {
+  margin-right: 5px;
+  width: 150px;
+}
+
+.group-select .remove-group {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: black;
+  z-index: 10;
+}
+
+.group-select .remove-group:hover {
+  background-color: #f8d7da;
+}
