@@ -19,7 +19,9 @@
         <option value="{{ group }}" {% if group==selected_group %} selected="selected" {% endif %}>{{ group }}</option>
         {% endfor %}
     </select>
-    <a role="button" class="remove-group btn btn-danger btn-sm">Remove</a>
+    <button type="button" class="remove-group btn btn-danger btn-sm">
+      Remove
+    </button>
 </div>
 {% endmacro %}
 
