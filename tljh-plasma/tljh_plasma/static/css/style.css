@@ -1,6 +1,6 @@
 fieldset {
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-bottom: 15px;
+  padding: 12px;
   border-radius: 8px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -35,7 +35,7 @@ fieldset {
 }
 
 .group-select .form-control:focus {
-  border-color: #007bff;
+  border-color: #21478e;
   background-color: #fff;
   outline: none;
 }
@@ -62,7 +62,7 @@ fieldset {
 }
 
 .add-group {
-  background-color: #007bff;
+  background-color: #21478e;
   color: white;
   font-size: 18px;
   padding: 7px 12px;
@@ -107,7 +107,7 @@ fieldset {
   margin-left: auto;
   padding: 10px 20px;
   font-size: 20px;
-  background-color: #007bff;
+  background-color: #21478e;
   color: white;
   border: none;
   border-radius: 4px;
