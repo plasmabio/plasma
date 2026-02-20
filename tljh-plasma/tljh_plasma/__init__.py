@@ -174,13 +174,6 @@ if hookimpl:
                         "127.0.0.1",
                         "--port",
                         "6789",
-                        "--machine_profiles",
-                        '[{"label": "Small", "cpu": 2, "memory": 2},'
-                        ' {"label": "Medium", "cpu": 4, "memory": 4},'
-                        ' {"label": "Large", "cpu": 8, "memory": 8}]',
-                        "--node_selector",
-                        '{"gpu": {"description": "GPU description", "values": ["yes", "no"]},'
-                        ' "ssd": {"description": "SSD description", "values": ["yes", "no"]}}',
                         "--custom_links",
                         '{"Permissions": "../tljh_plasma/permissions"}',
                     ],

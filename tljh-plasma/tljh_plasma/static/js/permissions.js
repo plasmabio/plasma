@@ -58,9 +58,7 @@ require(["jquery"], function ($) {
       credentials: "same-origin"
     })
       .then((response) => {
-        if (response.ok) {
-          window.location.reload();
-        } else {
+        if (!response.ok) {
           console.error("Error:", response.error);
         }
       })

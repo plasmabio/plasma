@@ -1,57 +1,125 @@
 fieldset {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .group-select {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin-right: 20px;
+  position: relative;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  transition: box-shadow 0.3s ease;
 }
 
-legend {
-  display: block;
-  width: 100%;
-  padding: 0;
-
-  margin-bottom: 20px;
-  font-size: 21px;
-  line-height: inherit;
-  color: #333;
-  border: 0;
-
-  border-bottom-width: 0px;
-  border-bottom-style: none;
-  border-bottom-color: currentcolor;
-
-  border-bottom: 1px solid #e5e5e5;
+.group-select:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.form-wrapper, .form, .form-scroll, .form-submit {
-  box-sizing: border-box;
+.group-select .form-control {
+  margin-right: 5px;
+  width: 110px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  transition: border-color 0.3s ease;
+}
+
+.group-select .form-control:focus {
+  border-color: #21478e;
+  background-color: #fff;
+  outline: none;
+}
+
+.group-select .remove-group {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: black;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  transition: color 0.3s ease;
+}
+
+.group-select .remove-group:hover {
+  color: #555;
+}
+
+.group-select .remove-group:focus {
+  outline: none;
+}
+
+.add-group {
+  background-color: #21478e;
+  color: white;
+  font-size: 18px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-right: 15px;
+}
+
+.add-group:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 .form-wrapper {
   height: 40em;
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  background-color: #fff;
+  padding: 15px;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
-.form {
+.form-wrapper {
+  height: 45em;
   display: flex;
   flex-direction: column;
-  height: 100%;
-}
-
-.form-scroll {
-  flex: 1;
-  overflow-y: scroll;
-  padding-right: 5px;
-  margin-bottom: 20px;
+  padding: 15px;
+  overflow-y: auto;
+  position: relative;
 }
 
 .form-submit {
-  flex-shrink: 0;
+  width: 82%;
+  display: flex;
   padding-top: 20px;
-  text-align: right;
+  padding-bottom: 15px;
+  background-color: #fff;
+}
+
+.form-submit button.submit {
+  margin-left: auto;
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: #21478e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.form-submit button.submit:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.form-submit button.submit:focus {
+  outline: none;
 }

@@ -1,0 +1,36 @@
+{% extends "page.html" %}
+{% if announcement_home is string %}
+  {% set announcement = announcement_home %}
+{% endif %}
+{% block main %}
+  <div class="container">
+    <h1 class="text-center" >Your server is stopping, please wait
+      <div class="spinner-border text-primary" role="status" />
+    </h1>
+    <div class="row">
+      <div class="text-center visually-hidden">
+        {% if default_server.active %}<a id="stop" role="button" class="btn btn-lg btn-danger">Stop My Server</a>{% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock main %}
+{% block script %}
+  {{ super() }}
+  <script type="text/javascript">
+    require(["home"], function() {
+      window.onload = function() {
+        setTimeout(function() {
+          const stopButton = document.querySelector('#stop');
+          if (stopButton) {
+              stopButton.click();
+          } else {
+              console.log('No "Stop My Server" button found. The server may already be stopped.');
+          }
+        }, 600);
+          setTimeout(function() {
+              window.location.href = '/hub/spawn'
+          }, 6000);
+      };
+    });
+  </script>
+{% endblock script %}
