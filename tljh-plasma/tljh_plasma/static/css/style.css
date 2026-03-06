@@ -78,16 +78,7 @@ fieldset {
 }
 
 .form-wrapper {
-  height: 40em;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-
-.form-wrapper {
-  height: 45em;
+  height: 38em;
   display: flex;
   flex-direction: column;
   padding: 15px;
