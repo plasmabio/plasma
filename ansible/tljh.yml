@@ -21,7 +21,7 @@
           --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
 
     - name: Ensure tljh-plasma plugins are upgraded to the target version
-      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasma }} {{ tljh_repo2docker }}"
+      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --force-reinstall --no-deps {{ tljh_plasma }} {{ tljh_repo2docker }}"
 
     # Wait for initial setup to complete
     - name: Wait for JupyterHub to be ready after installation
