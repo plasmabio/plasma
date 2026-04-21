@@ -17,15 +17,57 @@ html, body {
   border: none;
   z-index: 1;
 }
-.stop-container {
+/* ---- side panel ---- */
+.side-panel {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
-.stop-container button {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+.side-toggle {
+  width: 20px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  background: rgba(80, 80, 80, 0.5);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  transition: background 0.2s;
 }
+.side-toggle:hover {
+  background: rgba(80, 80, 80, 0.85);
+}
+.side-menu {
+  overflow: hidden;
+  max-width: 0;
+  transition: max-width 0.25s ease;
+}
+.side-menu-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 8px;
+  background: var(--jp-layout-color1, rgba(255,255,255,0.96));
+  box-shadow: -3px 0 12px rgba(0,0,0,0.15);
+  border-radius: 6px 0 0 6px;
+  white-space: nowrap;
+}
+.side-panel.expanded .side-menu {
+  max-width: 140px;
+}
+.side-panel.expanded .side-toggle {
+  border-radius: 0;
+}
+/* ---- loading overlay ---- */
 .iframe-overlay {
   position: fixed;
   top: 0;
@@ -60,9 +102,19 @@ html, body {
   </div>
 </div>
 
-<div class="stop-container">
-  <button id="stop-server" class="btn btn-danger btn-lg">
-    Stop Server
+<div id="side-panel" class="side-panel">
+  <div class="side-menu" id="side-menu">
+    <div class="side-menu-inner">
+      <button id="stop-server" class="btn btn-sm btn-danger w-100">
+        <i class="fa fa-power-off me-1"></i>Stop
+      </button>
+      <button id="home-btn" class="btn btn-sm btn-outline-secondary w-100">
+        <i class="fa fa-home me-1"></i>Home
+      </button>
+    </div>
+  </div>
+  <button id="side-toggle" class="side-toggle" aria-expanded="false" title="Menu">
+    <i class="fa fa-chevron-left" id="toggle-icon"></i>
   </button>
 </div>
 
@@ -92,10 +144,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const CSRF_TOKEN = window.jhdata && window.jhdata.xsrf_token;
     const LOAD_TIMEOUT_MS = 15000;
 
-    const overlay = document.getElementById("iframe-overlay");
-    const loading = document.getElementById("iframe-loading");
-    const error   = document.getElementById("iframe-error");
-    const iframe  = document.getElementById("user-app-frame");
+    const overlay    = document.getElementById("iframe-overlay");
+    const loading    = document.getElementById("iframe-loading");
+    const error      = document.getElementById("iframe-error");
+    const iframe     = document.getElementById("user-app-frame");
+    const panel      = document.getElementById("side-panel");
+    const toggleIcon = document.getElementById("toggle-icon");
+
+    // ---- loading overlay ----
 
     function startLoadTimer() {
         return setTimeout(function() {
@@ -128,6 +184,22 @@ document.addEventListener("DOMContentLoaded", function() {
         loadTimer = startLoadTimer();
     });
 
+    // ---- side panel toggle ----
+
+    function closePanel() {
+        panel.classList.remove("expanded");
+        document.getElementById("side-toggle").setAttribute("aria-expanded", "false");
+        toggleIcon.className = "fa fa-chevron-left";
+    }
+
+    document.getElementById("side-toggle").addEventListener("click", function() {
+        const expanded = panel.classList.toggle("expanded");
+        this.setAttribute("aria-expanded", expanded);
+        toggleIcon.className = expanded ? "fa fa-chevron-right" : "fa fa-chevron-left";
+    });
+
+    // ---- stop server ----
+
     document.getElementById("stop-server").addEventListener("click", function() {
         if (!confirm("Arrêter le serveur ?")) return;
         fetch(BASE_URL + "api/users/" + CURRENT_USER + "/server", {
@@ -147,24 +219,17 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Erreur lors de l'arrêt du serveur.");
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", function() {
-  const iframe = document.getElementById("user-app-frame");
+    // ---- home: reset iframe to JupyterLab home ----
 
-  iframe.onload = function() {
-    try {
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-      iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
-        link.removeAttribute("target");
-      });
-
-      iframe.contentWindow.open = function(url) {
-        iframe.src = url;
-      };
-    } catch(e) {}
-  };
+    document.getElementById("home-btn").addEventListener("click", function() {
+        overlay.style.display = "flex";
+        loading.style.display = "block";
+        error.style.display = "none";
+        iframe.src = BASE_URL + "user/" + CURRENT_USER + "/";
+        loadTimer = startLoadTimer();
+        closePanel();
+    });
 });
 </script>
 {% endif %}
