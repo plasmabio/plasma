@@ -148,6 +148,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  const iframe = document.getElementById("user-app-frame");
+
+  iframe.onload = function() {
+    try {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+      iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
+        link.removeAttribute("target");
+      });
+
+      iframe.contentWindow.open = function(url) {
+        iframe.src = url;
+      };
+    } catch(e) {}
+  };
+});
 </script>
 {% endif %}
 {% endblock script %}
