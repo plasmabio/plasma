@@ -7,3 +7,33 @@
     <h1>Select Environment</h1>
  </div>
 {% endblock heading %}
+{% block script %}
+{{ super() }}
+<script>
+// ImageTable (tljh_repo2docker) fait un POST sur /hub/spawn puis appelle
+// window.location.reload(). On intercepte fetch pour poser un override
+// one-shot de reload uniquement après un spawn POST réussi, évitant un
+// override global permanent de window.location.reload.
+(function() {
+    var _origFetch = window.fetch;
+    var _origReload = window.location.reload.bind(window.location);
+
+    window.fetch = function(url, options) {
+        var p = _origFetch.apply(this, arguments);
+        if (typeof url === 'string' && url.includes('/hub/spawn') &&
+                ((options && options.method) || '').toUpperCase() === 'POST') {
+            p.then(function(response) {
+                if (response.ok) {
+                    window.location.reload = function() {
+                        window.location.reload = _origReload;
+                        window.location.href = "{{ base_url }}spawn-pending/{{ user.name }}?next={{ base_url }}home";
+                    };
+                }
+            });
+        }
+        return p;
+    };
+})();
+</script>
+{% endblock script %}
+

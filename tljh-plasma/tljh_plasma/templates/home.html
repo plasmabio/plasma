@@ -1,27 +1,103 @@
 {% extends "page.html" %}
-{% if announcement_home is string %}
-  {% set announcement = announcement_home %}
-{% endif %}
+
 {% block main %}
-  <div class="container">
-    <h1 class="visually-hidden">JupyterHub home page</h1>
-    <div class="row">
-      <div class="text-center">
-        {% if default_server.active %}<a id="stop" role="button" class="btn btn-lg btn-danger">Stop My Server</a>{% endif %}
-        <a id="start"
-           role="button"
-           class="btn btn-lg btn-primary"
-           href="{{ url }}">
-          {% if not default_server.active %}Start{% endif %}
-          My Server
-        </a>
-      </div>
+{% if default_server.active %}
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+.app-frame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  z-index: 1;
+}
+.stop-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+}
+.stop-container button {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+</style>
+
+<iframe
+  class="app-frame"
+  id="user-app-frame"
+  src="{{ base_url }}user/{{ user.name }}/">
+</iframe>
+
+<div class="stop-container">
+  <button id="stop-server" class="btn btn-danger btn-lg">
+    Stop Server
+  </button>
+</div>
+
+{% else %}
+<div class="container">
+  <h1 class="visually-hidden">JupyterHub home page</h1>
+  <div class="row">
+    <div class="text-center">
+      <a href="{{ base_url }}spawn"
+         role="button"
+         class="btn btn-lg btn-primary">
+        Start My Server
+      </a>
     </div>
   </div>
+</div>
+{% endif %}
 {% endblock main %}
+
 {% block script %}
-  {{ super() }}
-  <script type="text/javascript">
-    require(["home"]);
-  </script>
+{{ super() }}
+{% if default_server.active %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const BASE_URL = "{{ base_url }}";
+    const CURRENT_USER = "{{ user.name }}";
+    const CSRF_TOKEN = window.jhdata && window.jhdata.xsrf_token;
+
+    document.getElementById("stop-server").addEventListener("click", function() {
+        if (!confirm("Arrêter le serveur ?")) return;
+        fetch(BASE_URL + "api/users/" + CURRENT_USER + "/server", {
+            method: "DELETE",
+            headers: {"X-XSRFToken": CSRF_TOKEN}
+        }).then(function(response) {
+            if (response.ok) {
+                window.location.href = BASE_URL + "spawn?next=" + BASE_URL + "home";
+            } else {
+                response.text().then(function(text) {
+                    console.error(text);
+                    alert("Erreur lors de l'arrêt du serveur.");
+                });
+            }
+        }).catch(function(err) {
+            console.error(err);
+            alert("Erreur lors de l'arrêt du serveur.");
+        });
+    });
+    const iframe = document.getElementById("user-app-frame");
+    iframe.onload = function() {
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
+                link.removeAttribute("target");
+            });
+            iframe.contentWindow.open = function(url) {
+                iframe.src = url;
+            };
+        } catch(e) {}
+    };
+});
+</script>
+{% endif %}
 {% endblock script %}
+

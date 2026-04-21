@@ -11,11 +11,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from tljh.hooks import hookimpl
-from tljh.systemd import check_service_active
 from tljh_repo2docker import TLJH_R2D_ADMIN_SCOPE, SpawnerMixin
 from traitlets import Unicode
 
-TLJH_PLASMA_DB_URL = os.environ.get("TLJH_PLASMA_DB_URL", "sqlite:///tljh_plasma.sqlite")
+TLJH_PLASMA_DB_URL = os.environ.get(
+    "TLJH_PLASMA_DB_URL", "sqlite:///tljh_plasma.sqlite"
+)
 Base = declarative_base()
 
 
@@ -104,8 +105,38 @@ if hookimpl:
 
     @hookimpl(trylast=True)
     def tljh_custom_jupyterhub_config(c):
+        # Patch SpawnHandler so that any spawn without an explicit ?next parameter
+        # redirects back to /hub/home instead of /user/NAME/lab.
+        # This ensures "Home" links from tljh_repo2docker pages work correctly
+        # even when the user already has a running server.
+        from jupyterhub.handlers.pages import SpawnHandler
+
+        if not getattr(SpawnHandler, "_plasma_home_patched", False):
+            _orig_get = SpawnHandler._get
+            _orig_post = SpawnHandler._post
+
+            def _patched_get(self, user_name, server_name):
+                if not self.get_argument("next", None):
+                    self.request.arguments["next"] = [
+                        (self.hub.base_url + "home").encode("utf-8")
+                    ]
+                return _orig_get(self, user_name=user_name, server_name=server_name)
+
+            def _patched_post(self, user_name, server_name):
+                if not self.get_argument("next", None):
+                    self.request.arguments["next"] = [
+                        (self.hub.base_url + "home").encode("utf-8")
+                    ]
+                return _orig_post(self, user_name=user_name, server_name=server_name)
+
+            SpawnHandler._get = _patched_get
+            SpawnHandler._post = _patched_post
+            SpawnHandler._plasma_home_patched = True
+
         # hub
         c.JupyterHub.cleanup_servers = False
+        c.JupyterHub.redirect_to_server = False
+        c.JupyterHub.default_url = "/hub/spawn"
         c.JupyterHub.authenticator_class = PAMAuthenticator
         c.Authenticator.allow_all = True
         c.JupyterHub.template_paths.insert(
@@ -127,7 +158,10 @@ if hookimpl:
         # TODO: change back to jupyterhub-singleuser
         c.PlasmaSpawner.cmd = ["/srv/conda/envs/notebook/bin/jupyterhub-singleuser"]
         # set the default cpu and memory limits
-        c.PlasmaSpawner.args = ["--ResourceUseDisplay.track_cpu_percent=True"]
+        c.PlasmaSpawner.args = [
+            "--ResourceUseDisplay.track_cpu_percent=True",
+            '--NotebookApp.tornado_settings={"headers":{"Content-Security-Policy": "frame-ancestors \'self\';"}}',
+        ]
         # explicitely opt-in to enable the custom entrypoint logic
         c.PlasmaSpawner.run_as_root = True
 

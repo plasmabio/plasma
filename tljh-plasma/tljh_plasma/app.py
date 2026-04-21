@@ -107,6 +107,10 @@ class TljhPlasma(Application):
         help="Extra settings to apply to tornado application, e.g. headers, ssl, etc",
     )
 
+    @default("tornado_settings")
+    def _tornado_settings_default(self):
+        return {"headers": {"Content-Security-Policy": "frame-ancestors 'self';"}}
+
     include_groups = Set(
         trait=Unicode,
         help="list of allowed UNIX groups from the TLJH config",
