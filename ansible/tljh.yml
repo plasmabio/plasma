@@ -14,21 +14,14 @@
         url: "{{ tljh_installer_url }}"
         dest: "{{ tljh_installer_dest }}"
 
-    - name: Check if the tljh-plasma is already installed
-      command: "{{ tljh_prefix }}/hub/bin/python3 -c 'import tljh_plasma'"
-      register: tljh_plasma_installed
-      failed_when: tljh_plasma_installed.rc > 2
-      changed_when: False
-
-    - name: Upgrade the tljh-plasma plugins first if it is already installed
-      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasma }} {{ tljh_repo2docker }}"
-      when: tljh_plasma_installed.rc == 0
-
     - name: Run the TLJH installer
       shell: |
         {{ ansible_python_interpreter }} {{ tljh_installer_dest }} \
           --version {{ tljh_version }} \
           --plugin {{ tljh_plasma }} {{ tljh_repo2docker }}
+
+    - name: Ensure tljh-plasma plugins are upgraded to the target version
+      shell: "{{ tljh_prefix }}/hub/bin/pip3 install --upgrade {{ tljh_plasma }} {{ tljh_repo2docker }}"
 
     # Wait for initial setup to complete
     - name: Wait for JupyterHub to be ready after installation
