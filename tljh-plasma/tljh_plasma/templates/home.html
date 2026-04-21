@@ -26,6 +26,21 @@ html, body {
 .stop-container button {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
+.iframe-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--jp-layout-color1, #fff);
+}
+.iframe-status {
+  text-align: center;
+}
 </style>
 
 <iframe
@@ -33,6 +48,17 @@ html, body {
   id="user-app-frame"
   src="{{ base_url }}user/{{ user.name }}/">
 </iframe>
+
+<div id="iframe-overlay" class="iframe-overlay">
+  <div id="iframe-loading" class="iframe-status">
+    <div class="spinner-border text-secondary" role="status"></div>
+    <p class="mt-3">Chargement...</p>
+  </div>
+  <div id="iframe-error" class="iframe-status" style="display:none;">
+    <p class="fs-5">Le serveur ne répond pas.</p>
+    <button id="iframe-reload" class="btn btn-primary mt-2">Recharger</button>
+  </div>
+</div>
 
 <div class="stop-container">
   <button id="stop-server" class="btn btn-danger btn-lg">
@@ -64,6 +90,43 @@ document.addEventListener("DOMContentLoaded", function() {
     const BASE_URL = "{{ base_url }}";
     const CURRENT_USER = "{{ user.name }}";
     const CSRF_TOKEN = window.jhdata && window.jhdata.xsrf_token;
+    const LOAD_TIMEOUT_MS = 15000;
+
+    const overlay = document.getElementById("iframe-overlay");
+    const loading = document.getElementById("iframe-loading");
+    const error   = document.getElementById("iframe-error");
+    const iframe  = document.getElementById("user-app-frame");
+
+    function startLoadTimer() {
+        return setTimeout(function() {
+            loading.style.display = "none";
+            error.style.display = "block";
+        }, LOAD_TIMEOUT_MS);
+    }
+
+    var loadTimer = startLoadTimer();
+
+    iframe.onload = function() {
+        clearTimeout(loadTimer);
+        overlay.style.display = "none";
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
+                link.removeAttribute("target");
+            });
+            iframe.contentWindow.open = function(url) {
+                iframe.src = url;
+            };
+        } catch(e) {}
+    };
+
+    document.getElementById("iframe-reload").addEventListener("click", function() {
+        error.style.display = "none";
+        loading.style.display = "block";
+        overlay.style.display = "flex";
+        iframe.src = iframe.src;
+        loadTimer = startLoadTimer();
+    });
 
     document.getElementById("stop-server").addEventListener("click", function() {
         if (!confirm("Arrêter le serveur ?")) return;
@@ -72,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function() {
             headers: {"X-XSRFToken": CSRF_TOKEN}
         }).then(function(response) {
             if (response.ok) {
-                window.location.href = BASE_URL + "spawn?next=" + BASE_URL + "home";
+                window.location.href = BASE_URL + "spawn";
             } else {
                 response.text().then(function(text) {
                     console.error(text);
@@ -84,20 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Erreur lors de l'arrêt du serveur.");
         });
     });
-    const iframe = document.getElementById("user-app-frame");
-    iframe.onload = function() {
-        try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
-                link.removeAttribute("target");
-            });
-            iframe.contentWindow.open = function(url) {
-                iframe.src = url;
-            };
-        } catch(e) {}
-    };
 });
 </script>
 {% endif %}
 {% endblock script %}
-
