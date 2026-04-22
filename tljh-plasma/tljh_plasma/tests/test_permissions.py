@@ -3,9 +3,14 @@ import json
 from collections import namedtuple
 
 import pytest
-from jupyterhub.tests.utils import (async_requests, auth_header,
-                                    check_db_locks, get_page, public_host,
-                                    public_url)
+from jupyterhub.tests.utils import (
+    async_requests,
+    auth_header,
+    check_db_locks,
+    get_page,
+    public_host,
+    public_url,
+)
 from jupyterhub.utils import url_path_join as ujoin
 from tljh_repo2docker.tests.utils import add_environment, wait_for_image
 
