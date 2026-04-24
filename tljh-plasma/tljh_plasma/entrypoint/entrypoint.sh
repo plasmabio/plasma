@@ -14,7 +14,7 @@ IMAGE_DIR=${HOME}/${USER_IMAGE}
 groupadd -g $NB_GID -o ${NB_GROUP:-${NB_USER}}
 
 # add the user and set their home directory
-useradd --home ${HOME} -u $NB_UID -g $NB_GID -G 100 -l $NB_USER
+useradd --home ${HOME} -u $NB_UID -g $NB_GID -G 100 -l -o $NB_USER
 
 # copy the content from the default docker image to the user home directory
 shopt -s dotglob
