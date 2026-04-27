@@ -84,6 +84,11 @@ fieldset legend {
   transform: scale(1.05);
 }
 
+#env-filter {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
 .form-wrapper {
   height: 38em;
   display: flex;

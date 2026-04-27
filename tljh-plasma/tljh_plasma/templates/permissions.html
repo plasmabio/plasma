@@ -28,6 +28,7 @@
 
 <div class="form-wrapper">
     <form class="container form" action="">
+        <input type="text" id="env-filter" class="form-control" placeholder="Filter environments…">
         <div class="form-scroll">
             {% for image in images %}
             <fieldset class="group-field" data-environment="{{ image.image_name }}">
