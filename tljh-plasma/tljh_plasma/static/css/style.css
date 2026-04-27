@@ -84,14 +84,36 @@ fieldset legend {
   transform: scale(1.05);
 }
 
+.env-owner {
+  font-size: 13px;
+  color: #666;
+  margin-left: 10px;
+}
+
+#env-filter {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
 .form-wrapper {
   height: 38em;
   display: flex;
   flex-direction: column;
   padding: 15px;
+}
+
+.form-wrapper .form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+}
+
+.form-scroll {
   overflow-y: auto;
   scrollbar-width: thin;
-  position: relative;
+  flex: 1;
 }
 
 .form-submit {
