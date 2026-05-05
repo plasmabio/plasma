@@ -68,4 +68,13 @@ require(["jquery"], function ($) {
   });
 
   $(".remove-group").click(remove);
+
+  $("#env-filter").on("input", function () {
+    var query = $(this).val().toLowerCase();
+    $(".group-field").each(function () {
+      var name = $(this).find("legend a").text().toLowerCase();
+      var owner = $(this).find(".env-owner").text().toLowerCase();
+      $(this).toggle(name.includes(query) || owner.includes(query));
+    });
+  });
 });

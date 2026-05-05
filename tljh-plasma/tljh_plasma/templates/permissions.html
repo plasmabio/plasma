@@ -28,11 +28,13 @@
 
 <div class="form-wrapper">
     <form class="container form" action="">
+        <input type="text" id="env-filter" class="form-control" placeholder="Filter environments…">
         <div class="form-scroll">
             {% for image in images %}
             <fieldset class="group-field" data-environment="{{ image.image_name }}">
                 <legend>
                     <a href="{{ image.repo }}/tree/{{ image.ref }}" target="_blank">{{ image.display_name }}</a>
+                    <span class="env-owner">{{ image.owner }}</span>
                 </legend>
                 <button type="button" class="add-group btn btn-primary btn-sm">Add Group</button>
                 {% if image.image_name in permissions %}
