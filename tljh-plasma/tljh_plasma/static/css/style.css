@@ -144,3 +144,42 @@ fieldset legend {
 .form-submit button.submit:focus {
   outline: none;
 }
+
+@media (prefers-color-scheme: dark) {
+  fieldset {
+    background-color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .group-select {
+    background-color: #3a3a3a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  .group-select .form-control {
+    background-color: #2e2e2e;
+    border-color: #555;
+    color: #ddd;
+  }
+
+  .group-select .form-control:focus {
+    background-color: #3a3a3a;
+    border-color: #6a9fd8;
+  }
+
+  .group-select .remove-group {
+    color: #ccc;
+  }
+
+  .group-select .remove-group:hover {
+    color: #fff;
+  }
+
+  .env-owner {
+    color: #aaa;
+  }
+
+  .form-submit {
+    background-color: transparent;
+  }
+}
