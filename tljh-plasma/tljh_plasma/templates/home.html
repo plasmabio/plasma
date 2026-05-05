@@ -27,47 +27,51 @@ html, body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: rgb(200, 200, 220);
+  background: transparent;
 }
 .side-toggle {
-  width: 30px;
+  width: 32px;
   height: 76px;
   padding: 4px 0;
   border: none;
-  border-radius: 6px 0 0 6px;
-  background: rgb(200, 200, 220);
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(180deg, #0d2150 0%, #1e457c 100%);
+  box-shadow: -2px 0 12px rgba(0,0,0,0.4);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.2s;
+  transition: filter 0.2s;
 }
 .side-toggle:hover {
-  background: rgb(200, 200, 220);
+  filter: brightness(1.2);
 }
-.toggle-logo {
-  width: 20px;
-  height: 48px;
-  object-fit: fill;
-  display: block;
+.toggle-p {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -1px;
+  text-shadow: 0 0 10px rgba(100,160,255,0.6), 0 2px 4px rgba(0,0,0,0.5);
+  user-select: none;
 }
 #toggle-icon {
-  color: rgb(30, 69, 140);
+  color: rgba(255,255,255,0.8);
   font-size: 13px;
 }
 .side-menu {
   overflow: hidden;
   max-width: 0;
   transition: max-width 0.25s ease;
-
 }
 .side-menu-inner {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px 8px;
-  background: rgb(200, 200, 220);
+  background: #1a2f5a;
   box-shadow: -3px 0 12px rgba(0,0,0,0.15);
   border-radius: 6px 0 0 6px;
   white-space: nowrap;
@@ -125,7 +129,7 @@ html, body {
     </div>
   </div>
   <button id="side-toggle" class="side-toggle" aria-expanded="false" title="Menu">
-    <img src="/services/tljh_plasma/service_static/images/monogramme-newHelice-slim.png" class="toggle-logo" alt="">
+    <span class="toggle-p">P</span>
     <i class="fa fa-chevron-left" id="toggle-icon"></i>
   </button>
 </div>
