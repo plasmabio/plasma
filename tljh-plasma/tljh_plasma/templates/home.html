@@ -198,11 +198,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ---- side panel toggle ----
 
+    function openPanel() {
+        panel.classList.add("expanded");
+        document.getElementById("side-toggle").setAttribute("aria-expanded", "true");
+        toggleIcon.className = "fa fa-chevron-right";
+    }
+
     function closePanel() {
         panel.classList.remove("expanded");
         document.getElementById("side-toggle").setAttribute("aria-expanded", "false");
         toggleIcon.className = "fa fa-chevron-left";
     }
+
+    openPanel();
+    setTimeout(closePanel, 2000);
 
     document.getElementById("side-toggle").addEventListener("click", function() {
         const expanded = panel.classList.toggle("expanded");
