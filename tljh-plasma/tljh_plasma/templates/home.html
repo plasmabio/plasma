@@ -27,36 +27,47 @@ html, body {
   display: flex;
   flex-direction: row;
   align-items: center;
+  background: rgb(200, 200, 220);
 }
 .side-toggle {
-  width: 20px;
-  height: 56px;
-  padding: 0;
+  width: 30px;
+  height: 76px;
+  padding: 4px 0;
   border: none;
   border-radius: 6px 0 0 6px;
-  background: rgba(80, 80, 80, 0.5);
-  color: #fff;
+  background: rgb(200, 200, 220);
   cursor: pointer;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 11px;
+  justify-content: space-between;
   transition: background 0.2s;
 }
 .side-toggle:hover {
-  background: rgba(80, 80, 80, 0.85);
+  background: rgb(200, 200, 220);
+}
+.toggle-logo {
+  width: 20px;
+  height: 48px;
+  object-fit: fill;
+  display: block;
+}
+#toggle-icon {
+  color: rgb(30, 69, 140);
+  font-size: 13px;
 }
 .side-menu {
   overflow: hidden;
   max-width: 0;
   transition: max-width 0.25s ease;
+
 }
 .side-menu-inner {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px 8px;
-  background: var(--jp-layout-color1, rgba(255,255,255,0.96));
+  background: rgb(200, 200, 220);
   box-shadow: -3px 0 12px rgba(0,0,0,0.15);
   border-radius: 6px 0 0 6px;
   white-space: nowrap;
@@ -108,12 +119,13 @@ html, body {
       <button id="stop-server" class="btn btn-sm btn-danger w-100">
         <i class="fa fa-power-off me-1"></i>Stop
       </button>
-      <button id="home-btn" class="btn btn-sm btn-outline-secondary w-100">
+      <button id="home-btn" class="btn btn-sm btn-primary w-100">
         <i class="fa fa-home me-1"></i>Home
       </button>
     </div>
   </div>
   <button id="side-toggle" class="side-toggle" aria-expanded="false" title="Menu">
+    <img src="/services/tljh_plasma/service_static/images/monogramme-newHelice-slim.png" class="toggle-logo" alt="">
     <i class="fa fa-chevron-left" id="toggle-icon"></i>
   </button>
 </div>
@@ -186,11 +198,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ---- side panel toggle ----
 
+    function openPanel() {
+        panel.classList.add("expanded");
+        document.getElementById("side-toggle").setAttribute("aria-expanded", "true");
+        toggleIcon.className = "fa fa-chevron-right";
+    }
+
     function closePanel() {
         panel.classList.remove("expanded");
         document.getElementById("side-toggle").setAttribute("aria-expanded", "false");
         toggleIcon.className = "fa fa-chevron-left";
     }
+
+    openPanel();
+    setTimeout(closePanel, 2000);
 
     document.getElementById("side-toggle").addEventListener("click", function() {
         const expanded = panel.classList.toggle("expanded");
