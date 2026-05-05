@@ -27,47 +27,58 @@ html, body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: rgb(200, 200, 220);
+  background: transparent;
 }
 .side-toggle {
-  width: 30px;
-  height: 76px;
-  padding: 4px 0;
+  width: 34px;
+  height: 96px;
+  padding: 6px 0;
   border: none;
-  border-radius: 6px 0 0 6px;
-  background: rgb(200, 200, 220);
+  border-radius: 8px 0 0 8px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 .side-toggle:hover {
-  background: rgb(200, 200, 220);
+  background: rgba(255,255,255,1);
+  box-shadow: -2px 0 14px rgba(0,0,0,0.3);
+}
+.toggle-logo-wrap {
+  width: 26px;
+  height: 72px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
 }
 .toggle-logo {
-  width: 20px;
-  height: 48px;
-  object-fit: fill;
-  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 72px;
+  height: 26px;
+  object-fit: contain;
 }
 #toggle-icon {
-  color: rgb(30, 69, 140);
+  color: #1a2f5a;
   font-size: 13px;
 }
 .side-menu {
   overflow: hidden;
   max-width: 0;
   transition: max-width 0.25s ease;
-
 }
 .side-menu-inner {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px 8px;
-  background: rgb(200, 200, 220);
+  background: rgba(255,255,255,0.95);
   box-shadow: -3px 0 12px rgba(0,0,0,0.15);
   border-radius: 6px 0 0 6px;
   white-space: nowrap;
@@ -125,7 +136,9 @@ html, body {
     </div>
   </div>
   <button id="side-toggle" class="side-toggle" aria-expanded="false" title="Menu">
-    <img src="/services/tljh_plasma/service_static/images/monogramme-newHelice-slim.png" class="toggle-logo" alt="">
+    <div class="toggle-logo-wrap">
+      <img src="/services/tljh_plasma/service_static/images/logoPLASMA-v6-newHelice-simple.png" class="toggle-logo" alt="">
+    </div>
     <i class="fa fa-chevron-left" id="toggle-icon"></i>
   </button>
 </div>
