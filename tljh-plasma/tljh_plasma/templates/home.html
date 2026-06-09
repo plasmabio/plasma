@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ---- stop server ----
 
     document.getElementById("stop-server").addEventListener("click", function() {
-        if (!confirm("Arrêter le serveur ?")) return;
+        if (!confirm("Quitter l'environnement ?")) return;
         fetch(BASE_URL + "api/users/" + CURRENT_USER + "/server", {
             method: "DELETE",
             headers: {"X-XSRFToken": CSRF_TOKEN}
