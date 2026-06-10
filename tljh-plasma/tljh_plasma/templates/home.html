@@ -196,6 +196,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 link.removeAttribute("target");
             });
             iframe.contentWindow.open = function(url) {
+                error.style.display = "none";
+                loading.style.display = "block";
+                overlay.style.display = "flex";
+                loadTimer = startLoadTimer();
                 iframe.src = url;
             };
         } catch(e) {}
