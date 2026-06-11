@@ -39,6 +39,13 @@ Check out the {ref}`persistence-user-data` section to know more about user data.
 
 ## Running the playbook
 
+```{important}
+Always run `git pull` in the `plasma/` directory before running the playbooks.
+Ansible reads the `ansible/vars/default.yml` file from your **local** copy of the repository,
+not from GitHub. If you skip this step, the playbook will use the versions defined in your
+local file and may not install the latest release.
+```
+
 To perform an upgrade of the setup, you can re-run the playbooks as explained in {ref}`install-ansible`.
 
 Re-running the playbooks will:

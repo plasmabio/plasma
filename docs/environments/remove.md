@@ -8,13 +8,7 @@ To remove an environment, click on the `Remove` button. This will bring the foll
 :width: 100%
 ```
 
-After clicking on `Remove`, a spinner will be shown and the page will reload shortly after:
-
-```{image} ../images/environments/remove-spinner.png
-:align: center
-:alt: Removing an environment - spinner
-:width: 100%
-```
+After clicking on `Remove`, a spinner will be shown and the page will reload shortly after.
 
 (remove-error)=
 
