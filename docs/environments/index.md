@@ -35,6 +35,7 @@ After a fresh install, this list will be empty.
 
 prepare
 add
+rebuild
 remove
 update
 ```
