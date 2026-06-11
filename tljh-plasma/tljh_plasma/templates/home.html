@@ -196,6 +196,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 link.removeAttribute("target");
             });
             iframe.contentWindow.open = function(url) {
+                error.style.display = "none";
+                loading.style.display = "block";
+                overlay.style.display = "flex";
+                loadTimer = startLoadTimer();
                 iframe.src = url;
             };
         } catch(e) {}
@@ -235,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ---- stop server ----
 
     document.getElementById("stop-server").addEventListener("click", function() {
-        if (!confirm("Arrêter le serveur ?")) return;
+        if (!confirm("Quitter l'environnement ?")) return;
         fetch(BASE_URL + "api/users/" + CURRENT_USER + "/server", {
             method: "DELETE",
             headers: {"X-XSRFToken": CSRF_TOKEN}
