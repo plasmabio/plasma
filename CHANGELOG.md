@@ -1,8 +1,9 @@
 # Changelog
 
-## [Unreleased]
+## [0.5] 2026-06-12
 
 - Show a loading spinner when navigating from the JupyterLab launcher (e.g. RStudio) inside the iframe
+- Upgrade tljh-repo2docker
 
 ## [0.4]
 
