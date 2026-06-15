@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.7] 2026-06-15
+
+- Upgrade tljh-repo2docker
+
 ## [0.6] 2026-06-15
 
 - Upgrade tljh-repo2docker
