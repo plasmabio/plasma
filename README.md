@@ -5,7 +5,7 @@
 
 ![logo](./docs/images/logo/full-logo.png)
 
-Plasma is an e-learning Jupyter-based platform for data analysis. This repository contains configuration files to setup and deploy Plasma on a single machine.
+Plasma is an e-learning Jupyter-based platform for teaching coding and computational data analysis. This repository contains configuration files to setup and deploy Plasma on a single machine.
 
 ## Documentation
 
