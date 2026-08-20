@@ -47,7 +47,14 @@ export JUPYTER_PATH=${IMAGE_DIR}/.local/share/jupyter
 # start the notebook server from the environment directory
 cd ${IMAGE_DIR}
 export CONDA_DIR="/srv/conda"
-export PATH=/srv/conda/envs/notebook/bin:/srv/conda/condabin:${IMAGE_DIR}/.local/bin:/srv/conda/envs/notebook/bin:/srv/conda/bin:/srv/npm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PAHT
+export PATH=/srv/conda/envs/notebook/bin:/srv/conda/condabin:${IMAGE_DIR}/.local/bin:/srv/conda/bin:/srv/npm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
 echo "Executing command as $NB_USER: $@"
-exec su $NB_USER -m -c '"$0" "$@"' -- "$@"
+# On Ubuntu-based images, su resets PATH through PAM (pam_env reading
+# /etc/environment), even with -m. The single-user server itself is started
+# with an absolute path so it does not notice, but every kernel it spawns
+# inherits that stripped down PATH: a bash kernel would then only see the
+# system directories and not the environment binaries, unlike a terminal which
+# runs a login shell and gets conda activated by /etc/profile.d. So re-export
+# PATH inside the shell started by su.
+exec su $NB_USER -m -c 'export PATH="'"$PATH"'"; exec "$0" "$@"' -- "$@"
