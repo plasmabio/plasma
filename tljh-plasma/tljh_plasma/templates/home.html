@@ -187,21 +187,84 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var loadTimer = startLoadTimer();
 
+    // ---- hub links ----
+
+    // The Hub serves "frame-ancestors 'none'", so none of its pages can be
+    // displayed inside the iframe: those navigations must target the top window.
+    // BASE_URL is already the Hub prefix ("/hub/"), as the API calls below show.
+
+    function isHubUrl(url) {
+        try {
+            const u = new URL(url, window.location.href);
+            return u.origin === window.location.origin
+                && u.pathname.startsWith(BASE_URL);
+        } catch(e) {
+            return false;
+        }
+    }
+
+    function openAtTop(url) {
+        window.top.location.href = new URL(url, window.location.href).href;
+    }
+
     iframe.onload = function() {
         clearTimeout(loadTimer);
         overlay.style.display = "none";
         try {
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
-                link.removeAttribute("target");
+                if (isHubUrl(link.href)) {
+                    link.setAttribute("target", "_top");
+                } else {
+                    link.removeAttribute("target");
+                }
             });
             iframe.contentWindow.open = function(url) {
+                // "Hub Control Panel" and "Restart Server" call window.open()
+                if (isHubUrl(url)) {
+                    openAtTop(url);
+                    return null;
+                }
                 error.style.display = "none";
                 loading.style.display = "block";
                 overlay.style.display = "flex";
                 loadTimer = startLoadTimer();
                 iframe.src = url;
             };
+            // Some File menu entries must not run the hub-extension command:
+            // "Log Out" navigates the iframe itself instead of calling
+            // window.open(), and "Hub Control Panel" is remapped to the same
+            // action as the Stop button. Intercept them before Lumino acts.
+            // Lumino tags menu and command palette items with data-command, but
+            // a menu fires its item on mouseup while the palette uses click:
+            // hook both, in the capture phase to run first.
+            const HUB_COMMANDS = {
+                "hub:logout": function() { openAtTop(BASE_URL + "logout"); },
+                "hub:control-panel": stopServer
+            };
+            // A single click emits both events, so run the action once per
+            // gesture: the mouseup consumes the click that follows it.
+            let handledOnMouseUp = false;
+            function interceptHubCommand(ev) {
+                const item = ev.target.closest && ev.target.closest("[data-command]");
+                const action = item && HUB_COMMANDS[item.dataset.command];
+                if (!action) {
+                    return;
+                }
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.type === "click" && handledOnMouseUp) {
+                    handledOnMouseUp = false;
+                    return;
+                }
+                handledOnMouseUp = ev.type === "mouseup";
+                action();
+            }
+            iframeDoc.addEventListener("mousedown", function() {
+                handledOnMouseUp = false;
+            }, true);
+            iframeDoc.addEventListener("mouseup", interceptHubCommand, true);
+            iframeDoc.addEventListener("click", interceptHubCommand, true);
         } catch(e) {}
     };
 
@@ -238,7 +301,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ---- stop server ----
 
-    document.getElementById("stop-server").addEventListener("click", function() {
+    function stopServer() {
         if (!confirm("Quitter l'environnement ?")) return;
         fetch(BASE_URL + "api/users/" + CURRENT_USER + "/server", {
             method: "DELETE",
@@ -256,7 +319,9 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error(err);
             alert("Erreur lors de l'arrêt du serveur.");
         });
-    });
+    }
+
+    document.getElementById("stop-server").addEventListener("click", stopServer);
 
     // ---- home: reset iframe to JupyterLab home ----
 
