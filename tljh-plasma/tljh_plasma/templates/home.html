@@ -219,7 +219,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     link.removeAttribute("target");
                 }
             });
+            const nativeOpen = iframe.contentWindow.open;
             iframe.contentWindow.open = function(url) {
+                // "Open in New Browser Tab" calls window.open() with no
+                // argument and then sets location.href on the window it gets
+                // back, so those calls need a real tab.
+                if (!url) {
+                    return nativeOpen.apply(iframe.contentWindow, arguments);
+                }
                 // "Hub Control Panel" and "Restart Server" call window.open()
                 if (isHubUrl(url)) {
                     openAtTop(url);
