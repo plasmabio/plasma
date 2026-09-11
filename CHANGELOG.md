@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8] 2026-09-11
+
+- Fix the File menu entries inside the JupyterLab iframe: "Log Out", "Hub Control Panel" and "Open in New Browser Tab"
+- Fix the kernels PATH: the entrypoint now drops privileges with runuser instead of su
+- Upgrade tljh-repo2docker
+
 ## [0.7] 2026-06-15
 
 - Upgrade tljh-repo2docker
