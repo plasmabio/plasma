@@ -207,11 +207,76 @@ document.addEventListener("DOMContentLoaded", function() {
         window.top.location.href = new URL(url, window.location.href).href;
     }
 
+    // ---- server-proxy launcher links ----
+
+    // Only the launcher entries of jupyter-server-proxy (RStudio...) are loaded
+    // in the iframe. Any other window.open() keeps its native behaviour: an
+    // export is a download and an RStudio preview is a popup, neither of them
+    // must replace the application.
+    const USER_URL = "{{ user.url }}";
+    const launcherPaths = new Set();
+    let launchersFetched = false;
+
+    function trimSlashes(path) {
+        return path.replace(/\/+$/, "");
+    }
+
+    // The user server only accepts a cookie authenticated fetch() with its
+    // XSRF token, which is in a cookie scoped to USER_URL: read it from the
+    // iframe document, as JupyterLab does.
+    function fetchLaunchers(iframeDoc) {
+        const xsrf = iframeDoc.cookie.match(/(?:^|;\s*)_xsrf=([^;]*)/);
+        if (!xsrf) {
+            return;
+        }
+        launchersFetched = true;
+        fetch(USER_URL + "server-proxy/servers-info", {
+            headers: {"X-XSRFToken": xsrf[1]},
+            redirect: "error"
+        }).then(function(response) {
+            if (!response.ok) {
+                throw new Error("servers-info: " + response.status);
+            }
+            return response.json();
+        }).then(function(data) {
+            data.server_processes.forEach(function(sp) {
+                launcherPaths.add(trimSlashes(USER_URL + sp.launcher_entry.path_info));
+            });
+        }).catch(function(err) {
+            launchersFetched = false;
+            console.error(err);
+        });
+    }
+
+    function launcherOf(path) {
+        return Array.from(launcherPaths).find(function(launcher) {
+            return path === launcher || path.startsWith(launcher + "/");
+        });
+    }
+
+    function isLauncherUrl(url) {
+        // An application already in the iframe opens its own windows (RStudio
+        // opens "rstudio/?view=rmarkdown" for a knit preview): leave them be.
+        if (launcherOf(trimSlashes(iframe.contentWindow.location.pathname))) {
+            return false;
+        }
+        try {
+            const u = new URL(url, window.location.href);
+            return u.origin === window.location.origin
+                && launcherPaths.has(trimSlashes(u.pathname));
+        } catch(e) {
+            return false;
+        }
+    }
+
     iframe.onload = function() {
         clearTimeout(loadTimer);
         overlay.style.display = "none";
         try {
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (!launchersFetched) {
+                fetchLaunchers(iframeDoc);
+            }
             iframeDoc.querySelectorAll("a[target='_blank']").forEach(link => {
                 if (isHubUrl(link.href)) {
                     link.setAttribute("target", "_top");
@@ -221,22 +286,23 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             const nativeOpen = iframe.contentWindow.open;
             iframe.contentWindow.open = function(url) {
-                // "Open in New Browser Tab" calls window.open() with no
-                // argument and then sets location.href on the window it gets
-                // back, so those calls need a real tab.
-                if (!url) {
-                    return nativeOpen.apply(iframe.contentWindow, arguments);
-                }
                 // "Hub Control Panel" and "Restart Server" call window.open()
-                if (isHubUrl(url)) {
+                if (url && isHubUrl(url)) {
                     openAtTop(url);
                     return null;
                 }
-                error.style.display = "none";
-                loading.style.display = "block";
-                overlay.style.display = "flex";
-                loadTimer = startLoadTimer();
-                iframe.src = url;
+                if (url && isLauncherUrl(url)) {
+                    error.style.display = "none";
+                    loading.style.display = "block";
+                    overlay.style.display = "flex";
+                    loadTimer = startLoadTimer();
+                    iframe.src = url;
+                    return null;
+                }
+                // "Open in New Browser Tab" calls window.open() with no
+                // argument and then sets location.href on the window it gets
+                // back, so it needs a real tab like the other calls.
+                return nativeOpen.apply(iframe.contentWindow, arguments);
             };
             // Some File menu entries must not run the hub-extension command:
             // "Log Out" navigates the iframe itself instead of calling
