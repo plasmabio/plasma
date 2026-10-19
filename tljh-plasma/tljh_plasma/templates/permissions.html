@@ -48,13 +48,8 @@
     </form>
 </div>
 <div class="form-submit">
-  <button type="submit" class="submit btn btn-primary">Submit</button>
+  <span class="submit-status" role="status" aria-live="polite"></span>
+  <button type="submit" class="submit btn btn-primary" disabled>Submit</button>
 </div>
-
-{% call modal('Saving Permissions', btn_label='OK', btn_class='btn-primary saving-button') %}
-<div class="text-center">
-    <p><i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i></p>
-</div>
-{% endcall %}
 
 {% endblock %}

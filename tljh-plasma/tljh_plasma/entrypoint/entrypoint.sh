@@ -44,6 +44,18 @@ chown -R ${NB_USER}:${NB_USER} ${IMAGE_DIR}
 export JUPYTER_CONFIG_DIR=${IMAGE_DIR}/.jupyter
 export JUPYTER_PATH=${IMAGE_DIR}/.local/share/jupyter
 
+# rserver drops the conda variables, so activate-conda.sh (set -e) kills the
+# RStudio terminal login shell: provide them from an earlier profile script.
+CONDA_ENV_PROFILE=/etc/profile.d/00-plasma-conda-env.sh
+: > ${CONDA_ENV_PROFILE}
+for var in CONDA_DIR NB_PYTHON_PREFIX KERNEL_PYTHON_PREFIX
+do
+  if [ -n "${!var}" ]
+  then
+    echo "export ${var}=\"\${${var}:-${!var}}\"" >> ${CONDA_ENV_PROFILE}
+  fi
+done
+
 # start the notebook server from the environment directory
 cd ${IMAGE_DIR}
 

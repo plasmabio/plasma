@@ -136,9 +136,25 @@ fieldset legend {
   cursor: pointer;
 }
 
-.form-submit button.submit:hover {
+.form-submit button.submit:hover:not(:disabled) {
   background-color: #0056b3;
   transform: scale(1.05);
+}
+
+.form-submit button.submit:disabled {
+  background-color: #8a9bbd;
+  cursor: default;
+}
+
+.form-submit .submit-status {
+  margin-left: auto;
+  margin-right: 15px;
+  align-self: center;
+  font-size: 16px;
+}
+
+.form-submit .submit-status + button.submit {
+  margin-left: 0;
 }
 
 .form-submit button.submit:focus {
