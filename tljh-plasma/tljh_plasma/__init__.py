@@ -12,6 +12,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from tljh.hooks import hookimpl
 from tljh_repo2docker import TLJH_R2D_ADMIN_SCOPE, SpawnerMixin
+from tornado import web
 from traitlets import Unicode
 
 from .versions import get_versions
@@ -64,15 +65,22 @@ class PlasmaSpawner(SpawnerMixin, SystemUserSpawner):
         return images
 
     async def start(self, *args, **kwargs):
+        username = self.user.name
+        image_name = self.user_options.get("image")
+
+        # the image comes from the request (/hub/spawn?image=, REST API), so
+        # check it against the environments the user's groups give access to
+        images = await self.list_images()
+        image = next((img for img in images if img["image_name"] == image_name), None)
+        if image is None:
+            raise web.HTTPError(
+                403, f"Environment {image_name} is not available for {username}"
+            )
+
         # set the image limits
         await super().set_limits()
 
         # escape the display name of the environment
-        username = self.user.name
-        image_name = self.user_options.get("image")
-
-        images = await super().list_images()
-        image = next(img for img in images if img["image_name"] == image_name)
         display_name = image["display_name"].replace(":", "-").replace("/", "-")
 
         # get the user home directory
