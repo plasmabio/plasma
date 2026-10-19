@@ -9,6 +9,7 @@ from tljh_repo2docker.docker import list_images
 from tornado import web
 
 from . import Permissions
+from .versions import get_versions
 
 
 class PermissionsHandler(BaseHandler):
@@ -37,6 +38,7 @@ class PermissionsHandler(BaseHandler):
             images=images,
             groups=all_groups,
             permissions=mapping,
+            plasma_versions=get_versions(),
         )
         if isawaitable(html):
             self.write(await html)

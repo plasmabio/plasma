@@ -14,6 +14,8 @@ from tljh.hooks import hookimpl
 from tljh_repo2docker import TLJH_R2D_ADMIN_SCOPE, SpawnerMixin
 from traitlets import Unicode
 
+from .versions import get_versions
+
 TLJH_PLASMA_DB_URL = os.environ.get(
     "TLJH_PLASMA_DB_URL", "sqlite:///tljh_plasma.sqlite"
 )
@@ -143,6 +145,8 @@ if hookimpl:
             0, os.path.join(os.path.dirname(__file__), "templates")
         )
         c.JupyterHub.allow_named_servers = True
+        # shown to admins in the header, see templates/page.html
+        c.JupyterHub.template_vars.update({"plasma_versions": get_versions()})
 
         # spawner
         c.JupyterHub.spawner_class = PlasmaSpawner
