@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9] 2026-10-20
+
+- Check the environment permissions when starting a server: a spawn with `?image=` could start an environment the user's groups have no access to
+- Add a Versions dialog to the header for admins (Plasma, tljh-repo2docker and JupyterHub versions)
+- Fix the RStudio terminal closing at startup
+- Only open server-proxy launcher entries (e.g. RStudio) inside the iframe; other `window.open` calls (exports, knit previews) go to the browser
+- Permissions page: Submit is only enabled with unsaved changes, and an inline status shows the save state
+- Make the hub header responsive
+- Upgrade tljh-repo2docker to 3.0.21
+
 ## [0.8] 2026-09-11
 
 - Fix the File menu entries inside the JupyterLab iframe: "Log Out", "Hub Control Panel" and "Open in New Browser Tab"
